@@ -1,0 +1,16 @@
+{
+  "usingComponents": {
+    "van-card": "../../static/vant/card/index",
+    "van-icon": "../../static/vant/icon/index",
+    "van-field": "../../static/vant/field/index",
+    "van-overlay": "../../static/vant/overlay/index",
+    "van-cell-group": "../../static/vant/cell-group/index",
+    "van-tab": "../../static/vant/tab/index",
+    "van-tabs": "../../static/vant/tabs/index"
+  },
+  "navigationBarBackgroundColor": "#fafafa",
+  "navigationBarTextStyle": "black",
+  "navigationBarTitleText": "租宜家",
+  "backgroundColor": "#fff",
+  "backgroundTextStyle": "light"
+}

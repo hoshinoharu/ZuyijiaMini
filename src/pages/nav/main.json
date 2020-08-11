@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "van-button": "../../static/vant/button/index",
+    "van-card": "../../static/vant/card/index"
+  },
+  "enablePullDownRefresh": true,  
+  "onReachBottomDistance": 0,  
+  "backgroundTextStyle": "dark",  
+  "backgroundColor": "#c0d9ff"
+}
