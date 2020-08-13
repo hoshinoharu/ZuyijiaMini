@@ -1,11 +1,17 @@
 {
+  "navigationBarTitleText": "test",
+  "navigationStyle": "custom",
   "component": true,
   "usingComponents": {
+    "van-card": "../../static/vant/card/index",
+    "van-icon": "../../static/vant/icon/index",
     "van-field": "../../static/vant/field/index",
-    "van-tag": "../../static/vant/tag/index",
-    "van-action-sheet": "../../static/vant/action-sheet/index"
-  },
-  "navigationBarTitleText": "test",
-  "navigationStyle": "custom"
-  
+    "van-overlay": "../../static/vant/overlay/index",
+    "van-cell-group": "../../static/vant/cell-group/index",
+    "van-cell": "../../static/vant/cell/index",
+    "van-swipe-cell": "../../static/vant/swipe-cell/index",
+    "van-checkbox": "../../static/vant/checkbox/index",
+    "van-checkbox-group": "../../static/vant/checkbox-group/index"
+  }
 }
+  

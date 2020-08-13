@@ -164,9 +164,6 @@ import Top from '../../components/head/index'
   background: #fafafa;
   height: 400rpx;
 }
-.leave_message {
- 
-}
 .leave_message .van-action-sheet {
    height: 35%;
 }
