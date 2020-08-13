@@ -104,6 +104,9 @@ import Top from '../../components/head/index'
         swiperIdx: 0
       }
     },
+    onLoad(option) {
+      console.log(option.dataDetail);
+    },
     methods: {
       message(){
         // this.showMessage = true

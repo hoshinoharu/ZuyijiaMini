@@ -19,10 +19,17 @@
           </view>
         </van-search>
       </div>
-      <div>
-        <span>编辑</span>
+      <div class="modify">
+        <span class="modify_title" v-if="modifyShow" @tap="allModify" >
+          编辑    
+        </span>
+        <span class="modify_title" v-else @tap="allFinish">完成</span>
+        <div style="float: right" v-show="!modifyShow">
+          <van-checkbox :value="checked" @change="modify" >全选</van-checkbox>
+        </div>
+        
       </div>
-      <div>
+      <div class="message_body">
         <van-checkbox-group :value="result" @change="onChange">
           <van-swipe-cell
             v-for="(num, index) in dataInfo"
@@ -52,6 +59,7 @@
                 </div>
                 <div slot="right-icon">
                   <van-checkbox
+                    v-if="!modifyShow"
                     @tap.stop="noop"
                     :class="'checkboxes-'+index"
                     :name="num.username"
@@ -71,7 +79,22 @@
             </div>
           </van-swipe-cell>
         </van-checkbox-group>
-      </div>  
+      </div>
+      <div class="message_empty">
+
+      </div>
+      <div class="button_footer">
+        <van-goods-action>
+          <!-- <van-goods-action-icon icon="chat-o" text="客服" bind:click="onClickIcon" />
+          <van-goods-action-icon icon="cart-o" text="购物车" bind:click="onClickIcon" /> -->
+          <van-goods-action-button
+            text="清除未读"
+            type="warning"
+            bind:click="onClickButton"
+          />
+          <van-goods-action-button text="删除" bind:click="onClickButton" />
+        </van-goods-action>
+      </div>
     </div>
   </div>
 </template>
@@ -87,6 +110,8 @@ import dataInfo from './dataInfo'
     data() {
       return {
         value: "",
+        checked: false,
+        modifyShow: true,
         result: ['2','3','4'],
         dataInfo,
         back: {
@@ -96,7 +121,18 @@ import dataInfo from './dataInfo'
       }
     },
     methods: {
+      allModify() {
+        this.modifyShow = false;
+        this.checked = false;
+      },
+      allFinish() {
+        this.modifyShow = true
+      },
       noop(e) {
+      },
+      modify(e) {
+        this.checked = !this.checked
+        console.log("dsdsdeee")
       },
       onClick() {},
       onChange(e) {
@@ -135,6 +171,11 @@ import dataInfo from './dataInfo'
 .message {
   background: #fafafa;
 }
+.message_empty {
+  position: relative;
+  height: 80px;
+  clear: both;
+}
 .mess_name {
   /* float: right; */
   position: relative;
@@ -151,9 +192,9 @@ import dataInfo from './dataInfo'
 .van-swipe-cell__right {
   display: inline-block;
   width: 240rpx;
-  height: 88rpx;
+  height: 140rpx;
   font-size: 22rpx;
-  line-height: 88rpx;
+  line-height: 140rpx;
   /* color: #fff;
   text-align: center; */
   /* background-color: #f44; */
@@ -162,9 +203,9 @@ import dataInfo from './dataInfo'
   display: inline-block;
   width:120rpx;
   background-color: #f44;
-  height: 88rpx;
+  height: 140rpx;
   font-size: 22rpx;
-  line-height: 88rpx;
+  line-height: 140rpx;
   color: #fff;
   text-align: center
 }
@@ -180,14 +221,40 @@ import dataInfo from './dataInfo'
   height: 100rpx;
   position: relative;
 }
-  .message .van-search__action--hover {
-    background: #fff !important;
-  }
-  .search_but .van-button {
-    width: 60rpx;
-    height: 60rpx;
-  }
-  .value-class {
+.message .van-search__action--hover {
+  background: #fff !important;
+}
+.search_but .van-button {
+  width: 60rpx;
+  height: 60rpx;
+}
+.value-class {
   flex: none !important;
+}
+.modify {
+  margin: 10rpx 10rpx;
+}
+.modify .van-checkbox__label {
+  margin-left: 10rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #bbb;
+}
+.modify_title {
+  margin-left: 30rpx;
+  font-size: 28rpx;
+}
+.modify_hover {
+  font-size: 30rpx;
+  color: aqua;
+}
+.button_footer .van-goods-action{
+  margin-bottom: 20px;
+}
+.message_body {
+  position: relative;
+  height: auto;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 </style>

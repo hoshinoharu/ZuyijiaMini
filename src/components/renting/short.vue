@@ -31,7 +31,7 @@
       </div>
       
     </div>
-      <div v-for="(num, i) in dataArr" :key="i" class="sublet"> 
+      <div v-for="(num, i) in dataArr" :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
         <van-panel :title="num.title" desc="描述信息" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
             <div class="content_main">
               <div class="remark"><span>{{num.description}}</span></div>
@@ -55,7 +55,7 @@
               </div>
             </div>
           <div slot="footer">
-            <van-button size="small" :icon="num.icon" :color="color" plain @tap="collect(num)">收藏</van-button>
+            <van-button size="small" :icon="num.icon" :color="color" plain @tap.stop="collect(num)">收藏</van-button>
           </div>
         </van-panel>
       </div>
@@ -90,11 +90,18 @@
       // console.log(this.navHeight)
     },
     methods: {
+      turnDetail(e,num) {
+          wx.navigateTo({
+            url: `/pages/detail/main?dataDetail=${JSON.stringify(num)}`,
+          })
+      },
       collect(val) {
         if(val.icon == 'star-o') {
-          val.icon = 'star'
+          this.$set(val, 'icon', 'star')
+          // val.icon = 'star'
         } else {
-          val.icon = 'star-o'
+          this.$set(val, 'icon', 'star-o')
+          // val.icon = 'star-o'
         }
         console.log(val)
       },

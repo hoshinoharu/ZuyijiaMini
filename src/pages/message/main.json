@@ -11,7 +11,12 @@
     "van-cell": "../../static/vant/cell/index",
     "van-swipe-cell": "../../static/vant/swipe-cell/index",
     "van-checkbox": "../../static/vant/checkbox/index",
-    "van-checkbox-group": "../../static/vant/checkbox-group/index"
+    "van-checkbox-group": "../../static/vant/checkbox-group/index",
+    "van-radio": "../../static/vant/radio/index",
+    "van-radio-group": "../../static/vant/radio-group/index",
+    "van-goods-action": "../../static/vant/goods-action/index",
+    "van-goods-action-icon": "../../static/vant/goods-action-icon/index",
+    "van-goods-action-button": "../../static/vant/goods-action-button/index"
   }
 }
   

@@ -41,12 +41,12 @@ export default {
         that.userInfo = res.userInfo;
         that.globalData.userInfo = res.userInfo;
         
-        // wx.switchTab({
-        //   url: "/pages/nav/main?userInfo="+JSON.stringify(that.userInfo)
-        // })
-         wx.navigateTo({
-            url: '/pages/message/main',
-          })
+        wx.switchTab({
+          url: "/pages/nav/main?userInfo="+JSON.stringify(that.userInfo)
+        })
+        //  wx.navigateTo({
+        //     url: '/pages/message/main',
+        //   })
         //此处为获取微信信息后的业务方法
       },
       fail: function () {
