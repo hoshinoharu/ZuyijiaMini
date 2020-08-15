@@ -30,7 +30,7 @@
     },
     created () {
       this.toBarHeight = this.globalData.toBar;
-      console.log(this.globalData)
+      // console.log(this.globalData)
       this.statusBarHeight = this.globalData.statusBarHeight
     },
     methods: {

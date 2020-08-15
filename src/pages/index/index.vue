@@ -45,7 +45,7 @@ export default {
           url: "/pages/nav/main?userInfo="+JSON.stringify(that.userInfo)
         })
         //  wx.navigateTo({
-        //     url: '/pages/message/main',
+        //     url: '/pages/detailInfo/main',
         //   })
         //此处为获取微信信息后的业务方法
       },

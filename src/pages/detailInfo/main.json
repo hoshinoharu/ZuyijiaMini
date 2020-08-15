@@ -1,0 +1,13 @@
+{
+  "component": true,
+  "usingComponents": {
+    "van-field": "../../static/vant/field/index",
+    "van-tag": "../../static/vant/tag/index",
+    "van-action-sheet": "../../static/vant/action-sheet/index",
+    "van-icon": "../../static/vant/icon/index",
+    "van-uploader": "../../static/vant/uploader/index"
+  },
+  "navigationBarTitleText": "test",
+  "navigationStyle": "custom"
+  
+}
