@@ -138,9 +138,9 @@
   /* font-size: 46rpx; */
 }
 .tab-bar-item image {
-  width: 54rpx;
-  height: 54rpx;
-  margin-bottom: -20rpx;
+  width: 50rpx;
+  height: 50rpx;
+  margin-bottom: -16rpx;
   /* font-size: 46rpx; */
 }
 .tab-bar-item span {

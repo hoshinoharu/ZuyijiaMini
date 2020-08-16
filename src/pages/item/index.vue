@@ -47,7 +47,9 @@
                         v-model="login.username"
                         clearable
                         required
+                        left-icon="contact"
                         label="用户名"
+                        maxlength="11"
                         right-icon="question-o"
                         placeholder="请输入用户名/手机号"
                         :error-message="login_err.username"
@@ -57,15 +59,17 @@
                         v-if="loginType=='密码登录'"
                         v-model="login.text"
                         center
+                        left-icon="phone-circle-o"
                         clearable
                         style="padding-bottom: 8rpx"
-                        label="短信验证码"
+                        label="验证码"
+                        maxlength="6"
                         placeholder="请输入短信验证码"
                         :border="false"
                         @change="inputIntext"
                         use-button-slot
                       >
-                        <van-button slot="button" size="small" class="login_test" type="primary">发送验证码</van-button>
+                        <van-button slot="button" size="small" round class="login_test" type="primary">验证码</van-button>
                       </van-field>
                       <van-field
                         v-else
@@ -84,7 +88,7 @@
                 </van-cell-group>
                 <van-button round plain @tap="loginStyle" class="login_but">{{loginType}}</van-button>
                 <div class="register_btn">
-                  <van-button type="primary"  size="normal" @tap.stop="onSubmit">登录</van-button>
+                  <van-button type="primary" round size="normal" @tap.stop="onSubmit">登录</van-button>
                   <!-- <van-button type="primary" plain size="normal" @click="onReset">重置</van-button> -->
                 </div>
               </van-tab>
@@ -94,6 +98,7 @@
                     v-model="register.username"
                     clearable
                     label="用户名"
+                    maxlength="11"
                     required
                     right-icon="question-o"
                     placeholder="请输入用户名"
@@ -104,7 +109,7 @@
                     v-model="register.phone"
                     clearable
                     required
-                    
+                    maxlength="11"
                     label="手机号"
                     right-icon="question-o"
                     placeholder="请输入手机号"
@@ -127,7 +132,7 @@
                   />
                 </van-cell-group>
                 <div class="register_btn">
-                  <van-button type="primary"  size="normal" @click="onRegister">注册</van-button>
+                  <van-button type="primary"  round size="normal" @click="onRegister">注册</van-button>
                   <!-- <van-button type="primary" plain size="normal" @tap="onReset($event, 'reg')">重置</van-button> -->
                 </div>
                 
@@ -398,7 +403,7 @@ import Bottom from '../../components/bottom/index'
   }
   .register_btn{
     margin-top: 20rpx;  
-    margin-left: calc(50% - 110rpx);
+    margin-left: calc(50% - 150rpx);
   }
   .login_but .van-button{
     width: 300rpx;
@@ -506,7 +511,7 @@ import Bottom from '../../components/bottom/index'
 }
 
 .block {
-  width: 80%;
+  width: 85%;
   height: 700rpx;
   background-color: #fff;
 }
