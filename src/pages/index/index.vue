@@ -109,7 +109,7 @@ export default {
 
       if(that.userInfo) {
         wx.navigateTo({
-          url: "/pages/item/main?userInfo="+JSON.stringify(that.userInfo)
+          url: "/pages/nav/main?userInfo="+JSON.stringify(that.userInfo)
         })
       }
       //最后，记得返回刚才的页面
