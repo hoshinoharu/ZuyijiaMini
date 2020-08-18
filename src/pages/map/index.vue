@@ -28,12 +28,42 @@
         <div style="height: 20rpx"></div>
      </div>
      <div style="background: #f0f3f6">
-        <van-grid square>
+        <!-- <van-grid square :custom-class="custom">
           <van-grid-item icon="wap-home-o" :text="num.name" v-for="(num, i) in areaName" :key="i" />
-        </van-grid>
-     </div>
-     <div>
+        </van-grid> -->
+     <!-- </div> -->
+      <div class="l_tag">
+         <span class="tag" v-for="(num, i) in areaName" :key="i">{{num.name}}</span>
+      </div>
+      <div class="index">
+          <van-index-bar>
+            <view>
+              <van-index-anchor index="A" />
+              <van-cell title="文本" />
+              <van-cell title="文本" />
+              <van-cell title="文本" />
+            </view>
 
+            <view>
+              <van-index-anchor index="B" />
+              <van-cell title="文本" />
+              <van-cell title="文本" />
+              <van-cell title="文本" />
+            </view>
+            <view>
+              <van-index-anchor index="C" />
+              <van-cell title="文本" />
+              <van-cell title="文本" />
+              <van-cell title="文本" />
+            </view>
+            <view>
+              <van-index-anchor index="D" />
+              <van-cell title="文本" />
+              <van-cell title="文本" />
+              <van-cell title="文本" />
+            </view>
+          </van-index-bar>
+      </div>
      </div>
   </div>
 </template>
@@ -77,7 +107,8 @@ import Top from '../../components/head/index'
         areaName,
         back: {
           flag: true,
-          text: "房源地点"
+          text: "房源地点",
+          url: "/pages/nav/index"
         },
         location: "上海",
         replay: false
@@ -98,6 +129,9 @@ import Top from '../../components/head/index'
 </script>
 
 <style scoped>
+.custom {
+  height: 200rpx;
+}
 .search_but .van-button {
   width: 60rpx;
   height: 60rpx;
@@ -120,9 +154,42 @@ top: 8rpx !important;
   }
 .replay {
   position: relative;
-  left: 250rpx;
+  left: 265rpx;
 }
 /deep/ .van-grid {
   top: 10px;
+}
+/deep/.index .van-index-bar__sidebar{
+ top: 875rpx;
+}
+/deep/.index .van-index-bar {
+  top: 10px;
+}
+.index {
+  height: 780rpx;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.index::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+  display: none;
+}
+.tag{
+  font-size: 28rpx;
+  color: #000;
+  background: #f0f3f6;
+  padding: 10rpx 42rpx;
+  margin: 20rpx;
+  /* border: #000 1px solid; */
+  border-radius: 10rpx;
+}
+.l_tag {
+  height: 200rpx;
+  width: 100%;
+  background: #fff;
+  display: flex;
+  flex-flow:wrap;
 }
 </style>

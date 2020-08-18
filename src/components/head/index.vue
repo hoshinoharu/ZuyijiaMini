@@ -1,7 +1,7 @@
 <template>
   <div class="ch_top">
-      <div :style="{height: statusBarHeight+'px'}"></div>
-      <div class="tobar" :style="{height: toBarHeight+'px'}">
+      <div :style="{height: statusBarHeight+'px', background: back.color?back.color: '#fff'}"></div>
+      <div class="tobar" :style="{height: toBarHeight+'px', background: back.color?back.color: '#fff'}">
         <div class="title" :style="{height: toBarHeight+'px',lineHeight: toBarHeight+'px'}">
           <text>{{back.text}}</text>
         </div>
@@ -35,7 +35,14 @@
     },
     methods: {
       onClickBack () {
-        wx.navigateBack({ changed: true });
+        if(this.back.url) {
+          wx.navigateTo({
+            url: this.back.url
+          })
+        } else {
+          wx.navigateBack({ changed: true });
+        }
+        // wx.navigateBack({ changed: true });
       }
     }
   }

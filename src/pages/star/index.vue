@@ -1,10 +1,10 @@
 <template>
   <div class="short">
     <van-search
-        v-model="searchValue"
+        :value="val"
         placeholder="请输入搜索关键字"
         use-action-slot
-        background="#f0f3f6"
+        background="#fafafa"
         @cancel="onCancel"
         @change="onChangeVal"
         @search="onSearch"
@@ -14,7 +14,7 @@
     >
     <div
         slot="action"
-        @tap="onSearchSend"
+        @tap="onSearch2"
     >搜索</div>
     </van-search>
     <div class="choose">
@@ -66,9 +66,13 @@
 </template>
 
 <script>
-  import {data} from './data'
+  import {data} from '../../components/renting/data'
+  import Top from '../../components/head/index'
   export default {
     name: '',
+    components: {
+      Top
+    },
     props: {
       dataArr: {
         type: Array,
@@ -82,8 +86,7 @@
         sort: "desc",
         color: '#FFCC66',
         navHeight: "",
-        icon: 'star-o',
-        searchValue: ""
+        icon: 'star-o'
       }
     },
     mounted () {
@@ -91,9 +94,6 @@
       // console.log(this.navHeight)
     },
     methods: {
-      onSearchSend(e) {
-        console.log(e.mp)
-      },
       turnDetail(e,num) {
           wx.navigateTo({
             url: `/pages/detail/main?dataDetail=${JSON.stringify(num)}`,
@@ -125,7 +125,7 @@
         this.val = e.mp.detail
       },
       onChangeVal (e) {
-        this.searchValue = e.mp.detail
+        this.val = e.mp.detail
       },
       onSearch2 () {
         wx.showToast({
@@ -236,8 +236,5 @@ padding-left: 10rpx;
 }
 .sublet:last-child {
   /* margin-bottom: 40rpx; */
-}
-.search .van-search__action--hover {
-  background: #f0f3f6 !important;
 }
 </style>

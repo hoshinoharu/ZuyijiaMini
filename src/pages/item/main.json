@@ -12,5 +12,6 @@
   "navigationBarTextStyle": "black",
   "navigationBarTitleText": "租宜家",
   "backgroundColor": "#fff",
-  "backgroundTextStyle": "light"
+  "backgroundTextStyle": "light",
+  "navigationStyle": "custom"
 }

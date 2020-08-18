@@ -406,7 +406,7 @@ Page{
   width: 100%;
 }
 .room_main {
-  background: #fafafa;
+  background: #f0f3f6;
   /* height: 100%; */
   width: 100%;
 }

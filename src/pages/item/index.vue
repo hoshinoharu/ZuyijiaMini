@@ -1,10 +1,11 @@
 <template>
 <div>
+  <Top :back="back"></Top>
   <div class="mine">
     <div class="mine_title">
       <div class="title">
         <image class="home_img" :src="url" alt=""></image>
-        <p><span>{{userInfo.nickName}}</span></p>
+        <p style="width:200rpx; text-align: left;"><span>{{userInfo.nickName}}</span></p>
       </div>
       
       <van-button color="linear-gradient(to right, #4bb0ff, #FFFFCC)" round 
@@ -18,7 +19,7 @@
     </div>
     <div class="mine_body">
       <ul class="ul_mine">
-        <li class="li_mine" v-for="(num, i) in mine" :key="i">
+        <li class="li_mine" v-for="(num, i) in mine" :key="i" @tap="onTurn($event, num.url)">
            <i :class="num.icon" v-if="i!=1"></i>
            <i v-else ><van-icon name="chat" :info="num.number"/></i>
            <span>{{num.name}}</span>
@@ -66,6 +67,7 @@
                         maxlength="6"
                         placeholder="请输入短信验证码"
                         :border="false"
+                        :error-message="login_err.text"
                         @change="inputIntext"
                         use-button-slot
                       >
@@ -145,6 +147,43 @@
         </div>
       </view>
     </van-overlay>
+    <van-overlay :show="warningShow" @click="onClickWarning">
+      <div class="wrapper">
+        <div class="block black1" catch:tap="noop">
+          <div>
+             <div id="style2">
+                <p>注意事项</p>
+              </div>
+              <div id="style1">
+                  <p>
+                      君不见，黄河之水天上来，奔流到海不复回。 
+                      君不见，高堂明镜悲白发，朝如青丝暮成雪。 
+                      人生得意须尽欢，莫使金樽空对月。
+                      天生我材必有用，千金散尽还复来。 
+                      烹羊宰牛且为乐，会须一饮三百杯。 
+                      岑夫子，丹丘生，将进酒，杯莫停。
+                  </p>
+                  <p>
+                      与君歌一曲，请君为我倾耳听。 
+                      钟鼓馔玉不足贵，但愿长醉不复醒。 
+                      古来圣贤皆寂寞，惟有饮者留其名。 
+                      陈王昔时宴平乐，斗酒十千恣欢谑。 
+                      主人何为言少钱，径须沽取对君酌。 
+                      五花马，千金裘，呼儿将出换美酒，与尔同销万古愁。
+                  </p>
+              </div>
+
+          </div>
+          <div class="warning_button" v-if="warningFlag">
+            <van-button style="float: left; margin-left: 20rpx" round type="primary" @tap="agree">同意</van-button>
+            <van-button style="float: right; margin-right: 20rpx " round type="primary" @tap="notAgree">不同意</van-button>
+          </div>
+          <div class="warning_icon" v-else>
+            <van-icon name="close" size="40" color="#fff"  @tap="onClickWarning" />
+          </div>
+        </div>
+      </div>
+    </van-overlay>
   </div>
   <div class="footer">
     <Bottom :selected="2"></Bottom>
@@ -153,23 +192,28 @@
 </template>
 
 <script>
+import Top from '../../components/head/index'
 let mine = [
   {
     name: "我的收藏",
-    icon: "iconfont icon-home "
+    icon: "iconfont icon-home ",
+    url: "/pages/star/main"
   },
   {
     name: "我的消息",
     icon: "iconfont icon-xiaoxi1",
-    number: ""
+    number: "",
+    url: "/pages/message/main"
   },
   {
     name: "我的发布",
-    icon: "iconfont icon-fabu"
+    icon: "iconfont icon-fabu",
+    url: "/pages/send/main"
   },
   {
     name: "注意事项",
-    icon: "iconfont icon-zhuyi "
+    icon: "iconfont icon-zhuyi ",
+    url: 'flag'
   }
 ]
 import Bottom from '../../components/bottom/index'
@@ -177,15 +221,23 @@ import Bottom from '../../components/bottom/index'
     name: '',
     
     components: {
-      Bottom
+      Bottom,
+      Top
     },
     data() {
       return {
-        url: "",
+        url: "../../static/images/loser.png",
+        back: {
+          flag: false,
+          text: '租宜家',
+          color: '#FFFD7D'
+        },
         mine,
-         active: 0,
+        active: 0,
+        warningFlag: false,
         btnCodeText: "ddd",
         show: false,
+        warningShow: false,
         userInfo: {},
         loginSuccess: false,
         errMsg: [],
@@ -208,7 +260,8 @@ import Bottom from '../../components/bottom/index'
         login_err: {
           username: "",
           phone: "",
-          password: ""
+          password: "",
+          text: ""
         },
         errors: [],
         phoneInfo: "",
@@ -221,6 +274,14 @@ import Bottom from '../../components/bottom/index'
       this.url = this.userInfo.avatarUrl
     },
     methods: {
+      onClickWarning() {
+        this.warningShow = false
+      },
+      onTurn(e, type) {
+        if(type == 'flag') {
+          this.warningShow = true
+        }
+      },
       login() {
         this.type = '登录'
       },
@@ -327,6 +388,10 @@ import Bottom from '../../components/bottom/index'
           if(this.login.username == "") {
             this.login_err.username = "请输入用户名或者手机号"
           }
+          if(this.login.text == "") {
+            this.login_err.text = "请输入短信验证码"
+            return
+          }
         } else {
           console.log("dd")
           if(this.login.username == "") {
@@ -334,8 +399,22 @@ import Bottom from '../../components/bottom/index'
           }
           if(this.login.password == "") {
             this.login_err.password = "请输入密码"
+            return
           }
-        } 
+        }
+        this.warningFlag = true
+        this.warningShow = true
+        // this.agree()
+      },
+      notAgree() {
+        this.warningShow = false
+        setTimeout(() => {
+          
+          this.warningFlag = false
+        }, 500)
+       
+      },
+      agree() {
         this.$http.post('/app/login/do',{
           "mobile": this.login.username,
           "password":this.login.password
@@ -352,6 +431,8 @@ import Bottom from '../../components/bottom/index'
             this.loginSuccess = true
             wx.setStorageSync('token', res.data.data.token);
             this.show = false
+            this.warningFlag = false
+            this.warningShow = false
           } else {
             wx.showToast({
                 title: res.data.msg,
@@ -377,6 +458,20 @@ import Bottom from '../../components/bottom/index'
 
 <style>
 /* @import url("./main.css"); */
+  .warning_button {
+    position: absolute;
+    bottom: 20rpx;
+    width: 100%;
+  }
+  .warning_icon {
+    position: absolute;
+    bottom: -95rpx;
+    left: calc(50% - 25rpx);
+  }
+  .warning_button .van-button {
+    width: 150rpx;
+    height: 70rpx;
+  }
   .mine {
     background:#fff;
   }
@@ -412,27 +507,28 @@ import Bottom from '../../components/bottom/index'
     left: calc(50% - 75px);
   }
   .ul_mine {
-     margin: 20px auto; 
-     width:90%; 
+     /* margin: 20rpx auto; 
+     width:90%;  */
+     margin: 20rpx 20rpx;
      overflow:hidden
   }
   .li_mine {
     float:left; 
-    padding:10px 8px; 
+    padding:20rpx 20rpx; 
     width:80px
   }
   .li_mine i{
     margin: 0 auto;
-    height: 100rpx;
+    height: 80rpx;
     /* height: 100rpc; */
-    width: 80rpx;
+    width: 60rpx;
     font-size: 80rpx;
-    line-height: 80rpx;
+    line-height: 70rpx;
     text-align: center;
     color: rgb(114, 224, 63);
   }
   .li_mine span {
-    width: 140rpx;
+    width: 154rpx;
     margin: 0 auto;
     display: inline-block;
     line-height: 32rpx;
@@ -446,32 +542,36 @@ import Bottom from '../../components/bottom/index'
     height: 24px;
   }
   .mine_title {
-    width: 90%;
+    width: 100%;
     height: 200rpx;
-    background:#fff;
-    border: 1px solid #bbb;
-    box-shadow: 0 2rpx 20rpx #aaaaaa;
-    margin: 10px auto;
+    background:#FFFD7D;
+    /* border: 1px solid #bbb;
+    box-shadow: 0 2rpx 20rpx #aaaaaa; */
+    /* margin: 10px auto; */
     display: flex
   }
   .mine_body {
-    width: 90%;
+    width: 700rpx;
     height: 400rpx;
     background:#fff;
-    border: 1px solid #bbb;
-    box-shadow: 0 2rpx 20rpx #aaaaaa;
+    border: 1px solid #f9f9f9;
+    box-shadow: 1rpx 1rpx 10rpx #FFFD7D;
     margin: 10px auto;
-    margin-top: 20px;
+    margin-top: 50rpx;
+    border-radius: 10rpx;
     /* display: flex */
   }
  .mine .title {
-   width: 40%;
-   margin-left: 20rpx;
+   width: 50%;
+   margin-left: 40rpx;
+   display: flex;
  }
   .mine .title span{
-    font-size: 23rpx;
-    font-weight: 600;
-    color: #bbb;
+    font-size: 28rpx;
+    color: #000;
+    position: relative;
+    top: 100rpx;
+    left: 10rpx;
   }
   .mine .title p{
     width: 120rpx;
@@ -483,22 +583,22 @@ import Bottom from '../../components/bottom/index'
    height: 65rpx;
    color: #000 !important;
    font-weight: 600;
-   top: 65rpx;
-   left: 60rpx;
+   top: 100rpx;
+   left: 80rpx;
  }
  .van_but {
    flex: 1;
  }
   .home_img{
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 60rpx;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 70rpx;
   /* margin-left: 100px; */
-  margin: 10px 0;
+  margin: 25rpx 0;
   /* margin: 100rpx 0; */
-  /* border: 1px solid #fff; */
+  border: 1rpx solid #fff;
   margin-bottom: 0px;
-  box-shadow: 0 2rpx 25rpx rgb(166,124,64)
+  /* box-shadow: 0 2rpx 25rpx rgb(166,124,64) */
 }
 .wrapper {
   display: flex;
@@ -514,5 +614,23 @@ import Bottom from '../../components/bottom/index'
   width: 85%;
   height: 700rpx;
   background-color: #fff;
+}
+.black1 {
+  position: relative;
+}
+#style1 {
+  font-family: "微软黑雅";
+  font-size: 28rpx;
+  color: black;
+  text-indent: 55rpx;
+  letter-spacing: 2rpx;
+  line-height: 40rpx;
+  margin: 0 10rpx;
+  margin-top: 20rpx;
+}
+#style2{
+  text-align: center;
+  font-family: "微软黑雅";
+  font-size: 40rpx;
 }
 </style>
