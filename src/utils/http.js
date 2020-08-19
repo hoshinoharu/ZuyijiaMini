@@ -1,4 +1,4 @@
-const serviceHost = 'http://47.96.100.89:9443';
+const serviceHost = 'https://course.huianzsb.com:9443';
 
 const request = req => { // 统一给请求添加host、时间戳、登录凭据处理
     if (!req || null == req || typeof req !== 'object' ||

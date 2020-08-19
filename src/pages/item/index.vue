@@ -269,6 +269,19 @@ import Bottom from '../../components/bottom/index'
         loginType: "密码登录"
       }
     },
+    created () {
+      let token = wx.getStorageSync('token')
+      if(token) {
+        this.$http.get('/app/login/validate', res => {
+          console.log(res)
+          if(res.data) {
+            this.loginSuccess = true;
+            this.warningFlag = false;
+          }
+        })
+        
+      }
+    },
     mounted () {
       this.userInfo = this.globalData.userInfo
       this.url = this.userInfo.avatarUrl

@@ -5,7 +5,7 @@
     <div class="message">
     
       <div>
-        <van-search
+        <!-- <van-search
           :value="value"
           label="联系人"
           placeholder="请输入搜索关键词"
@@ -17,7 +17,7 @@
           <view slot="action" @tap="onClick">
             <van-button size="small"  round class="search_but">搜索</van-button>
           </view>
-        </van-search>
+        </van-search> -->
       </div>
       <div class="modify">
         <span class="modify_title" v-if="modifyShow" @tap="allModify" >
@@ -83,7 +83,7 @@
       <div class="message_empty">
 
       </div>
-      <div class="button_footer">
+      <div class="button_footer" v-if="!modifyShow">
         <van-goods-action>
           <!-- <van-goods-action-icon icon="chat-o" text="客服" bind:click="onClickIcon" />
           <van-goods-action-icon icon="cart-o" text="购物车" bind:click="onClickIcon" /> -->
@@ -112,7 +112,7 @@ import dataInfo from './dataInfo'
         value: "",
         checked: false,
         modifyShow: true,
-        result: ['2','3','4'],
+        result: [],
         dataInfo,
         back: {
           text: '消息列表',
@@ -204,7 +204,7 @@ import dataInfo from './dataInfo'
   width:120rpx;
   background-color: #f44;
   height: 140rpx;
-  font-size: 22rpx;
+  font-size: 24rpx;
   line-height: 140rpx;
   color: #fff;
   text-align: center
@@ -233,6 +233,7 @@ import dataInfo from './dataInfo'
 }
 .modify {
   margin: 10rpx 10rpx;
+  padding-top: 10rpx;
 }
 .modify .van-checkbox__label {
   margin-left: 10rpx;
