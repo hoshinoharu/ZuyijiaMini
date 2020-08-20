@@ -24,7 +24,7 @@
           编辑    
         </span>
         <span class="modify_title" v-else @tap="allFinish">完成</span>
-        <div style="float: right" v-show="!modifyShow">
+        <div style="float: right; margin-right: 40rpx" v-show="!modifyShow">
           <van-checkbox :value="checked" @change="modify" >全选</van-checkbox>
         </div>
         
@@ -50,11 +50,11 @@
               >
                 
                 <div class="mess_info" slot="title">
-                  <image class="home_img" :src="num.url" alt="">
+                  <image class="home_img" :src="num.creator.headImg" alt="">
                   </image>
                     <div class="mess_name">
-                      <span>dsd</span><br>
-                      <span>我爱我的祖国，爱我的人民,伟大的共产主义事业将不会停止，他将永远驻足于我的领会</span>
+                      <span>{{num.creator.username}}</span><br>
+                      <span>{{num.content}}</span>
                     </div>
                 </div>
                 <div slot="right-icon">
@@ -62,10 +62,10 @@
                     v-if="!modifyShow"
                     @tap.stop="noop"
                     :class="'checkboxes-'+index"
-                    :name="num.username"
+                    :name="num.id"
                   />
-                  <div>
-                    <span>sdsds</span>
+                  <div class="time_right">
+                    <span>{{num.createTimeStr}}</span>
                   </div>
                 </div>
                 
@@ -101,6 +101,7 @@
 
 <script>
 import Top from '../../components/head/index'
+import fun from '../../utils/index'
 import dataInfo from './dataInfo'
   export default {
     name: '',
@@ -113,12 +114,26 @@ import dataInfo from './dataInfo'
         checked: false,
         modifyShow: true,
         result: [],
+        content: [],
+        // dataInfo: [],
         dataInfo,
         back: {
           text: '消息列表',
           flag: 'true'
         }
       }
+    },
+    onLoad() {
+      this.$http.get('/app/chat/list/all/user', res => {
+        if(res.data.success) {
+          this.dataInfo = res.data.data
+          this.dataInfo.forEach(num => {
+            num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
+            this.content.push(String(num.id))
+          })
+        }
+        console.log(res.data.success)
+      })
     },
     methods: {
       allModify() {
@@ -132,12 +147,27 @@ import dataInfo from './dataInfo'
       },
       modify(e) {
         this.checked = !this.checked
-        console.log("dsdsdeee")
+        if(this.checked) {
+          this.dataInfo.forEach(num => {
+            
+            this.result = this.result.concat(String(num.id))
+            // num.modelId
+          })
+        } else {
+          this.result = []
+        }
+        
+        console.log(this.result)
       },
       onClick() {},
       onChange(e) {
         this.result = []
         this.result = e.mp.detail
+        if(this.result.sort().toString() == this.content.sort().toString()) {
+          this.checked = true
+        } else {
+          this.checked = false
+        }
         console.log(e)
       },
       toggle(event) {
@@ -257,5 +287,13 @@ import dataInfo from './dataInfo'
   height: auto;
   overflow: hidden;
   overflow-y: scroll;
+}
+.time_right {
+  width: auto;
+  float: right;
+}
+.van-checkbox {
+  height: 30rpx;
+  line-height: 30rpx;
 }
 </style>
