@@ -272,13 +272,13 @@ import Bottom from '../../components/bottom/index'
     created () {
       let token = wx.getStorageSync('token')
       if(token) {
-        this.$http.get('/app/login/validate', res => {
-          console.log(res)
-          if(res.data) {
-            this.loginSuccess = true;
-            this.warningFlag = false;
-          }
-        })
+        // this.$http.get('/app/login/validate', res => {
+        //   console.log(res)
+        //   if(res.data) {
+        //     this.loginSuccess = true;
+        //     this.warningFlag = false;
+        //   }
+        // })
         
       }
     },

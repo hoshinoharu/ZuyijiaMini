@@ -176,7 +176,7 @@
   margin-left: 20rpx;
 }
  .bg_red {
-  color: red;
+  color: #87caee;
 }
 .content_main {
   display: flex;
@@ -202,9 +202,14 @@
   flex-wrap: wrap
 }
 .name {
-  width: 220rpx;
+  width: 262rpx !important;
   /* flex: 1; */
   padding: 20rpx;
+}
+.van-panel {
+  border: 2rpx solid#BBFF66;
+  padding: 2rpx;
+  border-radius: 5rpx;
 }
 .name span {
   width:auto;
@@ -220,7 +225,6 @@ padding-left: 10rpx;
 .time {
   float: right;
   font-size: 25rpx;
-  padding-right: 10rpx;
 }
 .time p {
   text-align: right;
@@ -228,7 +232,8 @@ padding-left: 10rpx;
   color: red;
 }
 .sublet {
-  padding: 20rpx 60rpx;
+  padding: 20rpx 30rpx !important;
+  
 }
 
 .footer {

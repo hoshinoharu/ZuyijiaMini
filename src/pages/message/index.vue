@@ -24,7 +24,7 @@
           编辑    
         </span>
         <span class="modify_title" v-else @tap="allFinish">完成</span>
-        <div style="float: right; margin-right: 40rpx" v-show="!modifyShow">
+        <div style="float: right; margin-right: 20rpx" v-show="!modifyShow">
           <van-checkbox :value="checked" @change="modify" >全选</van-checkbox>
         </div>
         
@@ -51,19 +51,22 @@
                 
                 <div class="mess_info" slot="title">
                   <image class="home_img" :src="num.creator.headImg" alt="">
+                    <i class="tip"></i>
                   </image>
                     <div class="mess_name">
                       <span>{{num.creator.username}}</span><br>
                       <span>{{num.content}}</span>
                     </div>
                 </div>
-                <div slot="right-icon">
-                  <van-checkbox
-                    v-if="!modifyShow"
-                    @tap.stop="noop"
-                    :class="'checkboxes-'+index"
-                    :name="num.id"
-                  />
+                <div slot="right-icon" class="rightArea">
+                  <div>
+                    <van-checkbox
+                      v-if="!modifyShow"
+                      @tap.stop="noop"
+                      :class="'checkboxes-'+index"
+                      :name="num.id"
+                    />
+                  </div>
                   <div class="time_right">
                     <span>{{num.createTimeStr}}</span>
                   </div>
@@ -74,8 +77,8 @@
               <!-- <van-cell title="单元格" value="内容" /> -->
             </van-cell-group>
             <div slot="right">
-              <span style="background:#9F9F9F">标为已读</span>
-              <span>删除</span>
+              <span style="background:#9F9F9F" @tap.stop="onRead($event, num.id)">标为已读</span>
+              <span @tap.stop="onDelete($event, num.id)">删除</span>
             </div>
           </van-swipe-cell>
         </van-checkbox-group>
@@ -90,9 +93,9 @@
           <van-goods-action-button
             text="清除未读"
             type="warning"
-            bind:click="onClickButton"
+            bind:click="onShread"
           />
-          <van-goods-action-button text="删除" bind:click="onClickButton" />
+          <van-goods-action-button text="删除" bind:click="onShdelete" />
         </van-goods-action>
       </div>
     </div>
@@ -102,7 +105,7 @@
 <script>
 import Top from '../../components/head/index'
 import fun from '../../utils/index'
-import dataInfo from './dataInfo'
+// import dataInfo from './dataInfo'
   export default {
     name: '',
     components: {
@@ -115,8 +118,8 @@ import dataInfo from './dataInfo'
         modifyShow: true,
         result: [],
         content: [],
-        // dataInfo: [],
-        dataInfo,
+        dataInfo: [],
+        // dataInfo,
         back: {
           text: '消息列表',
           flag: 'true'
@@ -136,6 +139,34 @@ import dataInfo from './dataInfo'
       })
     },
     methods: {
+      onShread(e, num) {
+        this.$http.post('/app/chat/read/all', {
+          id: id
+        }, res => {
+          console.log(res)
+        })
+      },
+      onShdelete(e, num) {
+        this.$http.post('', {
+          id: id
+        }, res => {
+          console.log(res)
+        })
+      },
+      onRead(e, id) {
+        this.$http.post('', {
+          id: id
+        }, res => {
+          console.log(res)
+        })
+      },
+      onDelete(e, id) {
+        this.$http.post('/app/house/delete',{
+          id: id
+        }, res => {
+          console.log(res)
+        })
+      },
       allModify() {
         this.modifyShow = false;
         this.checked = false;
@@ -163,12 +194,12 @@ import dataInfo from './dataInfo'
       onChange(e) {
         this.result = []
         this.result = e.mp.detail
+
         if(this.result.sort().toString() == this.content.sort().toString()) {
           this.checked = true
         } else {
           this.checked = false
         }
-        console.log(e)
       },
       toggle(event) {
         const { index } = event.currentTarget.dataset;
@@ -288,12 +319,23 @@ import dataInfo from './dataInfo'
   overflow: hidden;
   overflow-y: scroll;
 }
+.rightArea {
+  display: flex;
+  align-items: center;
+  flex-direction:column
+}
 .time_right {
-  width: auto;
-  float: right;
-}
-.van-checkbox {
-  height: 30rpx;
-  line-height: 30rpx;
-}
+  width: 153rpx;
+  text-align: center;
+  }
+  .tip {
+    display:block;
+    background:#f00;
+    border-radius:50%;
+    width:12rpx;
+    height:12rpx;
+    top:0px;
+    left: 80rpx;
+    position:absolute;
+  }
 </style>
