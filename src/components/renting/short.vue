@@ -102,19 +102,34 @@
       collect(val) {
         if(val.icon == 'star-o') {
           //  val.icon = ""
-          this.$set(val, 'icon', 'star')
+          
           this.$http.post(`/app/favorites/like/${val.id}`, res => {
             console.log(res)
+            wx.showToast({
+                title: res.data.msg,  // 标题
+                icon: 'success',
+                // icon: 'none',
+                mask:true,   // 图标类型，默认success
+                duration: 1500   // 提示窗停留时间，默认1500ms
+            })
+            this.$set(val, 'icon', 'star')
+            this.$forceUpdate();
           })
-          this.$forceUpdate();
+          
          
         } else {
           // val.icon = ""
           this.$http.put(`/app/chat/read/${val.id}`, res => {
             console.log(res)
+            wx.showToast({
+                title: res.data.msg,  // 标题
+                icon: 'success',   // 图标类型，默认success
+                duration: 1500   // 提示窗停留时间，默认1500ms
+            })
+            this.$set(val, 'icon', 'star-o')
+            this.$forceUpdate();
           })
-          this.$set(val, 'icon', 'star-o')
-          this.$forceUpdate();
+          
         }
         console.log(val)
       },

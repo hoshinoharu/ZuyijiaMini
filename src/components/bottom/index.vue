@@ -83,7 +83,15 @@
       console.log(url,index)
       // const data = e.currentTarget.dataset
       // const url = data.path
-      wx.switchTab({url})
+      wx.switchTab({
+        url: url,
+        success: function (e) { 
+          var page = getCurrentPages().pop();
+          console.log('page',page)
+          if (page == undefined || page == null) return;
+          page.onPullDownRefresh();
+        } 
+        })
       // console.log(data.index)
     },
     handleProxy(e) {

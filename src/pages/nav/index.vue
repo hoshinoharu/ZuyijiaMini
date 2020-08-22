@@ -76,7 +76,7 @@
   <div class="load_end" v-if="loaded">没有更多数据了……</div>
  
 	<div class="footer">
-    <Bottom :selected="0"></Bottom>
+    <Bottom :selected="0" @updateInfo="updateInfo"></Bottom>
   </div>
 </div>
 </template>
@@ -110,9 +110,11 @@ import roomlate from "../../components/renting/roomlate"
        loaded: false,
        statusBarHeight: "",
        innerWidth: "",
+       num: 1,
        innerPaddingRight: "",
        leftWidth: "",
        dataArr: [],
+       cookie: "",
        obj: {},
         navigationArr: [{
           title: '商品',
@@ -133,10 +135,10 @@ import roomlate from "../../components/renting/roomlate"
         ]
       }
     },
-    onPullDownRefresh: function() {  
-      console.info('onPullDownRefresh');
+    onPullDownRefresh: function() { 
       // this.loadData()
       var that = this;
+      that.num =1
       // 显示导航条加载动画  
       wx.showNavigationBarLoading();  
       
@@ -147,10 +149,14 @@ import roomlate from "../../components/renting/roomlate"
           that.dataArr = [].concat(res.data.data)
           wx.stopPullDownRefresh(); 
           wx.hideNavigationBarLoading();
-          that.dataArr.forEach(num => {
+        that.dataArr.forEach(num => {
             num.updateTime = num.updateTime.substring(0, 10)
+            if(num.favorite == false) {
+              num.icon="star-o"
+            } else {
+              num.icon = "star"
+            }
           })
-      console.log(that.dataArr)
         // })
           //状态由等待变为失败，传的参数作为then函数中失败函数的实参
       })
@@ -196,17 +202,36 @@ import roomlate from "../../components/renting/roomlate"
       })
     },
     methods: {
-     
+     updateInfo(value) {
+       if(value.indexOf('nav') > -1) {
+         this.cookie = wx.getStorageSync('cookie')
+         console.log(this.cookie, "ffdfdf")
+       }
+       
+     },
       changTab(index) {
         this.tab = index;
       },
       gainMoreLoadingListData: function () {
         let that = this;
-         setTimeout(function() { 
+        that.num = that.num + 1
+        this.$http.get(`/app/house/export/list?pageIndex=${that.num}&pageSize=10`, res=> {
+        that.dataArr = that.dataArr.concat(res.data.data)
+        that.dataArr.forEach(num => {
+            num.updateTime = num.updateTime.substring(0, 10)
+            if(num.favorite == false) {
+              num.icon="star-o"
+            } else {
+              num.icon = "star"
+            }
+          })
+         
+          setTimeout(() => {
              that.loading = false; //把"上拉加载"的变量设为true，隐藏
-             that.loaded = true; //把"上拉加载完成"的变量设为false，显示
+            that.loaded = true; //把"上拉加载完成"的变量设为false，显示
           }, 1000)
-          return
+          
+      })
       },
       /** 
      * 加载数据 
