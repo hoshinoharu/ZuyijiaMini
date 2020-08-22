@@ -82,7 +82,7 @@
         sort: "desc",
         color: '#FFCC66',
         navHeight: "",
-        icon: 'star-o',
+        // icon: 'star-o',
         searchValue: ""
       }
     },
@@ -101,11 +101,20 @@
       },
       collect(val) {
         if(val.icon == 'star-o') {
+          //  val.icon = ""
           this.$set(val, 'icon', 'star')
-          // val.icon = 'star'
+          this.$http.post(`/app/favorites/like/${val.id}`, res => {
+            console.log(res)
+          })
+          this.$forceUpdate();
+         
         } else {
+          // val.icon = ""
+          this.$http.put(`/app/chat/read/${val.id}`, res => {
+            console.log(res)
+          })
           this.$set(val, 'icon', 'star-o')
-          // val.icon = 'star-o'
+          this.$forceUpdate();
         }
         console.log(val)
       },

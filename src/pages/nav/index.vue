@@ -187,6 +187,11 @@ import roomlate from "../../components/renting/roomlate"
         that.dataArr = [].concat(res.data.data)
         that.dataArr.forEach(num => {
             num.updateTime = num.updateTime.substring(0, 10)
+            if(num.favorite == false) {
+              num.icon="star-o"
+            } else {
+              num.icon = "star"
+            }
           })
       })
     },
