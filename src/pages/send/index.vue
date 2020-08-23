@@ -102,7 +102,7 @@ import Top from '../../components/head/index'
         navHeight: "",
         back: {
           flag: true,
-          text: "我的收藏"
+          text: "我的发布"
         },
         dataArr: [],
         // icon: 'star-o',

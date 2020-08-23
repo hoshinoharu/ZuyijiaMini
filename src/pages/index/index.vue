@@ -48,7 +48,7 @@ export default {
         //     url: '/pages/housingRental/main',
         //   })
           // wx.navigateTo({
-          //   url: '/pages/message/main',
+          //   url: '/pages/star/main',
           // })
         //此处为获取微信信息后的业务方法
       },

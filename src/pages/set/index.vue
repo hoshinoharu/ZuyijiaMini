@@ -4,10 +4,10 @@
     <div class="set_body">
       <ul class="ul_mine">
         <li class="li_mine">
-          <van-button class="set_but" round plain @tap="roomRent($enent,'tent')">房源转租</van-button>
+          <van-button round plain class="set_but" @tap="roomRent($enent,'short')">房源短租</van-button>
         </li>
         <li class="li_mine">
-          <van-button round plain class="set_but" @tap="roomRent($enent,'short')">房源短租</van-button>
+          <van-button class="set_but" round plain @tap="roomRent($enent,'tent')">房源转租</van-button>
         </li>
         <li class="li_mine">
           <van-button round plain class="set_but" @tap="roomRent">寻找室友</van-button>

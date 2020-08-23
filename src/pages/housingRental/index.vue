@@ -151,7 +151,8 @@ import Top from '../../components/head/index'
           priceEachMonth: this.room.priceEachMonth,
           liveDuration: this.room.liveDuration,
           tags: JSON.stringify(this.room.type),
-          imgUrls: JSON.stringify(this.files)
+          imgUrls: JSON.stringify(this.files),
+          type: "sublet"
         }, res=> {
           console.log(res)
           wx.navigateBack({ changed: true });
