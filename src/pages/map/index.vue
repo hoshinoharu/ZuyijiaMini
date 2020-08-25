@@ -108,7 +108,8 @@ import Top from '../../components/head/index'
         back: {
           flag: true,
           text: "房源地点",
-          url: "/pages/nav/index"
+          url: "/pages/nav/main",
+          switch: "/pages/nav/main"
         },
         location: "上海",
         replay: false

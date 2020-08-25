@@ -152,7 +152,7 @@ import Top from '../../components/head/index'
           liveDuration: this.room.liveDuration,
           tags: JSON.stringify(this.room.type),
           imgUrls: JSON.stringify(this.files),
-          type: "sublet"
+          type: "short_rent"
         }, res=> {
           console.log(res)
           wx.navigateBack({ changed: true });

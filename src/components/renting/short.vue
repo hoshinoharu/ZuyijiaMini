@@ -146,7 +146,7 @@
          
         } else {
           // val.icon = ""
-          this.$http.put(`/app/chat/read/${val.id}`, res => {
+          this.$http.delete(`/app/favorites/dislike/${val.id}`, res => {
             console.log(res)
             wx.showToast({
                 title: res.data.msg,  // 标题

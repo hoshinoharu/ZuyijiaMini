@@ -57,7 +57,7 @@
         </div>
         <div v-else-if="tab===2">
           <div class="room_main">
-            <sublet></sublet>   
+            <sublet :dataArr="dataArr"></sublet>   
           </div>
           
         </div>
@@ -209,6 +209,13 @@ import roomlate from "../../components/renting/roomlate"
        }
        
      },
+     addressClick() {
+       wx.navigateTo({
+        url: '/pages/map/main',
+        success: function(res) {
+      
+        }})
+     },
       changTab(index) {
         this.tab = index;
       },
@@ -304,7 +311,7 @@ import roomlate from "../../components/renting/roomlate"
   display: flex;
   align-items: center;
   width: 150rpx;
-  margin-left: 20px;
+  margin-left: 20rpx;
   margin-bottom: 0px;
 }
 .weui-navigation-bar__inner {

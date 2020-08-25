@@ -1,10 +1,10 @@
 <template>
-  <div class="short_sub">
+  <div class="short">
     <van-search
-        :value="val"
+        v-model="searchValue"
         placeholder="请输入搜索关键字"
         use-action-slot
-        background="#fafafa"
+        background="#f0f3f6"
         @cancel="onCancel"
         @change="onChangeVal"
         @search="onSearch"
@@ -14,52 +14,65 @@
     >
     <div
         slot="action"
-        @tap="onSearch2"
+        @tap="onSearchSend"
     >搜索</div>
     </van-search>
     <div class="choose">
       <view hover-class="bg_red">
       <div :value="sort" @tap="sortClick" class="choose_div" @touchstart="sort">
-        <span class="choose_time">发布时间</span><i  class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
-        <i class="iconfont icon-sanjiaoxing_shang" v-else></i>
+        <span class="choose_time">发布时间</span><i style="font-size: 30rpx" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
+        <i style="font-size: 30rpx" class="iconfont icon-sanjiaoxing_shang" v-else></i>
       </div>
       </view>
       <!-- <span class="choose_time">发布时间</span><i @tip = "sort = asc" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
       <i class="icon-sanjiaoxing_shang" v-else></i> -->
-      <div>
-        <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i>
+      <div class="shaixuan">
+        <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
+        <van-dropdown-menu>
+          <van-dropdown-item title="筛选" ref="item">
+            <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
+            <!-- <van-cell :title="'性别: '+sex"> -->
+            <van-cell title="租房状态">
+              <van-switch v-model="switch1"  @input="onInput"></van-switch>
+            </van-cell>
+            <!-- <van-cell  title="团购">
+              <van-switch v-model="switch2"></van-switch>
+            </van-cell> -->
+            <van-button block type="info" @click="onConfirm">确认</van-button>
+          </van-dropdown-item>
+        </van-dropdown-menu>
       </div>
       
     </div>
-    <div v-for="(num, i) in data" :key="i" class="sublet"> 
-      <van-panel :title="num.title" desc="描述信息" :status="num.status" use-footer-slot class="sublet_main" footer-class="footer">
-          <div class="content_main">
-            <div class="remark"><span>{{num.remark}}</span></div>
-            <div>
-              <div class="tubiao">
-                <img class="home_img" src="" alt="">
-                <div class="name">
-                  <span>{{num.name}}
-                    <i class="iconfont icon-xingbienan" style="float:right; color:#83b2f9" v-if="num.sex=='男'"></i>
-                    <i class="iconfont icon-xingbienv" style="float:right; color:#f983a9" v-else></i>
-                  </span>
+      <div v-for="(num, i) in dataArr" :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
+        <van-panel :title="num.title+'/'+num.typeStr" desc="描述信息" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
+            <div class="content_main">
+              <div class="remark"><span>{{num.description}}</span></div>
+              <div>
+                <div class="tubiao">
+                  <img class="home_img" :src="num.creator.headImg" alt="">
+                  <div class="name">
+                    <span>{{num.creator.username}}
+                      <i class="iconfont icon-xingbienan" style="float:right; color:#83b2f9" v-if="num.sex=='male'"></i>
+                      <i class="iconfont icon-xingbienv" style="float:right; color:#f983a9" v-else></i>
+                    </span>
+                  </div>
+                  <div class="time">
+                    <span>发布时间：{{num.updateTime}}</span>
+                      <p>
+                      ￥{{num.priceEachMonth}}元/月
+                    </p>
+                  </div> 
                 </div>
-                <div class="time">
-                  <span>发布时间：{{num.time}}</span>
-                    <p>
-                    ￥{{num.price}}元/月
-                  </p>
-                </div> 
+                
               </div>
-               
             </div>
+          <div slot="footer">
+            <van-button size="small" :icon="num.icon" :color="color" plain @tap.stop="collect(num)">收藏</van-button>
           </div>
-        <div slot="footer">
-          <van-button size="small" :icon="num.icon" :color="color" plain bindtip="collect" @tap="collect(num)">收藏</van-button>
-        </div>
-      </van-panel>
-    </div>
-    <div class="footer">
+        </van-panel>
+      </div>
+    <div class="footer1">
 
     </div>
   </div>
@@ -69,14 +82,24 @@
   import {data} from './data'
   export default {
     name: '',
+    props: {
+      dataArr: {
+        type: Array,
+        default: () => {}
+      }
+      
+    },
     data() {
       return {
         value: "",
+        sex: '男',
         sort: "desc",
-        data,
         color: '#FFCC66',
+        switch1: false,
+        switch2: false,
         navHeight: "",
-        icon: 'star-o'
+        // icon: 'star-o',
+        searchValue: ""
       }
     },
     mounted () {
@@ -84,11 +107,56 @@
       // console.log(this.navHeight)
     },
     methods: {
+      onInput () {
+        this.switch1 = !this.switch1
+        if(this.switch1) {
+          this.sex = '女'
+        } else {
+          this.sex = '男'
+        }
+      },
+      onInput1 () {
+        this.switch2 = !this.switch2
+      },
+      onSearchSend(e) {
+        console.log(e.mp)
+      },
+      turnDetail(e,num) {
+          wx.navigateTo({
+            url: `/pages/detail/main?dataDetail=${JSON.stringify(num)}`,
+          })
+      },
       collect(val) {
         if(val.icon == 'star-o') {
-          val.icon = 'star'
+          //  val.icon = ""
+          
+          this.$http.post(`/app/favorites/like/${val.id}`, res => {
+            console.log(res)
+            wx.showToast({
+                title: res.data.msg,  // 标题
+                icon: 'success',
+                // icon: 'none',
+                mask:true,   // 图标类型，默认success
+                duration: 1500   // 提示窗停留时间，默认1500ms
+            })
+            this.$set(val, 'icon', 'star')
+            this.$forceUpdate();
+          })
+          
+         
         } else {
-          val.icon = 'star-o'
+          // val.icon = ""
+          this.$http.delete(`/app/favorites/dislike/${val.id}`, res => {
+            console.log(res)
+            wx.showToast({
+                title: res.data.msg,  // 标题
+                icon: 'success',   // 图标类型，默认success
+                duration: 1500   // 提示窗停留时间，默认1500ms
+            })
+            this.$set(val, 'icon', 'star-o')
+            this.$forceUpdate();
+          })
+          
         }
         console.log(val)
       },
@@ -108,7 +176,7 @@
         this.val = e.mp.detail
       },
       onChangeVal (e) {
-        this.val = e.mp.detail
+        this.searchValue = e.mp.detail
       },
       onSearch2 () {
         wx.showToast({
@@ -123,11 +191,11 @@
 </script>
 
 <style>
-.short_sub {
+.short {
   width: 100%;
 }
-.footer {
-  height: 80rpx;
+.footer1 {
+  height: 20rpx;
 }
 .search .van-search__content--round {
  border: 1px solid #000;
@@ -146,6 +214,8 @@
 }
  .choose div {
   width: 160rpx;
+  height: 40rpx;
+  line-height: 40rpx;
 }
 .choose .choose_div::before  {
   color: aqua;
@@ -159,7 +229,7 @@
   margin-left: 20rpx;
 }
  .bg_red {
-  color: red;
+  color: #1989fa !important;
 }
 .content_main {
   display: flex;
@@ -185,9 +255,14 @@
   flex-wrap: wrap
 }
 .name {
-  width: 220rpx;
+  width: 262rpx !important;
   /* flex: 1; */
   padding: 20rpx;
+}
+.van-panel {
+  border: 2rpx solid#87caee;
+  padding: 2rpx;
+  border-radius: 5rpx;
 }
 .name span {
   width:auto;
@@ -203,7 +278,6 @@ padding-left: 10rpx;
 .time {
   float: right;
   font-size: 25rpx;
-  padding-right: 10rpx;
 }
 .time p {
   text-align: right;
@@ -211,13 +285,27 @@ padding-left: 10rpx;
   color: red;
 }
 .sublet {
-  padding: 20rpx 60rpx;
+  padding: 20rpx 30rpx !important;
   
 }
+
 .footer {
   text-align: right;
 }
 .sublet:last-child {
-  margin-bottom: 40rpx;
+  /* margin-bottom: 40rpx; */
+}
+.search .van-search__action--hover {
+  background: #f0f3f6 !important;
+}
+.shaixuan .van-dropdown-menu {
+  height: 40rpx !important;
+  line-height: 40rpx;
+  background: #f0f3f6 !important;
+}
+.shaixuan .van-ellipsis {
+  font-size: 24rpx;
+}
+.shaixuan .van-cell {
 }
 </style>

@@ -35,13 +35,27 @@
     },
     methods: {
       onClickBack () {
-        if(this.back.url) {
-          wx.navigateTo({
-            url: this.back.url
+        if(this.back.switch) {
+          wx.switchTab({
+            url: "/pages/nav/main",
+            success: (res) => {
+            let page = getCurrentPages().pop();
+            if(page == undefined || page == null){
+                  return
+            }
+            page.onLoad();
+      }
           })
         } else {
-          wx.navigateBack({ changed: true });
+          if(this.back.url) {
+            wx.navigateTo({
+              url: this.back.url
+            })
+          } else {
+            wx.navigateBack({ changed: true });
+          }
         }
+        
         // wx.navigateBack({ changed: true });
       }
     }
