@@ -581,7 +581,7 @@ import Bottom from '../../components/bottom/index'
     height: 400rpx;
     background:#fff;
     border: 1px solid #f9f9f9;
-    box-shadow: 1rpx 1rpx 10rpx #FFFD7D;
+    box-shadow: 1rpx 1rpx 10rpx #87caee;
     margin: 10px auto;
     margin-top: 50rpx;
     border-radius: 10rpx;

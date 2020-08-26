@@ -10,7 +10,7 @@
           <van-button class="set_but" round plain @tap="roomRent($enent,'tent')">房源转租</van-button>
         </li>
         <li class="li_mine">
-          <van-button round plain class="set_but" @tap="roomRent">寻找室友</van-button>
+          <van-button round plain class="set_but" @tap="roomRent($enent,'mate')">寻找室友</van-button>
         </li>
       </ul>
     </div>
@@ -58,9 +58,12 @@ import Top from '../../components/head/index'
           case 'short':
             url = '/pages/housingShort/main'
             break;
-            default:
-              url = ''
-              break
+          case 'mate':
+            url = '/pages/housingRomate/main'
+            break;
+          default:
+            url = ''
+            break
         }
         console.log("dd")
        wx.navigateTo({

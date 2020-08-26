@@ -45,7 +45,7 @@ export default {
           url: "/pages/nav/main?userInfo="+JSON.stringify(that.userInfo)
         })
         //  wx.navigateTo({
-        //     url: '/pages/housingRental/main',
+        //     url: '/pages/housingRomate/main',
         //   })
           // wx.navigateTo({
           //   url: '/pages/star/main',

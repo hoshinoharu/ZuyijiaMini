@@ -119,6 +119,9 @@ import Top from '../../components/head/index'
         columns: ['WIFI', '洗衣机', '冰箱', '煤气', '热水器']
       }
     },
+    onLoad() {
+      this.resetRoom()
+    },
     methods: {
       onInputMonth(e) {
         this.$set(this.room, 'priceEachMonth', e.target.value.replace(/[^\d]/g,''))
@@ -168,6 +171,8 @@ import Top from '../../components/head/index'
       },
       resetRoom() {
         console.log(this.room)
+        this.files = []
+        this.fileList = []
         this.room = {
           type: []
         }

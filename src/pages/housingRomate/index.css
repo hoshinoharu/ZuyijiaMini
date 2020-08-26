@@ -1,0 +1,86 @@
+
+ul,li{
+  list-style:none;
+  }
+a{
+  text-decoration:none;
+  }
+input{
+  outline-style:none;
+  border: 0px;
+}
+#form1{
+  margin-top:20rpx;
+  width:80%;
+  margin:4rpx auto;
+}
+#form1 form span{
+  color:#999;
+}
+.row { 
+  margin-top: 50rpx;
+  height: 100rpx;
+  line-height: 52rpx;
+  border-bottom: 1px solid #c7c6c6;
+  width:100%; 
+}
+.row_mate {
+  margin-top: 50rpx;
+  height: 200rpx;
+  line-height: 52rpx;
+  border-bottom: 2rpx solid #c7c6c6;
+  width:100%; 
+}
+.row1 {
+  margin-top: 20rpx;
+  height: 190rpx;
+  line-height: 52rpx;
+  /* border-bottom: 1px solid #c7c6c6; */
+  width:100%;
+}
+.input { 
+  position: relative;
+  width: 100%;
+  height: 52rpx; 
+}
+.input input { 
+  display: block;
+  width: 100%;
+  height: 52rpx;
+  border:none;
+  background: none;
+  color: #666;
+  outline:none; 
+  word-wrap:break-word ;
+}
+.input label, .select label { 
+  /* position: absolute; */
+  top:0;
+  left:0;
+  height: 52rpx;
+  line-height: 52rpx;
+  font-size: 28rpx;
+  color: #999; 
+}
+.select select{
+  display:block;
+  width:100%;
+  border:none;
+  outline:none;
+}
+input[type=date]::-webkit-inner-spin-button { visibility: hidden; }
+.button{
+  width:100%;
+  height:80rpx;
+  /* background: #ff961e; */
+  outline: none;
+  margin:40rpx 0 40rpx 0;
+}
+/* .button button{
+  border:0px;
+  background-color:transparent;
+  width: 120px;
+  height:40px;
+  margin:0 auto;
+  font-size:17px;
+} */

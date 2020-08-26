@@ -39,6 +39,21 @@
                       <br>
                   </div>
               </div>
+              <div class="row_mate" >
+                <div class="select" >
+                  <label>寻找室友</label><br>
+                  <van-cell title="男" icon="friends-o" class="male">
+                    <!-- <van-icon slot="icon" name="friends-o" color="#3366FF" /> -->
+                    <van-stepper :value="0" min="0" max="5" />
+                  </van-cell>
+                  <van-cell title="女" icon="friends-o" class="female">
+                    <!-- <van-icon slot="icon" name="friends-o"  /> -->
+                    <van-stepper :value="0" min="0" max="5" />
+                  </van-cell>
+                  
+                </div>
+                
+              </div>
               <div class="row">
                   <div class="input">
                       <label for="price">月租价格 ￥/月</label><br>
@@ -102,7 +117,7 @@ import Top from '../../components/head/index'
       return {
         back: {
           flag: true,
-          text: '房源短租'
+          text: '寻找室友'
         },
         room: {
           type: [],
@@ -116,7 +131,7 @@ import Top from '../../components/head/index'
         files: [],
         show: false,
         multiIndex: "",
-        columns: ['地铁站', '超市', '火车站', '购物广场', '学校']
+        columns: ['WIFI', '洗衣机', '冰箱', '煤气', '热水器']
       }
     },
     onLoad() {
@@ -155,7 +170,7 @@ import Top from '../../components/head/index'
           liveDuration: this.room.liveDuration,
           tags: JSON.stringify(this.room.type),
           imgUrls: JSON.stringify(this.files),
-          type: "short_rent"
+          type: "find_mate"
         }, res=> {
           console.log(res)
           wx.navigateBack({ changed: true });
@@ -295,4 +310,16 @@ import Top from '../../components/head/index'
     .row_title {
       margin-top: 10rpx;
     }
+  .row_mate .van-cell:after{
+    border: none !important;
+  }
+  .row_mate .van-cell {
+    padding: 20rpx 2rpx;
+  }
+  .male .van-cell__left-icon-wrap{
+    color:#3366FF !important;
+  }
+  .female .van-cell__left-icon-wrap{
+    color:#FF33FF !important;
+  }
 </style>
