@@ -44,11 +44,11 @@
                   <label>寻找室友</label><br>
                   <van-cell title="男" icon="friends-o" class="male">
                     <!-- <van-icon slot="icon" name="friends-o" color="#3366FF" /> -->
-                    <van-stepper :value="0" min="0" max="5" />
+                    <van-stepper :value="0" min="0" max="5" @change="onChangeSex($event, 'male')" />
                   </van-cell>
                   <van-cell title="女" icon="friends-o" class="female">
                     <!-- <van-icon slot="icon" name="friends-o"  /> -->
-                    <van-stepper :value="0" min="0" max="5" />
+                    <van-stepper :value="0" min="0" max="5" @change="onChangeSex($event, 'female')" />
                   </van-cell>
                   
                 </div>
@@ -138,6 +138,15 @@ import Top from '../../components/head/index'
       this.resetRoom()
     },
     methods: {
+      onChangeSex(e, type) {
+        if(type == 'male') {
+          console.log(e.mp.detail)
+          this.room.male = e.mp.detail
+          
+        } else {
+          this.room.female = e.mp.detail
+        }
+      },
       onInputMonth(e) {
         this.$set(this.room, 'priceEachMonth', e.target.value.replace(/[^\d]/g,''))
         console.log(this.room.priceEachMonth)
@@ -170,7 +179,9 @@ import Top from '../../components/head/index'
           liveDuration: this.room.liveDuration,
           tags: JSON.stringify(this.room.type),
           imgUrls: JSON.stringify(this.files),
-          type: "find_mate"
+          type: "find_mate",
+          male: this.room.male,
+          female: this.room.female 
         }, res=> {
           console.log(res)
           wx.navigateBack({ changed: true });
