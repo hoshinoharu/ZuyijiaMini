@@ -460,6 +460,8 @@ import Bottom from '../../components/bottom/index'
             this.warningFlag = false
             this.warningShow = false
           } else {
+            this.warningFlag = false
+            this.warningShow = false
             wx.showToast({
                 title: res.data.msg,
                 icon: 'none',

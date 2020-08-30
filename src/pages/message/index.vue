@@ -51,7 +51,7 @@
                 
                 <div class="mess_info" slot="title">
                   <image class="home_img" :src="num.creator.headImg" alt="">
-                    <i class="tip"></i>
+                    <i class="tip" v-show="status != 'unread'"></i>
                   </image>
                     <div class="mess_name">
                       <span>{{num.creator.username}}</span><br>
@@ -77,7 +77,7 @@
               <!-- <van-cell title="单元格" value="内容" /> -->
             </van-cell-group>
             <div slot="right">
-              <span style="background:#9F9F9F" @tap.stop="onRead($event, num.id)">标为已读</span>
+              <span style="background:#9F9F9F" @tap.stop="onRead($event, num)">标为已读</span>
               <span @tap.stop="onDelete($event, num.id)">删除</span>
             </div>
           </van-swipe-cell>
@@ -153,9 +153,29 @@ import fun from '../../utils/index'
           console.log(res)
         })
       },
-      onRead(e, id) {
-        this.$http.post(`app/chat/read/user/${id}`, res => {
+      onRead(e, num) {
+        let userId = num.creator.id
+        let sendId = ""
+        if(userId == num.creatorId) {
+          sendId = num.receiverId
+        } else {
+          sendId = num.creatorId
+        }
+        this.$http.put(`/app/chat/read/user/${sendId}`, res => {
           console.log(res)
+          if(res.data.success) {
+            this.$http.get('/app/chat/list/all/user', res => {
+              if(res.data.success) {
+                this.dataInfo = []
+                this.dataInfo = res.data.data
+                this.dataInfo.forEach(num => {
+                  num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
+                  this.content.push(String(num.id))
+                })
+              }
+              console.log(res.data.success)
+            })
+          }
         })
       },
       onDelete(e, id) {
