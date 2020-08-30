@@ -141,7 +141,7 @@ import Top from '../../components/head/index'
       //   
         this.$http.get('/app/favorites/list?pageIndex=1&pageSize=10', res=> {
           console.log(res)
-          that.dataArr = that.dataArr.concat(res.data.data)
+          that.dataArr = [].concat(res.data.data)
           wx.stopPullDownRefresh(); 
           wx.hideNavigationBarLoading();
           that.dataArr.forEach(num => {
@@ -158,7 +158,7 @@ import Top from '../../components/head/index'
       getData() {
         this.$http.get('/app/favorites/list?pageIndex=1&pageSize=10', res=> {
           console.log(res)
-          that.dataArr = that.dataArr.concat(res.data.data)
+          that.dataArr = [].concat(res.data.data)
           that.dataArr.forEach(num => {
             num.house.updateTime = num.house.updateTime.substring(0, 10)
             if(num.house.favorite == false) {

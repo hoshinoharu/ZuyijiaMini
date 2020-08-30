@@ -154,9 +154,7 @@ import fun from '../../utils/index'
         })
       },
       onRead(e, id) {
-        this.$http.post('', {
-          id: id
-        }, res => {
+        this.$http.post(`app/chat/read/user/${id}`, res => {
           console.log(res)
         })
       },
