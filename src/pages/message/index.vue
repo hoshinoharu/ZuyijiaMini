@@ -37,7 +37,9 @@
             id="swipe-cell"
             :right-width="120"
             async-close
+            @close="onClose"
           >
+          <!-- async-close -->
             <!-- <div slot="left">选择</div> -->
             <van-cell-group>
               <!-- :title="'复选框'+index" -->
@@ -76,10 +78,11 @@
               <!-- class="checkboxes-{{ index }}" -->
               <!-- <van-cell title="单元格" value="内容" /> -->
             </van-cell-group>
-            <div slot="right">
-              <span style="background:#9F9F9F" @tap.stop="onRead($event, num)">标为已读</span>
-              <span @tap.stop="onDelete($event, num.id)">删除</span>
-            </div>
+            <!-- <view slot="right">删除</view> -->
+            <span slot="right">
+              <view   @tap="onDelete($event, num.id)">删除</view>
+              <view   style="background:#9F9F9F" @tap="onRead($event, num)">标为已读</view>
+            </span>
           </van-swipe-cell>
         </van-checkbox-group>
       </div>
@@ -258,18 +261,19 @@ import fun from '../../utils/index'
         // this.result.push()
       },
       onClose(event) {
-        const { position, instance } = event.detail;
+        const { position, instance } = event.mp.detail;
+        console.log(position, instance, "Dd")
         switch (position) {
           case 'left':
           case 'cell':
             instance.close();
             break;
           case 'right':
-            Dialog.confirm({
-              message: '确定删除吗？',
-            }).then(() => {
+            // Dialog.confirm({
+            //   message: '确定删除吗？',
+            // }).then(() => {
               instance.close();
-            });
+            // });
             break;
         }
       },
@@ -309,7 +313,7 @@ import fun from '../../utils/index'
   text-align: center; */
   /* background-color: #f44; */
 }
-.van-swipe-cell__right span {
+.van-swipe-cell__right view {
   display: inline-block;
   width:120rpx;
   background-color: #f44;
@@ -317,7 +321,8 @@ import fun from '../../utils/index'
   font-size: 24rpx;
   line-height: 140rpx;
   color: #fff;
-  text-align: center
+  float: right;
+  text-align: center;
 }
 .home_img{
   width: 80rpx;
