@@ -14,41 +14,41 @@
         </div>
       </div>
       <div>
-        <van-panel title="标题" desc="标识位" status="状态" use-footer-slot>
+        <van-panel :title="roomDetail.title" desc="标识位" :status="roomDetail.statusStr" use-footer-slot>
           <div>
             <div class="detail_main">
               <div class="remark">
-                <span>{{data1.description}}</span>
+                <span>{{roomDetail.description}}</span>
               </div>
               <div class="detail_main_item">
                 <span class="label">发布人</span>
                 <div>
                   <!-- <image class="home_img" :src="url" alt=""></image> -->
                     
-                    <i class="iconfont icon-xingbienan" style="color:#83b2f9; float:right" v-if="sex=='male'"></i>
+                    <i class="iconfont icon-xingbienan" style="color:#83b2f9; float:right" v-if="roomDetail.sex=='male'"></i>
                     <i class="iconfont icon-xingbienv" style="color:#f983a9" v-else></i>
-                    <span class="title_icon info">{{'dddd'}}&nbsp;&nbsp;</span>
+                    <span class="title_icon info">{{roomDetail.creator.username}}&nbsp;&nbsp;</span>
           
                 </div>
               </div>
               
               <div class="detail_main_item">
                 <span class="label">租期</span>
-                <span class="info">{{data1.liveDuration}}&nbsp;&nbsp;/月</span>
+                <span class="info">{{roomDetail.liveDuration}}&nbsp;&nbsp;/月</span>
               </div>
               <div class="detail_main_item">
                 <span class="label">每月租金</span>
-                <span class="info">{{100}}&nbsp;&nbsp;￥/月</span>
+                <span class="info">{{roomDetail.priceEachMonth}}&nbsp;&nbsp;￥/月</span>
               </div>
               <div class="detail_main_item">
                 <span class="label">发布时间</span>
-                <span class="info">{{data1.updateTime}}</span>
+                <span class="info">{{roomDetail.updateTime}}</span>
               </div>
             </div>
           </div>
           <div slot="footer" class="footer">
             <van-button size="small" icon="chat-o" color="#07c160" plain @tap="message">留言</van-button>
-            <van-button size="small"  :icon="icon" :color="color" plain @tap="collect(data1.icon)">收藏</van-button>
+            <van-button size="small"  :icon="icon" :color="color" plain @tap="collect(roomDetail)">收藏</van-button>
           </div>
         </van-panel>
       </div>
@@ -73,12 +73,12 @@ import Top from '../../components/head/index'
     components: {
       Top
     },
-    props: {
-      roomDetail:{
-        type: Object,
-        default: () => {}
-      }
-    },
+    // props: {
+    //   roomDetail:{
+    //     type: Object,
+    //     default: () => {}
+    //   }
+    // },
     data() {
       return {
         back: {
@@ -89,6 +89,7 @@ import Top from '../../components/head/index'
         color: '#FFCC66',
         icon: 'star',
         sex: 'male',
+        roomDetail: {},
         data1: {
           description: "速度大大大大大大大大大大大大大大大大大但是杀杀杀杀杀杀杀杀杀说的是事实",
           liveDuration: "2",
@@ -105,7 +106,10 @@ import Top from '../../components/head/index'
       }
     },
     onLoad(option) {
-      console.log(option.dataDetail);
+      let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
+      this.roomDetail = roomDetail
+      this.imgUrls = JSON.parse(roomDetail.imgUrls)
+      console.log( this.roomDetail)
     },
     methods: {
       message(){
@@ -119,9 +123,35 @@ import Top from '../../components/head/index'
       },
       collect(val) {
         if(val.icon == 'star-o') {
-          val.icon = 'star'
+          //  val.icon = ""
+          
+          this.$http.post(`/app/favorites/like/${val.id}`, res => {
+            console.log(res)
+            wx.showToast({
+                title: res.data.msg,  // 标题
+                icon: 'success',
+                // icon: 'none',
+                mask:true,   // 图标类型，默认success
+                duration: 1500   // 提示窗停留时间，默认1500ms
+            })
+            this.$set(val, 'icon', 'star')
+            this.$forceUpdate();
+          })
+          
+         
         } else {
-          val.icon = 'star-o'
+          // val.icon = ""
+          this.$http.delete(`/app/favorites/dislike/${val.id}`, res => {
+            console.log(res)
+            wx.showToast({
+                title: res.data.msg,  // 标题
+                icon: 'success',   // 图标类型，默认success
+                duration: 1500   // 提示窗停留时间，默认1500ms
+            })
+            this.$set(val, 'icon', 'star-o')
+            this.$forceUpdate();
+          })
+          
         }
         console.log(val)
       },

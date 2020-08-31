@@ -33,23 +33,27 @@
       // console.log(this.globalData)
       this.statusBarHeight = this.globalData.statusBarHeight
     },
+    
     methods: {
       onClickBack () {
         if(this.back.switch) {
           wx.switchTab({
             url: "/pages/nav/main",
             success: (res) => {
-            let page = getCurrentPages().pop();
-            if(page == undefined || page == null){
-                  return
+              let page = getCurrentPages().pop();
+              if(page == undefined || page == null){
+                    return
+              }
+              page.onLoad();
             }
-            page.onLoad();
-      }
           })
         } else {
           if(this.back.url) {
             wx.navigateTo({
-              url: this.back.url
+              url: this.back.url,
+              success: () => {
+                clearInterval(this.myInterval)
+              }
             })
           } else {
             wx.navigateBack({ changed: true });

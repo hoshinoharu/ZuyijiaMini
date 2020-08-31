@@ -3,37 +3,37 @@
     <Top :back="back"></Top>
     <div class="chat">
       <div class="chat_body" :style="{height: heightP + 'rpx', width: '100%'}">
-        <div v-for="(num, i) in 10" :key="i">
+        <div v-for="(num, i) in content" :key="i">
 
         
-          <div  class="chat_image">
+          <div  class="chat_image" v-if="num.creatorId==id">
             <div>
               <image class="home_img" 
-              src="https://wx.qlogo.cn/mmopen/vi_32/2JJlCSK63JyAoUflTl8xBbZFgKg9OUaYia0ib7bq7qNHgMkRz2hSTtTxDvrgujEFJh6Kz4HqkKXa0ibmkvfzlWBIw/132" alt="">
+              :src="num.creator.headImg">
               </image>
             </div>
             <div class="bubble_diailog size_1">
               <i class="l"></i>
               <b class="l"></b>
               <div class="text">
-                <span>dddddddddddddddddddlkkkkkkkkkkkkkkkkkkkkklkddsssssssss</span>
+                <span>{{num.content}}</span>
                 
               </div>
             </div>
           </div>
-          <div  class="chat_image" style="float: right">
+          <div  class="chat_image" style="float: right" v-else>
             
             <div class="bubble_diailog right_bubble size_1">
               <i class="r"></i>
               <b class="r"></b>
               <div class="text">
-                <!-- <span>dddddddddddddddddddddsssssssss</span> -->
-                <image class="chat_photo" :src="path"></image>
+                <span v-if="num.type=='text'">{{num.content}}</span>
+                <image v-else class="chat_photo" :src="path"></image>
               </div>
             </div>
             <div>
               <image class="home_imgr" 
-              src="https://wx.qlogo.cn/mmopen/vi_32/2JJlCSK63JyAoUflTl8xBbZFgKg9OUaYia0ib7bq7qNHgMkRz2hSTtTxDvrgujEFJh6Kz4HqkKXa0ibmkvfzlWBIw/132" alt="">
+              :src="num.creator.headImg">
               </image>
             </div>
           </div>
@@ -43,8 +43,10 @@
        <div class="chat_footer">
           <div class="l-custom-input">
               <input size="large" id="l-input" 
-              type="text" 
-              confirm-type='send'
+              type="text"
+              v-model="msg"
+              @input="inputMsg"
+              confirm-type='发送'
               @confirm="sendMsgTap"
               cursor-spacing="20"
               />
@@ -53,7 +55,7 @@
                   <van-icon name="photo-o" size="25px" style="margin: 18rpx 20rpx 0px 20rpx"/>
                 </van-uploader>
                 
-                <van-button size="small" round>发送</van-button>
+                <van-button size="small" round @tap="sendMessage($event)">发送</van-button>
               </div>
           </div>
        </div>
@@ -84,27 +86,161 @@ import Top from '../../components/head/index'
           text: '聊天室',
           flag: true
         },
+        content: [],
         heightP: "",
-        path: ""
+        id: "",
+        msg:"",
+        path: "",
+        user: {},
+        files: [],
+        myInterval: ""
       }
     },
-    onLoad() {
+    onLoad(option) {
       this.heightP = this.globalData.windowHeight*2;
-      console.log(this.heightP)
+      this.id = option.id
+      console.log(option.id, "gg")
+      this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${option.id}`, res => {
+        this.content = [].concat(res.data.data)
+        console.log(res)
+      })
     },
     mounted () {
-     console.log(this.globalData, "dd")
+     
+     this.user = this.globalData.userInfo
+     this.initList()
+     console.log(this.user, "dd")
+    },
+    destroyed(){
+      
+    },
+    onUnload() {
+      clearInterval(this.myInterval)
     },
     methods: {
+      initList () {
+        let that = this
+        this.myInterval = setInterval(() => {
+          this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${that.id}`, res => {
+            that.content = [].concat(res.data.data)
+            console.log(res)
+          })
+          console.log("dddaa")
+        }, 5000);
+      },
+      getData() {
+        return new Promise((resolve, reject) => {
+          this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${option.id}`, res => {
+            this.content = [].concat(res.data.data)
+            resolve()
+            console.log(res)
+          })
+        })
+      },
+      // async start() {
+      //   const { data } = await this.getData()
+      //   let timeId = setTimeout(this.start, 1000)
+      // },
+      sendMessage(e,value) {
+        let val = value || this.msg
+        // this.content.push({
+        //       creatorId: this.id,
+        //       creator: {
+        //         headImg: this.user.avatarUrl
+        //       },
+        //       content: val,
+        //       type: 'text'
+        //     })
+        //     this.msg = ""
+        //   return
+        let userId = wx.getStorageSync('id')
+        this.$http.post('/app/chat/send',{
+          content: val,
+          receiverId: this.id,
+          type: 'text'
+        }, res => {
+          if(res.data.success) {
+            this.content.push({
+              creatorId: userId,
+              creator: {
+                headImg: this.user.avatarUrl
+              },
+              content: val,
+              type: 'text'
+            })
+            this.msg = ""
+          }
+        })
+      },
+      inputMsg(e) {
+        this.msg = e.mp.detail.value
+        console.log(this.msg)
+        console.log(e.mp)
+      },
       sendMsgTap(e) {
+        this.sendMessage(e.mp.detail.value)
         console.log(e.mp.detail.value)
       },
       afterRead(e) {
         let { file } = e.mp.detail
         let url = file.path
         this.path = url
+        let type = file.path.split('.')
+        let name = e.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
+        console.log(name)
+       this.urlTobase64(file.path, name)
         // console.log()
-      }
+      },
+      urlTobase64(url, name){
+        wx.request({
+          url:url,
+          responseType: 'arraybuffer', //最关键的参数，设置返回的数据格式为arraybuffer
+          success:res=>{
+            //把arraybuffer转成base64
+                let base64 = wx.arrayBufferToBase64(res.data); 
+                
+                //不加上这串字符，在页面无法显示的哦
+                base64　= 'data:image/jpeg;base64,' + base64　
+                this.$http.post('/app/file/upload/base64', {
+                  fileName: name,
+                  base64Content: base64
+                }, res => {
+                  console.log(res)
+                  if(res.data.success) {
+                    let userId = wx.getStorageSync('id')
+                    this.files.push(res.data.data)
+                    this.$http.post('/app/chat/send',{
+                      content: this.files[0],
+                      receiverId: userId,
+                      type: 'image'
+                    }, res => {
+                      if(res.data.success) {
+                        this.content.push({
+                          creatorId: this.id,
+                          creator: {
+                            headImg: this.user.avatarUrl
+                          },
+                          content: this.files[0],
+                          type: 'image'
+                        })
+                      }
+                    })
+                    // this.content.push({
+                    //   creatorId: this.id,
+                    //   creator: {
+                    //     headImg: this.user.avatarUrl
+                    //   },
+                    //   content: this.files[0],
+                    //   type: 'image'
+                    // })
+                  }
+                })
+                console.log(this.files)
+                // /app/file/upload/base64
+                //打印出base64字符串，可复制到网页校验一下是否是你选择的原图片呢　
+              }
+        })
+      },
     }
   }
 </script>

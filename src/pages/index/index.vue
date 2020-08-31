@@ -34,7 +34,6 @@ export default {
   }, 
   mounted () {
     let that = this
-    console.log(wx.getStorageSync('token'))
     wx.getUserInfo({
       withCredentials: true,
       success: function (res) {
@@ -42,10 +41,10 @@ export default {
         that.globalData.userInfo = res.userInfo;
         
         wx.switchTab({
-          url: "/pages/nav/main?userInfo="+JSON.stringify(that.userInfo)
+          url: "/pages/item/main?userInfo="+JSON.stringify(that.userInfo)
         })
         //  wx.navigateTo({
-        //     url: '/pages/housingRomate/main',
+        //     url: '/pages/detailInfo/main',
         //   })
           // wx.navigateTo({
           //   url: '/pages/star/main',
@@ -107,11 +106,12 @@ export default {
       //此处授权得到userInfo
       that.userInfo = {}
       that.userInfo = e.target.userInfo;
+      that.globalData.userInfo = that.userInfo
       // console.log(e.detail.userInfo);
       //接下来写业务代码
 
       if(that.userInfo) {
-        wx.navigateTo({
+        wx.switchTab({
           url: "/pages/nav/main?userInfo="+JSON.stringify(that.userInfo)
         })
       }

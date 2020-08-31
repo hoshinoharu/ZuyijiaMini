@@ -42,16 +42,16 @@
             <van-cell-group>
               <!-- :title="'复选框'+index" -->
               <van-cell
-                
+                @click="turnDataInfo($event, num)"
                 value-class="value-class"
                 clickable
                 :data-index="index"
-                @click="toggle"
-              >
                 
+              >
+                <!-- @click="toggle" -->
                 <div class="mess_info" slot="title">
                   <image class="home_img" :src="num.creator.headImg" alt="">
-                    <i class="tip" v-show="status != 'unread'"></i>
+                    <i class="tip" v-show="num.status == 'unread'"></i>
                   </image>
                     <div class="mess_name">
                       <span>{{num.creator.username}}</span><br>
@@ -83,7 +83,7 @@
           </van-swipe-cell>
         </van-checkbox-group>
       </div>
-      <div class="message_empty">
+      <div class="message_empty" :style="{height: he+'rpx'}">
 
       </div>
       <div class="button_footer" v-if="!modifyShow">
@@ -117,6 +117,7 @@ import fun from '../../utils/index'
         checked: false,
         modifyShow: true,
         result: [],
+        he: 40,
         content: [],
         dataInfo: [],
         // dataInfo,
@@ -127,6 +128,18 @@ import fun from '../../utils/index'
       }
     },
     onLoad() {
+      this.$http.get('/app/chat/list/all/user', res => {
+        if(res.data.success) {
+          this.dataInfo = res.data.data
+          this.dataInfo.forEach(num => {
+            num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
+            this.content.push(String(num.id))
+          })
+        }
+        console.log(res.data.success)
+      })
+    },
+    onShow() {
       this.$http.get('/app/chat/list/all/user', res => {
         if(res.data.success) {
           this.dataInfo = res.data.data
@@ -153,20 +166,37 @@ import fun from '../../utils/index'
           console.log(res)
         })
       },
-      onRead(e, num) {
-        let userId = num.creator.id
+      turnDataInfo(e, num) {
+        let userId = wx.getStorageSync('id')
         let sendId = ""
+        console.log(userId,'id',num.creatorId,'num.creatorId',num.receiverId,'num.receiverId')
         if(userId == num.creatorId) {
           sendId = num.receiverId
-        } else {
+        } else{
           sendId = num.creatorId
         }
+         wx.navigateTo({
+          url: '/pages/detailInfo/main?id='+sendId,
+          success: function(res) {
+        
+          }})
+      },
+      onRead(e, num) {
+        let userId = wx.getStorageSync('id')
+        let sendId = ""
+        console.log(userId,'id',num.creatorId,'num.creatorId',num.receiverId,'num.receiverId')
+        if(userId == num.creatorId) {
+          sendId = num.receiverId
+        } else if(userId == num.receiverId){
+          sendId = num.creatorId
+        }
+        console.log(sendId)
         this.$http.put(`/app/chat/read/user/${sendId}`, res => {
           console.log(res)
           if(res.data.success) {
             this.$http.get('/app/chat/list/all/user', res => {
               if(res.data.success) {
-                this.dataInfo = []
+                this.dataInfo = [] 
                 this.dataInfo = res.data.data
                 this.dataInfo.forEach(num => {
                   num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
@@ -186,6 +216,7 @@ import fun from '../../utils/index'
         })
       },
       allModify() {
+        this.he = 80
         this.modifyShow = false;
         this.checked = false;
       },
@@ -252,7 +283,7 @@ import fun from '../../utils/index'
 }
 .message_empty {
   position: relative;
-  height: 80px;
+  
   clear: both;
 }
 .mess_name {

@@ -447,6 +447,8 @@ import Bottom from '../../components/bottom/index'
         }, res => {
           var cookie = res.header["Set-Cookie"];
            wx.setStorageSync('cookie', cookie);
+           console.log(res.data,'ss')
+           wx.setStorageSync('id', res.data.data.id);
           if(res.data.success) {
             wx.showToast({
               title: res.data.msg,
