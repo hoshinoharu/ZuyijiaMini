@@ -2,44 +2,47 @@
   <div class="chat_all">
     <Top :back="back" ></Top>
     <div class="chat">
-    <!-- <scroll-view class="my_list" :style='{height: windowHeight - 60+"px"}' scroll-y="true" :scrollTop="scrollTop"> -->
 
+    <div class="chat_all">
+      <div class="chat_body"   :style="{height: heightP + 'rpx', width: '100%'}">
+        <scroll-view class="my_list" id="page" :style='{height: windowHeight - 60+"px"}' scroll-y="true" :scroll-top="scrollTop" @scroll="scroll">
 
-      <div class="chat_body"  id="page" :style="{height: heightP + 'rpx', width: '100%'}">
-        <div v-for="(num, i) in content" :key="i" >
-          <div  class="chat_image" v-if="num.creatorId==id">
-            <div>
-              <image class="home_img" 
-              :src="num.creator.headImg">
-              </image>
-            </div>
-            <div class="bubble_diailog size_1">
-              <i class="l"></i>
-              <b class="l"></b>
-              <div class="text">
-                <span>{{num.content}}</span>
-                
+          <div v-for="(num, i) in content" :key="i" >
+            <div  class="chat_image" v-if="num.creatorId==id">
+              <div>
+                <image class="home_img" 
+                :src="num.creator.headImg">
+                </image>
+              </div>
+              <div class="bubble_diailog size_1">
+                <i class="l"></i>
+                <b class="l"></b>
+                <div class="text">
+                  <span>{{num.content}}</span>
+                  
+                </div>
               </div>
             </div>
-          </div>
-          <div  class="chat_image" style="float: right" v-else>
-            
-            <div class="bubble_diailog right_bubble size_1">
-              <i class="r"></i>
-              <b class="r"></b>
-              <div class="text">
-                <span v-if="num.type=='text'">{{num.content}}</span>
-                <image v-else class="chat_photo" :src="path"></image>
+            <div  class="chat_image" style="float: right" v-else>
+              
+              <div class="bubble_diailog right_bubble size_1">
+                <i class="r"></i>
+                <b class="r"></b>
+                <div class="text">
+                  <span v-if="num.type=='text'">{{num.content}}</span>
+                  <image v-else class="chat_photo" :src="path"></image>
+                </div>
+              </div>
+              <div>
+                <image class="home_imgr" 
+                :src="num.creator.headImg">
+                </image>
               </div>
             </div>
-            <div>
-              <image class="home_imgr" 
-              :src="num.creator.headImg">
-              </image>
-            </div>
+            <div style="clear: both; height: 50rpx"></div>
           </div>
-          <div style="clear: both; height: 90rpx"></div>
-         </div>
+        </scroll-view>
+      
       </div>
        <div class="chat_footer">
           <div class="l-custom-input">
@@ -60,8 +63,8 @@
               </div>
           </div>
        </div>
-   
-     <!-- </scroll-view> -->
+      </div>
+    
     </div>
     <!-- <van-action-sheet :show="false" title="留言板" class="leave_message" @close="onClose">
       <div class="message">
@@ -96,7 +99,7 @@ import Top from '../../components/head/index'
         msg:"",
         path: "",
         user: {},
-        scrollTop: 0,//控制上滑距离
+        scrollTop: -1,//控制上滑距离
         windowHeight: 0,//页面高度
         files: [],
         myInterval: ""
@@ -104,6 +107,7 @@ import Top from '../../components/head/index'
     },
     onLoad(option) {
       this.heightP = this.globalData.windowHeight*2;
+      this.windowHeight = this.globalData.windowHeight
       this.id = option.id
       console.log(option.id, "gg")
       this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${option.id}`, res => {
@@ -123,18 +127,21 @@ import Top from '../../components/head/index'
     onUnload() {
       clearInterval(this.myInterval)
     },
-    onReady: function() {
-       wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
-          console.log("react", rect)
-      // 使页面滚动到底部
-              wx.pageScrollTo({
-                scrollTop: rect.bottom
-              })
-        }).exec();
-  },
+    // onReady: function() {
+    //    wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
+    //       console.log("react", rect)
+    //   // 使页面滚动到底部
+    //           wx.pageScrollTo({
+    //             scrollTop: rect.bottom +5000
+    //           })
+    //     }).exec();
+    // },
  
 
     methods: {
+      scroll (e) {
+        this.scrollTop = e.mp.detail.scrollTop
+      },
       initList () {
         let that = this
         this.myInterval = setInterval(() => {
@@ -159,12 +166,15 @@ import Top from '../../components/head/index'
       //   let timeId = setTimeout(this.start, 1000)
       // },
       sendMessage(e,value) {
+        let that1 = this
+        // return
         wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
           console.log("react", rect)
       // 使页面滚动到底部
-              wx.pageScrollTo({
-                scrollTop: rect.bottom+5000
-              })
+           that1.scrollTop = rect.bottom
+              // wx.pageScrollTo({
+              //   scrollTop: rect.bottom+5000
+              // })
         }).exec();
         return
         let val = value || this.msg
@@ -286,19 +296,25 @@ import Top from '../../components/head/index'
   .chat {
     width: 100%;
     height: 100%;
+    /* bottom: 80rpx; */
     background: #f9f9f9;
-    /* margin-bottom: 90rpx; */
+    position: relative;
+    display: inline-block;
+  }
+  .chat_all {
+    height: auto;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    background: #f9f9f9;
+  }
+  .chat_body {
+    height: 100%;
+    width: 100%;
     position: relative;
     display: inline-block;
     overflow: hidden;
     overflow-y: scroll;
-  }
-  .chat_body {
-    height: 100%;
-    position: relative;
-    display: inline-block;
-    /* overflow: hidden;
-    overflow-y: scroll; */
   }
 .chat_body::-webkit-scrollbar {
   width: 0;

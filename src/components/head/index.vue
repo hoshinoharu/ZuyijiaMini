@@ -68,6 +68,7 @@
 
 <style scoped>
   .ch_top {
+    position: static;
     /* background-color: #ffdd00; */
   }
   .ch_top .tobar{

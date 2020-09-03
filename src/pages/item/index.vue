@@ -501,6 +501,7 @@ import Bottom from '../../components/bottom/index'
   .warning_button .van-button {
     width: 150rpx;
     height: 70rpx;
+    font-size: 28rpx;
   }
   .mine {
     background:#fff;
