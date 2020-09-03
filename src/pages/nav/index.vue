@@ -53,6 +53,7 @@
 
           <div class="room_main">
             <short :dataArr="dataArr"></short>
+            
           </div>
         </div>
         <div v-else-if="tab===2">
@@ -74,7 +75,9 @@
     <div class="load-tips">正在加载……</div>
   </div>
   <div class="load_end" v-if="loaded">没有更多数据了……</div>
- 
+ <div class="bot_footer">
+
+ </div>
 	<div class="footer">
     <Bottom :selected="0" @updateInfo="updateInfo"></Bottom>
   </div>
@@ -140,16 +143,27 @@ import roomlate from "../../components/renting/roomlate"
       var that = this;
       that.num =1
       // 显示导航条加载动画  
-      wx.showNavigationBarLoading();  
-      
+      wx.showNavigationBarLoading();
+      let type;
+      switch(this.tab){
+        case 1:
+          type = 'short_rent'
+          break;
+        case 2:
+          type = 'sublet'
+          break;
+        case 3:
+          type = 'find_mate'
+          break;
+      }
       // let p = new Promise(function(reslove,reject){
       //   
-        this.$http.get('/app/house/export/list?pageIndex=1&pageSize=10', res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`, res=> {
           console.log(res)
           that.dataArr = [].concat(res.data.data)
           wx.stopPullDownRefresh(); 
           wx.hideNavigationBarLoading();
-        that.dataArr.forEach(num => {
+          that.dataArr.forEach(num => {
             num.updateTime = num.updateTime.substring(0, 10)
             if(num.favorite == false) {
               num.icon="star-o"
@@ -189,7 +203,22 @@ import roomlate from "../../components/renting/roomlate"
     },
     onLoad() {
       let that = this
-      this.$http.get('/app/house/export/list?pageIndex=1&pageSize=10', res=> {
+      let type;
+      switch(this.tab){
+        case 1:
+          type = 'short_rent'
+          break;
+        case 2:
+          type = 'sublet'
+          break;
+        case 3:
+          type = 'find_mate'
+          break;
+      }
+      console.log(type, 'type')
+      this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`,{
+        type: 'short_rent'
+      }, res=> {
         that.dataArr = [].concat(res.data.data)
         that.dataArr.forEach(num => {
             num.updateTime = num.updateTime.substring(0, 10)
@@ -201,7 +230,24 @@ import roomlate from "../../components/renting/roomlate"
           })
       })
     },
+    onShow() {
+      this.getData('short_rent')
+    },
     methods: {
+      getData(type) {
+        let that = this
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`, res=> {
+            that.dataArr = [].concat(res.data.data)
+            that.dataArr.forEach(num => {
+              num.updateTime = num.updateTime.substring(0, 10)
+              if(num.favorite == false) {
+                num.icon="star-o"
+              } else {
+                num.icon = "star"
+              }
+            })
+        })
+      },
      updateInfo(value) {
        if(value.indexOf('nav') > -1) {
          this.cookie = wx.getStorageSync('cookie')
@@ -218,11 +264,36 @@ import roomlate from "../../components/renting/roomlate"
      },
       changTab(index) {
         this.tab = index;
+        let type;
+        switch(this.tab){
+          case 1:
+            type = 'short_rent'
+            break;
+          case 2:
+            type = 'sublet'
+            break;
+          case 3:
+            type = 'find_mate'
+            break;
+        }
+        this.getData(type)
       },
       gainMoreLoadingListData: function () {
         let that = this;
+        let type;
+        switch(this.tab){
+          case 1:
+            type = 'short_rent'
+            break;
+          case 2:
+            type = 'sublet'
+            break;
+          case 3:
+            type = 'find_mate'
+            break;
+        }
         that.num = that.num + 1
-        this.$http.get(`/app/house/export/list?pageIndex=${that.num}&pageSize=10`, res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=${that.num}&pageSize=10&type=${type}`, res=> {
         that.dataArr = that.dataArr.concat(res.data.data)
         that.dataArr.forEach(num => {
             num.updateTime = num.updateTime.substring(0, 10)
@@ -262,6 +333,7 @@ import roomlate from "../../components/renting/roomlate"
 .load_more {
   width: 65%;
   margin: 20px auto;
+  margin-bottom: 20rpx;
   font-size: 14px;
   text-align: center;
   display: flex;
@@ -272,7 +344,6 @@ import roomlate from "../../components/renting/roomlate"
 .load_loading {
   margin: 0 5px;
   width: 40rpx;
-  height: 40rpx;
   /* display: inline-block;
   vertical-align: middle; */
   animation: weuiLoading 1s steps(12, end) infinite;
@@ -479,5 +550,11 @@ Page{
   width: 100%;
   height: 600rpx;
 }
-
+.bot_footer {
+  position: relative;
+  width: 100%;
+  height: 80rpx;
+  margin-bottom: 0rpx;
+   background-color: rgba(255, 255, 255, 0.4)
+}
 </style>

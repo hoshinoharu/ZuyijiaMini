@@ -10,7 +10,7 @@
     "van-cell": "../../static/vant/cell/index"
   },
   "enablePullDownRefresh": true,  
-  "onReachBottomDistance": 0,  
+  "onReachBottomDistance": 40,  
   "backgroundTextStyle": "dark",  
   "backgroundColor": "#c0d9ff"
 }

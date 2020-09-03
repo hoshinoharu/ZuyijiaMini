@@ -1,5 +1,5 @@
 <template>
-  <div class="short">
+  <div class="short" id="short">
     <van-search
         v-model="searchValue"
         placeholder="请输入搜索关键字"
@@ -192,51 +192,51 @@
 </script>
 
 <style>
-.short {
+#short {
   width: 100%;
 }
-.footer1 {
-  height: 20rpx;
+#short .footer1 {
+  height: 40rpx;
 }
-.search .van-search__content--round {
+#short .search .van-search__content--round {
  border: 1px solid #000;
 }
-.choose span{
+#short .choose span{
   font-size: 24rpx;
   float: left;
   padding-left: 20rpx;
 }
-.home_img{
+#short .home_img{
   width: 60rpx;
   height: 60rpx;
   border-radius: 30rpx;
   /* margin: 100rpx 0; */
   margin-left: 30rpx;
 }
- .choose div {
+#short .choose div {
   width: 160rpx;
   height: 40rpx;
   line-height: 40rpx;
 }
-.choose .choose_div::before  {
+#short .choose .choose_div::before  {
   color: aqua;
 }
 .choose_time {
   /* float: left; */
 }
-.choose {
+#short .choose {
   width: 100%;
   display: flex;
   margin-left: 20rpx;
 }
- .bg_red {
+ #short .bg_red {
   color: #1989fa !important;
 }
-.content_main {
+#short .content_main {
   display: flex;
   flex-direction: column;
 }
-.content_main .remark{
+#short .content_main .remark{
   margin: 20rpx auto;
   width: 550rpx;
   display: -webkit-box;
@@ -251,21 +251,21 @@
   font-family: '微软雅黑';
   color:#888888;
 }
- .content_main .tubiao {
+ #short .content_main .tubiao {
   display: flex;
   flex-wrap: wrap
 }
-.name {
+#short .name {
   width: 262rpx !important;
   /* flex: 1; */
   padding: 20rpx;
 }
-.van-panel {
+#short .van-panel {
   border: 2rpx solid#87caee;
   padding: 2rpx;
   border-radius: 5rpx;
 }
-.name span {
+#short .name span {
   width:auto;
   display: inline-block;
   height: 30rpx;
@@ -273,38 +273,38 @@
   font-size: 28rpx;
   
 }
-.name span i {
+#short .name span i {
 padding-left: 10rpx;
 }
-.time {
+#short .time {
   float: right;
   font-size: 25rpx;
 }
-.time p {
+#short .time p {
   text-align: right;
   font-weight: 600;
   color: red;
 }
-.sublet {
+#short .sublet {
   padding: 20rpx 30rpx !important;
   
 }
 
-.footer {
+#short .footer {
   text-align: right;
 }
-.sublet:last-child {
-  /* margin-bottom: 40rpx; */
+#short .sublet:last-child {
+  margin-bottom: 40rpx;
 }
-.search .van-search__action--hover {
+#short .search .van-search__action--hover {
   background: #f0f3f6 !important;
 }
-.shaixuan .van-dropdown-menu {
+#short .shaixuan .van-dropdown-menu {
   height: 40rpx !important;
   line-height: 40rpx;
   background: #f0f3f6 !important;
 }
-.shaixuan .van-ellipsis {
+#short .shaixuan .van-ellipsis {
   font-size: 24rpx;
 }
 .shaixuan .van-cell {

@@ -1,5 +1,5 @@
 <template>
-  <div class="short">
+  <div class="sublet1">
     <van-search
         v-model="searchValue"
         placeholder="请输入搜索关键字"
@@ -191,51 +191,51 @@
 </script>
 
 <style>
-.short {
+.sublet1 {
   width: 100%;
 }
-.footer1 {
+.sublet1 .footer1 {
   height: 20rpx;
 }
-.search .van-search__content--round {
+.sublet1 .search .van-search__content--round {
  border: 1px solid #000;
 }
-.choose span{
+.sublet1 .choose span{
   font-size: 24rpx;
   float: left;
   padding-left: 20rpx;
 }
-.home_img{
+.sublet1 .home_img{
   width: 60rpx;
   height: 60rpx;
   border-radius: 30rpx;
   /* margin: 100rpx 0; */
   margin-left: 30rpx;
 }
- .choose div {
+.sublet1 .choose div {
   width: 160rpx;
   height: 40rpx;
   line-height: 40rpx;
 }
-.choose .choose_div::before  {
+.sublet1 .choose .choose_div::before  {
   color: aqua;
 }
 .choose_time {
   /* float: left; */
 }
-.choose {
+.sublet1 .choose {
   width: 100%;
   display: flex;
   margin-left: 20rpx;
 }
- .bg_red {
+ .sublet1 .bg_red {
   color: #1989fa !important;
 }
-.content_main {
+.sublet1 .content_main {
   display: flex;
   flex-direction: column;
 }
-.content_main .remark{
+.sublet1 .content_main .remark{
   margin: 20rpx auto;
   width: 550rpx;
   display: -webkit-box;
@@ -250,21 +250,21 @@
   font-family: '微软雅黑';
   color:#888888;
 }
- .content_main .tubiao {
+.sublet1 .content_main .tubiao {
   display: flex;
   flex-wrap: wrap
 }
-.name {
+.sublet1 .name {
   width: 262rpx !important;
   /* flex: 1; */
   padding: 20rpx;
 }
-.van-panel {
+.sublet1 .van-panel {
   border: 2rpx solid#87caee;
   padding: 2rpx;
   border-radius: 5rpx;
 }
-.name span {
+.sublet1 .name span {
   width:auto;
   display: inline-block;
   height: 30rpx;
@@ -272,14 +272,14 @@
   font-size: 28rpx;
   
 }
-.name span i {
+.sublet1 .name span i {
 padding-left: 10rpx;
 }
-.time {
+.sublet1 .time {
   float: right;
   font-size: 25rpx;
 }
-.time p {
+.sublet1 .time p {
   text-align: right;
   font-weight: 600;
   color: red;

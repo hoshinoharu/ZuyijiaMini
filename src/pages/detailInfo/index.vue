@@ -1,11 +1,12 @@
 <template>
   <div class="chat_all">
-    <Top :back="back"></Top>
+    <Top :back="back" ></Top>
     <div class="chat">
-      <div class="chat_body" :style="{height: heightP + 'rpx', width: '100%'}">
-        <div v-for="(num, i) in content" :key="i">
+    <!-- <scroll-view class="my_list" :style='{height: windowHeight - 60+"px"}' scroll-y="true" :scrollTop="scrollTop"> -->
 
-        
+
+      <div class="chat_body"  id="page" :style="{height: heightP + 'rpx', width: '100%'}">
+        <div v-for="(num, i) in content" :key="i" >
           <div  class="chat_image" v-if="num.creatorId==id">
             <div>
               <image class="home_img" 
@@ -59,6 +60,8 @@
               </div>
           </div>
        </div>
+   
+     <!-- </scroll-view> -->
     </div>
     <!-- <van-action-sheet :show="false" title="留言板" class="leave_message" @close="onClose">
       <div class="message">
@@ -74,6 +77,7 @@
 </template>
 
 <script>
+let that1 = this;
 import Top from '../../components/head/index'
   export default {
     name: '',
@@ -92,6 +96,8 @@ import Top from '../../components/head/index'
         msg:"",
         path: "",
         user: {},
+        scrollTop: 0,//控制上滑距离
+        windowHeight: 0,//页面高度
         files: [],
         myInterval: ""
       }
@@ -117,6 +123,17 @@ import Top from '../../components/head/index'
     onUnload() {
       clearInterval(this.myInterval)
     },
+    onReady: function() {
+       wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
+          console.log("react", rect)
+      // 使页面滚动到底部
+              wx.pageScrollTo({
+                scrollTop: rect.bottom
+              })
+        }).exec();
+  },
+ 
+
     methods: {
       initList () {
         let that = this
@@ -142,17 +159,16 @@ import Top from '../../components/head/index'
       //   let timeId = setTimeout(this.start, 1000)
       // },
       sendMessage(e,value) {
+        wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
+          console.log("react", rect)
+      // 使页面滚动到底部
+              wx.pageScrollTo({
+                scrollTop: rect.bottom+5000
+              })
+        }).exec();
+        return
         let val = value || this.msg
-        // this.content.push({
-        //       creatorId: this.id,
-        //       creator: {
-        //         headImg: this.user.avatarUrl
-        //       },
-        //       content: val,
-        //       type: 'text'
-        //     })
-        //     this.msg = ""
-        //   return
+        let that = this
         let userId = wx.getStorageSync('id')
         this.$http.post('/app/chat/send',{
           content: val,
@@ -160,6 +176,7 @@ import Top from '../../components/head/index'
           type: 'text'
         }, res => {
           if(res.data.success) {
+            that.pageScrollToBottom();
             this.content.push({
               creatorId: userId,
               creator: {
@@ -271,14 +288,17 @@ import Top from '../../components/head/index'
     height: 100%;
     background: #f9f9f9;
     /* margin-bottom: 90rpx; */
+    position: relative;
+    display: inline-block;
     overflow: hidden;
+    overflow-y: scroll;
   }
   .chat_body {
     height: 100%;
     position: relative;
     display: inline-block;
-    overflow: hidden;
-    overflow-y: scroll;
+    /* overflow: hidden;
+    overflow-y: scroll; */
   }
 .chat_body::-webkit-scrollbar {
   width: 0;
