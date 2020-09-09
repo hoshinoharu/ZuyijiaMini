@@ -29,7 +29,7 @@
 			</div>
 		</div>
 	</div>
-  <div style="clear: both;"></div>
+  <!-- <div style="clear: both;"></div> -->
   <div style="clear: both; background: #fff;" :style="{marginTop: 2*navHeight + 'rpx'}"></div>
 	<div class="main" >
     <div class="test">
@@ -64,7 +64,7 @@
         </div>
         <div v-else>
           <div class="room_main">
-            <roomlate></roomlate>
+            <roomlate :dataArr="dataArr"></roomlate>
           </div>
         </div>
       </div>
@@ -79,7 +79,8 @@
 
  </div>
 	<div class="footer">
-    <Bottom :selected="0" @updateInfo="updateInfo"></Bottom>
+    
+    <!-- <Bottom :selected="0" @updateInfo="updateInfo"></Bottom> -->
   </div>
 </div>
 </template>
@@ -114,6 +115,7 @@ import roomlate from "../../components/renting/roomlate"
        statusBarHeight: "",
        innerWidth: "",
        num: 1,
+       searchValue: "",
        innerPaddingRight: "",
        leftWidth: "",
        dataArr: [],
@@ -183,15 +185,15 @@ import roomlate from "../../components/renting/roomlate"
       this.gainMoreLoadingListData()  
   },
     created () {
-      
-      wx.hideTabBar({
-        aniamtion: false,
-        fail () {
-          setTimeout(function () {
-            wx.hideTabBar({ aniamtion: false })
-          }, 500)
-        }
-      })
+      this.getData('short_rent')
+      // wx.hideTabBar({
+      //   aniamtion: false,
+      //   fail () {
+      //     setTimeout(function () {
+      //       wx.hideTabBar({ aniamtion: false })
+      //     }, 500)
+      //   }
+      // })
       
     },
      onPageScroll:function(e){
@@ -203,6 +205,7 @@ import roomlate from "../../components/renting/roomlate"
     },
     onLoad() {
       let that = this
+      // that.attached();
       let type;
       switch(this.tab){
         case 1:
@@ -231,12 +234,36 @@ import roomlate from "../../components/renting/roomlate"
       })
     },
     onShow() {
+      let that = this
       this.getData('short_rent')
     },
+    watch: {
+      '$store.state.searchValue': {
+        handler (newVal, oldVal) {
+          let type;
+          switch(this.tab){
+            case 1:
+              type = 'short_rent'
+              break;
+            case 2:
+              type = 'sublet'
+              break;
+            case 3:
+              type = 'find_mate'
+              break;
+          }
+          let title = newVal
+          if(title) {
+            this.getData(type, title)
+          }
+        },
+        deep: true,
+        }
+    },
     methods: {
-      getData(type) {
+      getData(type, title) {
         let that = this
-        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`, res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}`, res=> {
             that.dataArr = [].concat(res.data.data)
             that.dataArr.forEach(num => {
               num.updateTime = num.updateTime.substring(0, 10)
@@ -502,7 +529,7 @@ Page{
 .main {
   position: relative;
   width: 100%;
-  /* overflow-y: auto; */
+  height: 100%;
 }
 .main::-webkit-scrollbar {
   width: 0;
@@ -557,4 +584,5 @@ Page{
   margin-bottom: 0rpx;
    background-color: rgba(255, 255, 255, 0.4)
 }
+
 </style>

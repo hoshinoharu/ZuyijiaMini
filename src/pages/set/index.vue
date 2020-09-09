@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="set">
     <Top :back="back"></Top>
     <div class="set_body">
       <ul class="ul_mine">
@@ -14,9 +14,9 @@
         </li>
       </ul>
     </div>
-    <div class="footer">
-      <Bottom :selected="1"></Bottom>
-    </div>
+    <!-- <div class="footer"> -->
+      <!-- <Bottom :selected="1"></Bottom> -->
+    <!-- </div> -->
   </div>
   
 </template>
@@ -39,14 +39,15 @@ import Top from '../../components/head/index'
       }
     },
     created () {
-      wx.hideTabBar({
-        aniamtion: false,
-        fail () {
-          setTimeout(function () {
-            wx.hideTabBar({ aniamtion: false })
-          }, 500)
-        }
-      })
+      console.log("Ddd")
+      // wx.hideTabBar({
+      //   aniamtion: false,
+      //   fail () {
+      //     setTimeout(function () {
+      //       wx.hideTabBar({ aniamtion: false })
+      //     }, 500)
+      //   }
+      // })
     },
     methods: {
       roomRent(e, type) {
@@ -65,8 +66,7 @@ import Top from '../../components/head/index'
             url = ''
             break
         }
-        console.log("dd")
-       wx.navigateTo({
+        wx.navigateTo({
           url: url,  //跳转页面的路径，可带参数 ？隔开，不同参数用 & 分隔；相对路径，不需要.wxml后缀
           success:function(){
             console.log("Sss")
@@ -80,28 +80,28 @@ import Top from '../../components/head/index'
 </script>
 
 <style>
-  .set_body {
+ #set .set_body {
     width: 90%;
     height: 600rpx;
     margin: 0 auto;
     margin-top: calc(50% - 150rpx);
   }
-  .ul_mine {
+ #set .ul_mine {
      margin: 20px auto; 
      width:90%; 
      overflow:hidden
   }
- .ul_mine li{
+#set .ul_mine li{
     float:left; 
     padding:10px 8px; 
     width: 100%
   }
-  .ul_mine .set_but .van-button {
-    width: 400rpx;
-    height: 90rpx;
-    margin-top: 24rpx;
-    left: calc(50% - 100px);
-    font-weight: 600;
-    background: linear-gradient(rgb(252, 126, 67), rgba(255,0,0,0)); 
-  }
+#set .ul_mine .set_but .van-button {
+  width: 400rpx;
+  height: 90rpx;
+  margin-top: 24rpx;
+  left: calc(50% - 100px);
+  font-weight: 600;
+  background: linear-gradient(rgb(252, 126, 67), rgba(255,0,0,0)); 
+}
 </style>

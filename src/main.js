@@ -31,7 +31,8 @@ wx.getSystemInfo({
         navTop: navTop,
         windowHeight: res.windowHeight,
         statusBarHeight: statusBarHeight,
-        toBar: toBar
+        toBar: toBar,
+        searchValue: ""
       };
   },
   fail(err) {

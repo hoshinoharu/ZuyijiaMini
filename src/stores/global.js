@@ -9,6 +9,7 @@ export default new Vuex.Store({
     count: 0,
     gg: "sss",
     style: {},
+    searchValue: ""
   }, 
   mutations: {    
     increment: (state) => {
@@ -20,6 +21,10 @@ export default new Vuex.Store({
     SETSTYLE: (state, data) => { 
       state.style = Object.assign({}, data)
       console.log(state.style)
+    },
+    changeValue: (state, data) => { 
+      state.searchValue = ""
+      state.searchValue = data
     }
   }
 });

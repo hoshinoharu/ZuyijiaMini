@@ -41,7 +41,7 @@ export default {
         that.globalData.userInfo = res.userInfo;
         
         wx.switchTab({
-          url: "/pages/nav/main?userInfo="+JSON.stringify(that.userInfo)
+          url: "/pages/item/main?userInfo="+JSON.stringify(that.userInfo)
         })
         //  wx.navigateTo({
         //     url: '/pages/detailInfo/main',

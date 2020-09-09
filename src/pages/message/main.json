@@ -2,6 +2,8 @@
   "navigationBarTitleText": "test",
   "navigationStyle": "custom",
   "component": true,
+  "backgroundTextStyle": "dark",
+  "backgroundColor": "#c0d9ff",
   "usingComponents": {
     "van-card": "../../static/vant/card/index",
     "van-icon": "../../static/vant/icon/index",

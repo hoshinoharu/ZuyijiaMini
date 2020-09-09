@@ -3,7 +3,7 @@
     <Top :back="back"></Top>
 
     <div class="message">
-    
+
       <div>
         <!-- <van-search
           :value="value"
@@ -30,7 +30,29 @@
         
       </div>
       <div class="message_body">
+        
         <van-checkbox-group :value="result" @change="onChange">
+          <scroll-view class="my_list" id="page"
+            @touchstart='touchStart'
+            @touchend='touchEnd'
+            @touchmove='touchMove'
+            :style='{height: (windowHeight - 140)*2+"rpx"}' scroll-y="true" :scroll-top="scrollTop"
+            @scroll="scroll" @scrolltoupper="refresh">
+          <view v-if="showRefresh" style='width:100%;position:relative;padding:30rpx 0; fontSize: 30rpx'>
+            <view class="text-gray" style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>
+                <view v-if="freshStatus == 'fresh'" class="flex">
+                <view class="lzy-loading"></view>
+                <view>刷新中...</view>
+              </view>
+              <view class="text" v-else-if="freshStatus == 'more'">
+                <!-- 使用到了 colorUI 下拉箭头图标 -->
+                <text class="cuIcon-refresharrow">继续下拉刷新</text> 
+              </view>
+              <view class="text" v-else>
+                释放刷新
+              </view>
+            </view>
+          </view>
           <van-swipe-cell
             v-for="(num, index) in dataInfo"
             :key="index"
@@ -84,6 +106,7 @@
               <view   style="background:#9F9F9F" @tap="onRead($event, num)">标为已读</view>
             </span>
           </van-swipe-cell>
+          </scroll-view>
         </van-checkbox-group>
       </div>
       <div class="message_empty" :style="{height: he+'rpx'}">
@@ -107,18 +130,22 @@
 
 <script>
 import Top from '../../components/head/index'
+// import refresh from '../../components/refresh/index'
 import fun from '../../utils/index'
 // import dataInfo from './dataInfo'
   export default {
     name: '',
     components: {
       Top,
+      // refreshView: refresh
     },
     data() {
       return {
         value: "",
         checked: false,
         modifyShow: true,
+         freshStatus: 'more', // 当前刷新的状态
+        showRefresh: false,   // 是否显示下拉刷新组件
         result: [],
         he: 40,
         content: [],
@@ -127,10 +154,15 @@ import fun from '../../utils/index'
         back: {
           text: '消息列表',
           flag: 'true'
-        }
+        },
+        windowHeight: 0,
+        scrollTop: 20
       }
     },
+    mounted () {
+    },
     onLoad() {
+      this.windowHeight = this.globalData.windowHeight
       this.$http.get('/app/chat/list/all/user', res => {
         if(res.data.success) {
           this.dataInfo = res.data.data
@@ -154,7 +186,96 @@ import fun from '../../utils/index'
         console.log(res.data.success)
       })
     },
+    onPullDownRefresh: function() { 
+      // this.loadData()
+     wx.showNavigationBarLoading(); 
+     this.$http.get('/app/chat/list/all/user', res=> {
+          console.log(res)
+          setTimeout(() => {
+            wx.hideNavigationBarLoading();
+            wx.stopPullDownRefresh();
+          }, 1000)
+          
+          if(res.data.success) {
+          this.dataInfo = res.data.data
+          this.dataInfo.forEach(num => {
+            num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
+            this.content.push(String(num.id))
+          })
+        }
+      })
+    },
     methods: {
+      touchStart(e) {
+      this.startY = e.mp.changedTouches[0].pageY;
+      this.freshStatus = 'more'
+    },
+    // 触摸移动
+    touchMove(e) {
+      let endY = e.mp.changedTouches[0].pageY;
+      let startY = this.startY;
+      let dis = endY - startY;
+      // 判断是否下拉
+      console.log(dis)
+      if (dis <= 0) {
+        return;
+      }
+      let offsetTop = e.mp.currentTarget.offsetTop;
+      if (dis > 20) {
+         this.showRefresh = true
+        // a.then(() => {
+          if (dis > 50) {
+            this.freshStatus = 'end'
+          } else {
+            this.freshStatus = 'more'
+          }
+        // })
+        // this.setData({
+        //   showRefresh: true
+        // }, () => {
+        //   if (dis > 50) {
+        //     this.setData({
+        //       freshStatus: 'end'
+        //     })
+        //   } else {
+        //     this.setData({
+        //       freshStatus: 'more'
+        //     })
+        //   }
+        // })
+      } else {
+        this.showRefresh = false
+      }
+    },
+    // 触摸结束
+    touchEnd(e) {
+      if (this.freshStatus == 'end') {
+        // 延迟 500 毫秒，显示 “刷新中”，防止请求速度过快不显示
+        // setTimeout(()=>{
+            this.getData(); // 获取最新列表数据
+        // }, 500);
+      } else {
+        this.showRefresh = false
+      }
+    },
+    getData() {
+      if(this.showRefresh == true) {
+          this.freshStatus = 'fresh'
+        }
+      this.$http.get('/app/chat/list/all/user', res => {
+        if(res.data.success) {
+          setTimeout(() => {
+            this.showRefresh = false
+          }, 1000)
+          this.dataInfo = res.data.data
+          this.dataInfo.forEach(num => {
+            num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
+            this.content.push(String(num.id))
+          })
+        }
+        console.log(res.data.success)
+      })
+    },
       onShread(e, num) {
         this.$http.post('/app/chat/read/all', {
           id: id
@@ -290,11 +411,11 @@ import fun from '../../utils/index'
   
   clear: both;
 }
-.mess_name {
+.message .mess_name {
   /* float: right; */
   position: relative;
   left: 100rpx;
-  bottom: 80%;
+  bottom: 100%;
   width:420rpx;/*要显示文字的宽度*/
   text-overflow: ellipsis;
   overflow: hidden;
@@ -303,7 +424,10 @@ import fun from '../../utils/index'
   /* overflow:hidden;
   text-overflow:ellipsis */
 }
-.van-swipe-cell__right {
+.message .van-cell-group {
+  margin-top: 0px;
+}
+.message .van-swipe-cell__right {
   display: inline-block;
   width: 240rpx;
   height: 140rpx;
@@ -313,7 +437,7 @@ import fun from '../../utils/index'
   text-align: center; */
   /* background-color: #f44; */
 }
-.van-swipe-cell__right view {
+.message .van-swipe-cell__right view {
   display: inline-block;
   width:120rpx;
   background-color: #f44;
@@ -324,14 +448,14 @@ import fun from '../../utils/index'
   float: right;
   text-align: center;
 }
-.home_img{
+.message .home_img{
   width: 80rpx;
   height: 80rpx;
   border-radius: 10rpx;
   /* margin: 100rpx 0; */
   border: 1px solid #fff;
 }
-.mess_info{
+.message .mess_info{
   width: auto;
   height: 100rpx;
   position: relative;
@@ -339,50 +463,50 @@ import fun from '../../utils/index'
 .message .van-search__action--hover {
   background: #fff !important;
 }
-.search_but .van-button {
+.message .search_but .van-button {
   width: 60rpx;
   height: 60rpx;
 }
-.value-class {
+.message .value-class {
   flex: none !important;
 }
-.modify {
+.message .modify {
   margin: 10rpx 10rpx;
   padding-top: 10rpx;
 }
-.modify .van-checkbox__label {
+.message .modify .van-checkbox__label {
   margin-left: 10rpx;
   font-size: 24rpx;
   font-weight: 600;
   color: #bbb;
 }
-.modify_title {
+.message .modify_title {
   margin-left: 30rpx;
   font-size: 28rpx;
 }
-.modify_hover {
+.message .modify_hover {
   font-size: 30rpx;
   color: aqua;
 }
-.button_footer .van-goods-action{
-  margin-bottom: 20px;
+.message .button_footer .van-goods-action{
+  margin-bottom: 20rpx;
 }
-.message_body {
+.message .message_body {
   position: relative;
   height: auto;
   overflow: hidden;
   overflow-y: scroll;
 }
-.rightArea {
+.message .rightArea {
   display: flex;
   align-items: center;
   flex-direction:column
 }
-.time_right {
+.message .time_right {
   width: 153rpx;
   text-align: center;
   }
-  .tip {
+ .message .tip {
     display:block;
     background:#f00;
     border-radius:50%;
@@ -391,5 +515,30 @@ import fun from '../../utils/index'
     top:0px;
     left: 80rpx;
     position:absolute;
+  }
+ .message .lzy-loading{
+  margin-right: 20rpx;
+  float: left;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 1px solid #f0f0f0;
+  border-left: 1px solid #6190E8;
+  animation: load 1s linear infinite;
+  -webkit-animation: load 1s linear infinite;
+}
+.message .flex {
+  display: flex;
+  align-items: column;
+}
+@-webkit-keyframes load
+{
+  from{-webkit-transform:rotate(0deg);}
+  to{-webkit-transform:rotate(360deg);}
+}
+@keyframes load
+{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
   }
 </style>

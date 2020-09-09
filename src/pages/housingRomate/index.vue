@@ -1,7 +1,7 @@
 <template>
   <div>
     <Top :back="back"></Top>
-    <div>
+    <div class="romate">
       <div id="form1">
           <form action="" method="post" onsubmit="return checkForm(this)">
               <br>
@@ -81,15 +81,15 @@
                 </div>
                 
                 <van-uploader 
-                id="img"
-                :file-list="fileList"
-                sizeType="60px"
-                preview-size="60px"
-                :mutiple="true"
-                max-count="8"
-                :deletable="true"
-                @delete="deleteImg"
-                @afterread="afterRead" />
+                  id="img"
+                  :file-list="fileList"
+                  sizeType="60px"
+                  preview-size="60px"
+                  :mutiple="true"
+                  max-count="8"
+                  :deletable="true"
+                  @delete="deleteImg"
+                  @afterread="afterRead" />
                 <div class="button">
                   <button type="button" class="bt_connect" @tap="checkForm(this)" style="float: left">发布</button>
                   <button type="button" class="bt_connect"  @tap.stop="resetRoom()" style="float: right">重置</button>
@@ -268,6 +268,10 @@ import Top from '../../components/head/index'
 
 <style>
   @import url('./index.css');
+  .romate {
+    height: 100%;
+    width: 100%;
+  }
   .row_img {
     height: 80px;
     margin-top: 20px;

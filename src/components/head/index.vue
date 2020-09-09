@@ -1,6 +1,7 @@
 <template>
   <div class="ch_top">
       <div :style="{height: statusBarHeight+'px', background: back.color?back.color: '#fff'}"></div>
+      <div style="clear: both"></div>
       <div class="tobar" :style="{height: toBarHeight+'px', background: back.color?back.color: '#fff'}">
         <div class="title" :style="{height: toBarHeight+'px',lineHeight: toBarHeight+'px'}">
           <text>{{back.text}}</text>

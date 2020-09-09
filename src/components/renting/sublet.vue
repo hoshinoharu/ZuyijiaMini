@@ -2,7 +2,7 @@
   <div class="sublet1">
     <van-search
         v-model="searchValue"
-        placeholder="请输入搜索关键字"
+        placeholder="请输入房源标题"
         use-action-slot
         background="#f0f3f6"
         @cancel="onCancel"
@@ -291,6 +291,11 @@ padding-left: 10rpx;
 
 .footer {
   text-align: right;
+}
+.footer .van-button {
+   font-size: 28rpx;
+   width: 140rpx;
+   height: 64rpx;
 }
 .sublet:last-child {
   /* margin-bottom: 40rpx; */

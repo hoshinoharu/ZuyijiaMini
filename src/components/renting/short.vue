@@ -2,7 +2,7 @@
   <div class="short" id="short">
     <van-search
         v-model="searchValue"
-        placeholder="请输入搜索关键字"
+        placeholder="请输入房源标题"
         use-action-slot
         background="#f0f3f6"
         @cancel="onCancel"
@@ -20,8 +20,8 @@
     <div class="choose">
       <view hover-class="bg_red">
       <div :value="sort" @tap="sortClick" class="choose_div" @touchstart="sort">
-        <span class="choose_time">发布时间</span><i style="font-size: 30rpx" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
-        <i style="font-size: 30rpx" class="iconfont icon-sanjiaoxing_shang" v-else></i>
+        <span class="choose_time">发布时间</span><i style="font-size: 30rpx; color: #666666" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
+        <i style="font-size: 30rpx;color: #666666" class="iconfont icon-sanjiaoxing_shang" v-else></i>
       </div>
       </view>
       <!-- <span class="choose_time">发布时间</span><i @tip = "sort = asc" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
@@ -29,7 +29,7 @@
       <div class="shaixuan">
         <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
         <van-dropdown-menu>
-          <van-dropdown-item title="筛选" ref="item">
+          <van-dropdown-item title="筛选" ref="item" id="item">
             <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
             <!-- <van-cell :title="'性别: '+sex"> -->
             <van-cell title="租房状态">
@@ -99,7 +99,8 @@
         switch2: false,
         navHeight: "",
         // icon: 'star-o',
-        searchValue: ""
+        searchValue: "",
+        status: ""
       }
     },
     mounted () {
@@ -107,19 +108,24 @@
       // console.log(this.navHeight)
     },
     methods: {
+      onConfirm() {
+        this.$root.$mp.page.selectComponent('#item').toggle();
+      },
       onInput () {
         this.switch1 = !this.switch1
         if(this.switch1) {
-          this.sex = '女'
+          this.status = "finished"
         } else {
-          this.sex = '男'
+          this.sex = "persistent"
         }
       },
       onInput1 () {
         this.switch2 = !this.switch2
       },
       onSearchSend(e) {
-        console.log(e.mp)
+        if(this.searchValue) {
+          this.$store.commit('changeValue', this.searchValue) 
+        }
       },
       turnDetail(e,num) {
         let a = JSON.stringify(num)
@@ -293,6 +299,11 @@ padding-left: 10rpx;
 #short .footer {
   text-align: right;
 }
+#short .footer .van-button {
+   font-size: 28rpx;
+   width: 140rpx;
+   height: 64rpx;
+}
 #short .sublet:last-child {
   margin-bottom: 40rpx;
 }
@@ -308,5 +319,8 @@ padding-left: 10rpx;
   font-size: 24rpx;
 }
 .shaixuan .van-cell {
+}
+#short .van-dropdown-item--down {
+  top: 185px!important;
 }
 </style>

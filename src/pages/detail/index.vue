@@ -191,6 +191,9 @@ import Top from '../../components/head/index'
 }
 .footer .van-button {
   margin-left: 10px;
+  font-size: 28rpx;
+   width: 140rpx;
+   height: 64rpx;
 }
 .message {
   width: 100%;
