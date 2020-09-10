@@ -38,7 +38,27 @@
             <!-- <van-cell  title="团购">
               <van-switch v-model="switch2"></van-switch>
             </van-cell> -->
-            <van-button block type="info" @click="onConfirm">确认</van-button>
+            <van-cell title="租房标识" class="symbolRental">
+              <checkbox-group @dchange="checkboxChange" class="boxflex">
+                  <label :class="['checkbox', num.checked?'active':'']"
+                      v-for="(num, i) in items" 
+                      :key="i"
+                      @tap="addclass"
+                      :data-index="i">
+                      <chechbox :value="i" :checked="num.checked">{{num.name}}</chechbox>
+                  </label>
+              </checkbox-group>
+
+
+            </van-cell>
+            <van-cell>
+              <van-button style="float: left" round type="info" @click="onConfirmReset">重置</van-button>
+              <van-button  round type="info" @click="onConfirm">确认</van-button>
+            </van-cell>
+            <!-- <div class="chooseBut">
+              
+            </div> -->
+            
           </van-dropdown-item>
         </van-dropdown-menu>
       </div>
@@ -100,7 +120,18 @@
         navHeight: "",
         // icon: 'star-o',
         searchValue: "",
-        status: ""
+        status: "",
+        items: [
+            { name: 'USA', value: '美国', checked: false },
+            { name: 'CHN', value: '中国', checked: true },
+            { name: 'BRA', value: '巴西', checked: false },
+            { name: 'JPN', value: '日本', checked: false },
+            { name: 'ENG', value: '英国', checked: false },
+            { name: 'TUR', value: '法国', checked: false },
+            { name: 'TUR', value: '法国', checked: false },
+            { name: 'TUR', value: '法国', checked: false },
+             
+        ]
       }
     },
     mounted () {
@@ -108,7 +139,29 @@
       // console.log(this.navHeight)
     },
     methods: {
+      checkboxChange(e){
+        console.log('checkbox发生change事件，携带value值为：', e.mp.detail.value)
+    },
+    //添加class 样式
+    addclass(e){
+        let self = this
+        //获取数据
+        let list = self.items
+        //获取index
+        let index = e.mp.currentTarget.dataset.index
+        //如果为true变为false
+        if(list[index].checked){
+            list[index].checked=false
+        }else{
+            list[index].checked = true
+        }
+        //重新赋值
+        self.items = [] .concat(list)
+    },    
       onConfirm() {
+        this.$root.$mp.page.selectComponent('#item').toggle();
+      },
+      onConfirmReset() {
         this.$root.$mp.page.selectComponent('#item').toggle();
       },
       onInput () {
@@ -118,6 +171,7 @@
         } else {
           this.sex = "persistent"
         }
+
       },
       onInput1 () {
         this.switch2 = !this.switch2
@@ -323,4 +377,45 @@ padding-left: 10rpx;
 #short .van-dropdown-item--down {
   top: 185px!important;
 }
+.shaixuan .van-cell .van-button {
+  width: 200rpx;
+  height: 80rpx;
+   opacity: 0.5;
+  font-size: 30rpx;
+}
+.checkbox{
+    /* opacity: 0; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 50rpx;
+    width: 100rpx;
+}
+.checkbox{
+    position: relative;
+    height: 50rpx;
+    line-height: 50rpx;
+    width: 100rpx;
+    background: #ccc;
+    color: #fff;
+    font-size: 28rpx;
+    border-radius: 10rpx;
+    margin: 10rpx;
+    text-align: center;
+    padding: 0 10rpx;
+    box-sizing: border-box;
+}
+.boxflex{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.active{
+    background: #1989fa;
+}
+.symbolRental .van-cell__title,.van-cell__value {
+flex: none;
+}
+
 </style>

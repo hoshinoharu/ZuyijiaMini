@@ -100,7 +100,7 @@
       </div>
     </div>
     <van-action-sheet :show="show" title="房源标识位选择" @close.stop="cancel">
-       <van-picker show-toolbar :columns="columns" @change="onChange"  @confirm="onConfirm"/>
+       <van-picker show-toolbar :columns="columns" @cancel="onCancel" @change="onChange"  @confirm="onConfirm"/>
     </van-action-sheet>
     <span v-show="show1"></span>
   </div>
@@ -188,6 +188,9 @@ import Top from '../../components/head/index'
         })
       },
       noop() {},
+      onCancel() {
+        this.show = false
+      },
       cancel() {
         console.log("ss")
         this.show = false
