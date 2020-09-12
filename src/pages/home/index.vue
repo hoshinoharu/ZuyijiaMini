@@ -36,7 +36,7 @@ import item from "../item/index"
     },
     data() {
       return {
-        active: 2,
+        active: 0,
         showHome: false
       }
     },
