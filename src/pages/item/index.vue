@@ -284,6 +284,7 @@ import Bottom from '../../components/bottom/index'
     },
     mounted () {
       this.userInfo = this.globalData.userInfo
+      console.log(this.userInfo)
       this.url = this.userInfo.avatarUrl
     },
     methods: {
@@ -381,6 +382,8 @@ import Bottom from '../../components/bottom/index'
         if(this.register.phone == "") {
           this.register_err.phone = "请输入密码"
         }
+        this.userInfo.headImg = this.userInfo.avatarUrl
+        this.userInfo.username = this.userInfo.nickName
         if(this.register.username&&this.register.password&&this.register.phone) {
             this.$http.post('/app/login/register',{
             "name": this.register.usernam,

@@ -10,11 +10,12 @@
           id="page" 
           :style='{height: (windowHeight - 120)*2+"rpx",width: windowWidth*2 + "rpx"}' 
           scroll-y="true" 
-          :scroll-top="scrollTop" 
+          :scroll-top="0" 
           @scroll="scroll"
           @touchstart='touchStart'
           @touchend='touchEnd'
           @touchmove='touchMove'
+          :scroll-into-view="total"
         >
 
           <view v-if="showRefresh" 
@@ -33,7 +34,7 @@
               </view>
             </view>
           </view>
-          <div v-for="(num, i) in content" :key="i" >
+          <div v-for="(num, i) in content" :key="i"  :id="'item'+(i+1)">
             <div  class="chat_image" v-if="num.creatorId==id">
               <div>
                 <image class="home_img" 
@@ -120,6 +121,7 @@ import Top from '../../components/head/index'
           flag: true
         },
         content: [],
+        total: "item9",
         heightP: "",
         id: "",
         freshStatus: 'more', // 当前刷新的状态
@@ -140,6 +142,7 @@ import Top from '../../components/head/index'
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
       this.id = option.id
+      let _this = this
       let a = new Promise((resolve, reject) => {
         this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${option.id}`, res => {
           let arr = [].concat(res.data.data)
@@ -148,7 +151,14 @@ import Top from '../../components/head/index'
         })
       }) 
       a.then(() => {
-        this.toBottom()
+        console.log(this.content,"content")
+        _this.$mp.page.setData({
+          total: 'item'+(this.content.length)
+        })
+        _this.total = _this.$mp.page.data.total
+        console.log(_this.$mp.page.data.total)
+        console.log(_this.total)
+        // this.toBottom()
       })
     },
     mounted () {
@@ -165,19 +175,12 @@ import Top from '../../components/head/index'
       clearInterval(this.myInterval)
     },
     onShow() {
+      this.total = 'item1'
       this.toBottom()
     },
     onReady: function() {
-      let that1 = this
-      // return
-      wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
-        console.log("react", rect)
-    // 使页面滚动到底部
-          that1.scrollTop = rect.bottom
-            // wx.pageScrollTo({
-            //   scrollTop: rect.bottom+5000
-            // })
-      }).exec();
+      this.total = 'item1'
+      this.toBottom()
     },
  
 
@@ -228,7 +231,8 @@ import Top from '../../components/head/index'
         }
       },
       scroll (e) {
-        this.scrollTop = e.mp.detail.scrollTop
+        this.scrollTop = -1
+        // this.scrollTop = e.mp.detail.scrollTop
       },
       initList () {
         let that = this
@@ -249,12 +253,10 @@ import Top from '../../components/head/index'
               if(!flag) {
                 this.content.push(...arr)
               }
-               
+               this.toBottom()
             }
-           
-            console.log(res)
           })
-        }, 5000);
+        }, 6000);
       },
       getData(num) {
         if(this.showRefresh == true) {
@@ -291,25 +293,51 @@ import Top from '../../components/head/index'
         })
       },
       toBottom() {
-        wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
-           that1.scrollTop = rect.bottom
-        }).exec();
+        this.total = 'item' + (this.content.length)
+        console.log(this.total)
+        // let that1 = this
+        // wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
+        //   console.log(rect.bottom)
+        //    that1.scrollTop = rect.bottom + 200
+        // }).exec();
       },
-      // async start() {
-      //   const { data } = await this.getData()
-      //   let timeId = setTimeout(this.start, 1000)
-      // },
+      shuaxin() {
+        this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${this.id}`, res => {
+            if(res.data.success) {
+              let arr = res.data.data
+              let flag = false
+              arr.forEach((num, i) => {
+                let len = this.content.length - 1
+                // if(this.content[len].id != undefined) {
+                    let a = this.content[len].id
+                    if(a == num.id) {
+                      console.log("445")
+                      flag = true
+                      let b = arr.slice(0, i)
+                      this.content.push(...this.ascTime(b))
+                    }
+                // }
+               
+              })
+              if(!flag) {
+                this.content.push(...arr)
+              }
+              console.log(this.content)
+               this.toBottom()
+            }
+          })
+      },
       sendMessage(e,value) {
         let that1 = this
         // return
-        wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
-          console.log("react", rect)
-      // 使页面滚动到底部
-           that1.scrollTop = rect.bottom
-              // wx.pageScrollTo({
-              //   scrollTop: rect.bottom+5000
-              // })
-        }).exec();
+      //   wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
+      //     console.log("react", rect)
+      // // 使页面滚动到底部
+      //      that1.scrollTop = rect.bottom
+      //         // wx.pageScrollTo({
+      //         //   scrollTop: rect.bottom+5000
+      //         // })
+      //   }).exec();
         // return
         let val = value || this.msg
         let that = this
@@ -320,23 +348,13 @@ import Top from '../../components/head/index'
           type: 'text'
         }, res => {
           if(res.data.success) {
-            that.pageScrollToBottom();
-            this.content.push({
-              creatorId: userId,
-              creator: {
-                headImg: this.user.avatarUrl
-              },
-              content: val,
-              type: 'text'
-            })
+            this.shuaxin()
             this.msg = ""
           }
         })
       },
       inputMsg(e) {
         this.msg = e.mp.detail.value
-        console.log(this.msg)
-        console.log(e.mp)
       },
       sendMsgTap(e) {
         this.sendMessage(e.mp.detail.value)
