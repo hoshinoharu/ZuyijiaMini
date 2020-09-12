@@ -2,13 +2,20 @@
   <div>
     <home v-if="active == 0"></home>
     <set  v-else-if="active == 1"></set>
-    <item  v-else></item>
+    <item  v-else-if="active == 2"></item>
     <van-tabbar :active="active" @change="onChange">
       <van-tabbar-item icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item icon="shop-o">发布</van-tabbar-item>
       <van-tabbar-item icon="friends-o">我的</van-tabbar-item>
       <!-- <van-tabbar-item icon="setting-o">标签</van-tabbar-item> -->
     </van-tabbar>
+    <van-overlay :show="showHome" @click="onClickHide">
+      <view class="wrapper">
+        <div class="home_button">
+          <button open-type="getUserInfo" @getuserinfo="getuserinfo1">开始体验</button>
+        </div>
+      </view>
+    </van-overlay>
   </div>
 </template>
 
@@ -29,7 +36,8 @@ import item from "../item/index"
     },
     data() {
       return {
-        active: 0
+        active: 2,
+        showHome: false
       }
     },
     onShow() {
@@ -41,14 +49,16 @@ import item from "../item/index"
           that.globalData.userInfo = res.userInfo;
           
         },
-        fail: function () {
+        fail: function (val) {
+          console.log(val)
           //获取用户信息失败后。请跳转授权页面
           wx.showModal({
           title: '警告',
           content: '尚未进行授权，请点击确定跳转到授权页面进行授权。',
           success: function (res) {
               if (res.confirm) {
-                that.getuserinfo()
+                // that.getuserinfo()
+                that.showHome = true
               console.log('用户点击确定')
               // wx.navigateTo({
                 // url: '../tologin/tologin',
@@ -91,6 +101,16 @@ import item from "../item/index"
             }
           }
         })
+      },
+      getuserinfo1(e) {
+        var that = this;
+        //此处授权得到userInfo
+        that.userInfo = {}
+        that.userInfo = e.target.userInfo;
+        that.globalData.userInfo = that.userInfo
+        // console.log(e.detail.userInfo);
+        //接下来写业务代码
+        that.showHome = false
       },
       getuserinfo(e) {
       let that = this
@@ -137,6 +157,14 @@ import item from "../item/index"
   }
 </script>
 
-<style lang="" scoped>
-  
+<style scoped>
+  .home_button{
+    width: 240rpx;
+    height: 80rpx;
+    font-size: 40rpx;
+  }
+  .wrapper {
+    position: relative;
+    top: 500rpx
+  }
 </style>

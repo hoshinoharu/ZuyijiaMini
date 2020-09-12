@@ -5,8 +5,34 @@
 
     <div class="chat_all">
       <div class="chat_body"   :style="{height: heightP + 'rpx', width: '100%'}">
-        <scroll-view class="my_list" id="page" :style='{height: windowHeight - 60+"px"}' scroll-y="true" :scroll-top="scrollTop" @scroll="scroll">
+        <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden'}">
+        <scroll-view class="my_list" 
+          id="page" 
+          :style='{height: (windowHeight - 120)*2+"rpx",width: windowWidth*2 + "rpx"}' 
+          scroll-y="true" 
+          :scroll-top="scrollTop" 
+          @scroll="scroll"
+          @touchstart='touchStart'
+          @touchend='touchEnd'
+          @touchmove='touchMove'
+        >
 
+          <view v-if="showRefresh" 
+            style='width:100%;position:relative;padding:60rpx 0;padding-bottom: 30rpx'>
+            <view class="text-gray" style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>
+              <view v-if="freshStatus == 'fresh'" class="flex">
+                <view class="lzy-loading"></view>
+                <view>刷新中...</view>
+              </view>
+              <view class="text" v-else-if="freshStatus == 'more'">
+                <!-- 使用到了 colorUI 下拉箭头图标 -->
+                <text class="cuIcon-refresharrow">继续下拉刷新</text> 
+              </view>
+              <view class="text" v-else>
+                释放刷新
+              </view>
+            </view>
+          </view>
           <div v-for="(num, i) in content" :key="i" >
             <div  class="chat_image" v-if="num.creatorId==id">
               <div>
@@ -42,7 +68,7 @@
             <div style="clear: both; height: 50rpx"></div>
           </div>
         </scroll-view>
-      
+        </view>
       </div>
        <div class="chat_footer">
           <div class="l-custom-input">
@@ -96,36 +122,50 @@ import Top from '../../components/head/index'
         content: [],
         heightP: "",
         id: "",
+        freshStatus: 'more', // 当前刷新的状态
+        showRefresh: false,   // 是否显示下拉刷新组件
         msg:"",
+        num: 1,
         path: "",
+        windowWidth: "",
         user: {},
-        scrollTop: -1,//控制上滑距离
+        scrollTop: 5,//控制上滑距离
         windowHeight: 0,//页面高度
         files: [],
         myInterval: ""
       }
     },
     onLoad(option) {
-      this.heightP = this.globalData.windowHeight*2;
+      this.heightP = (this.globalData.windowHeight - 80)*2;
       this.windowHeight = this.globalData.windowHeight
+      this.windowWidth = this.globalData.windowWidth
       this.id = option.id
-      console.log(option.id, "gg")
-      this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${option.id}`, res => {
-        this.content = [].concat(res.data.data)
-        console.log(res)
+      let a = new Promise((resolve, reject) => {
+        this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${option.id}`, res => {
+          let arr = [].concat(res.data.data)
+          this.content = this.ascTime(arr)
+          resolve()
+        })
+      }) 
+      a.then(() => {
+        this.toBottom()
       })
     },
     mounted () {
      
      this.user = this.globalData.userInfo
      this.initList()
-     console.log(this.user, "dd")
+     
     },
     destroyed(){
       
     },
     onUnload() {
+      this.num = 1
       clearInterval(this.myInterval)
+    },
+    onShow() {
+      this.toBottom()
     },
     onReady: function() {
       let that1 = this
@@ -142,6 +182,51 @@ import Top from '../../components/head/index'
  
 
     methods: {
+      ascTime(arr) {
+        arr.sort(function(a, b) {
+          return b.createTime < a.createTime ? 1 : -1
+        })
+        return arr
+      },
+      touchStart(e) {
+        this.startY = e.mp.changedTouches[0].pageY;
+        this.freshStatus = 'more'
+      },
+      // 触摸移动
+      touchMove(e) {
+        let endY = e.mp.changedTouches[0].pageY;
+        let startY = this.startY;
+        let dis = endY - startY;
+        // 判断是否下拉
+        console.log(dis)
+        if (dis <= 0) {
+          return;
+        }
+        let offsetTop = e.mp.currentTarget.offsetTop;
+        if (dis > 20) {
+          this.showRefresh = true
+          // a.then(() => {
+            if (dis > 50) {
+              this.freshStatus = 'end'
+            } else {
+              this.freshStatus = 'more'
+            }
+        } else {
+          this.showRefresh = false
+        }
+      },
+      // 触摸结束
+      touchEnd(e) {
+        if (this.freshStatus == 'end') {
+          // 延迟 500 毫秒，显示 “刷新中”，防止请求速度过快不显示
+          // setTimeout(()=>{
+            this.num++
+              this.getData(this.num); // 获取最新列表数据
+          // }, 500);
+        } else {
+          this.showRefresh = false
+        }
+      },
       scroll (e) {
         this.scrollTop = e.mp.detail.scrollTop
       },
@@ -149,20 +234,66 @@ import Top from '../../components/head/index'
         let that = this
         this.myInterval = setInterval(() => {
           this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${that.id}`, res => {
-            that.content = [].concat(res.data.data)
+            if(res.data.success) {
+              let arr = res.data.data
+              let flag = false
+              arr.forEach((num, i) => {
+                let len = this.content.length - 1 
+                let a = this.content[len].id
+                if(a == num.id) {
+                  flag = true
+                  let b = arr.slice(0, i)
+                  this.content.push(...b)
+                }
+              })
+              if(!flag) {
+                this.content.push(...arr)
+              }
+               
+            }
+           
             console.log(res)
           })
-          console.log("dddaa")
         }, 5000);
       },
-      getData() {
-        return new Promise((resolve, reject) => {
-          this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${option.id}`, res => {
-            this.content = [].concat(res.data.data)
-            resolve()
-            console.log(res)
+      getData(num) {
+        if(this.showRefresh == true) {
+          this.freshStatus = 'fresh'
+        }
+        let that = this
+        this.$http.get(`/app/chat/session?pageIndex=${num}&pageSize=10&receiverId=${that.id}`, res => {
+          
+          let a = new Promise ((resolve, reject) => {
+            setTimeout(() => {
+              that.showRefresh = false
+              resolve()
+            },1000)
+          })
+          a.then(() => {
+            if(res.data.success) {
+              let arr = res.data.data
+              let flag = false
+              arr.forEach((num, i) => {
+                let a = this.content[0].id
+                if(a == num.id) {
+                  flag = true
+                  let b = arr.slice(i)
+                  this.content.unshift(...b)
+                }
+                
+              })
+              if(!flag) {
+                 let len = this.content.length-1
+                 this.content.unshift(...arr)
+              }
+            }
           })
         })
+      },
+      toBottom() {
+        wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
+           that1.scrollTop = rect.bottom
+        }).exec();
       },
       // async start() {
       //   const { data } = await this.getData()
@@ -457,4 +588,29 @@ import Top from '../../components/head/index'
     outline: none;
     border-bottom: 1px solid #2196f3;
 }
+.lzy-loading{
+  margin-right: 20rpx;
+  float: left;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 1px solid #f0f0f0;
+  border-left: 1px solid #6190E8;
+  animation: load 1s linear infinite;
+  -webkit-animation: load 1s linear infinite;
+}
+.flex {
+  display: flex;
+  align-items: column;
+}
+@-webkit-keyframes load
+{
+  from{-webkit-transform:rotate(0deg);}
+  to{-webkit-transform:rotate(360deg);}
+}
+@keyframes load
+{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+  }
 </style>
