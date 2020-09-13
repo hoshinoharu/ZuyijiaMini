@@ -45,8 +45,9 @@
                 <i class="l"></i>
                 <b class="l"></b>
                 <div class="text">
-                  <span>{{num.content}}</span>
-                  
+                  <span v-if="num.type=='text'">{{num.content}}</span>
+                  <image v-else class="chat_photo" :src="num.content" @tap.stop="onPreview($event, num.content)"></image>
+
                 </div>
               </div>
             </div>
@@ -57,7 +58,7 @@
                 <b class="r"></b>
                 <div class="text">
                   <span v-if="num.type=='text'">{{num.content}}</span>
-                  <image v-else class="chat_photo" :src="path"></image>
+                  <image v-else class="chat_photo" :src="num.content" @tap.stop="onPreview($event, num.content)"></image>
                 </div>
               </div>
               <div>
@@ -185,6 +186,9 @@ import Top from '../../components/head/index'
  
 
     methods: {
+      onPreview(e, path) {
+        
+      },
       ascTime(arr) {
         arr.sort(function(a, b) {
           return b.createTime < a.createTime ? 1 : -1
@@ -253,7 +257,7 @@ import Top from '../../components/head/index'
               if(!flag) {
                 this.content.push(...arr)
               }
-               this.toBottom()
+              //  this.toBottom()
             }
           })
         }, 6000);
@@ -394,14 +398,15 @@ import Top from '../../components/head/index'
                       type: 'image'
                     }, res => {
                       if(res.data.success) {
-                        this.content.push({
-                          creatorId: this.id,
-                          creator: {
-                            headImg: this.user.avatarUrl
-                          },
-                          content: this.files[0],
-                          type: 'image'
-                        })
+                        this.shuaxin()
+                        // this.content.push({
+                        //   creatorId: this.id,
+                        //   creator: {
+                        //     headImg: this.user.avatarUrl
+                        //   },
+                        //   content: this.files[0],
+                        //   type: 'image'
+                        // })
                       }
                     })
                     // this.content.push({

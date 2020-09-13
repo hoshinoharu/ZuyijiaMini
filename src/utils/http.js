@@ -29,18 +29,17 @@ const request = req => { // 统一给请求添加host、时间戳、登录凭据
         req.fail = undefined
     }
   let token = wx.getStorageSync('token');
-  console.log(token)
+  let cookie = wx.getStorageSync('cookie')
   if (!req.hasOwnProperty('header') || typeof req.header !== 'object') {
     // req.header = {
     //   'content-type': req.method = 'GET' ?'application/json': "application/x-www-form-urlencoded"
     // }
-    let cookie = wx.getStorageSync('cookie')
+    
     console.log(cookie, "fdf")
         req.header = {
           'content-type': 'application/json',
           "cookie": cookie
     };
-    console.log(token, "dsd")
     if (token && null != token) {
         req.header['Authorization'] = token
     }

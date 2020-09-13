@@ -272,13 +272,13 @@ import Bottom from '../../components/bottom/index'
     created () {
       let token = wx.getStorageSync('token')
       if(token) {
-        // this.$http.get('/app/login/validate', res => {
-        //   console.log(res)
-        //   if(res.data) {
-        //     this.loginSuccess = true;
-        //     this.warningFlag = false;
-        //   }
-        // })
+        this.$http.get('/app/login/validate', res => {
+          console.log(res)
+          if(res.data) {
+            this.loginSuccess = true;
+            this.warningFlag = false;
+          }
+        })
         
       }
     },
@@ -450,8 +450,8 @@ import Bottom from '../../components/bottom/index'
         }, res => {
           var cookie = res.header["Set-Cookie"];
            wx.setStorageSync('cookie', cookie);
-           console.log(res.data,'ss')
            wx.setStorageSync('id', res.data.data.id);
+           wx.setStorageSync('token', res.data.data.token);
           if(res.data.success) {
             wx.showToast({
               title: res.data.msg,
@@ -460,7 +460,6 @@ import Bottom from '../../components/bottom/index'
               duration: 2000
             })
             this.loginSuccess = true
-            wx.setStorageSync('token', res.data.data.token);
             this.show = false
             this.warningFlag = false
             this.warningShow = false
