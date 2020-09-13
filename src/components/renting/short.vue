@@ -52,7 +52,7 @@
 
             </van-cell>
             <van-cell>
-              <van-button style="float: left" round type="info" @click="onConfirmReset">重置</van-button>
+              <van-button style="float: left" color="red" round type="info" @click="onConfirmReset">重置</van-button>
               <van-button  round type="info" @click="onConfirm">确认</van-button>
             </van-cell>
             <!-- <div class="chooseBut">
@@ -162,6 +162,10 @@
         this.$root.$mp.page.selectComponent('#item').toggle();
       },
       onConfirmReset() {
+        this.items.forEach(num => {
+          num.checked = false
+        })
+        this.switch1 = false
         this.$root.$mp.page.selectComponent('#item').toggle();
       },
       onInput () {
@@ -169,7 +173,7 @@
         if(this.switch1) {
           this.status = "finished"
         } else {
-          this.sex = "persistent"
+          this.status = "persistent"
         }
 
       },
@@ -380,7 +384,7 @@ padding-left: 10rpx;
 .shaixuan .van-cell .van-button {
   width: 200rpx;
   height: 80rpx;
-   opacity: 0.5;
+   opacity: 0.8;
   font-size: 30rpx;
 }
 .checkbox{

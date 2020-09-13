@@ -274,7 +274,7 @@ import Bottom from '../../components/bottom/index'
       if(token) {
         this.$http.get('/app/login/validate', res => {
           console.log(res)
-          if(res.data) {
+          if(res.data.success) {
             this.loginSuccess = true;
             this.warningFlag = false;
           }
