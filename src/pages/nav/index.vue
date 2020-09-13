@@ -33,7 +33,7 @@
   <div style="clear: both; background: #fff;" :style="{marginTop: 2*navHeight + 'rpx'}"></div>
 	<div class="main" >
     <div class="test">
-      <div class="testNav">
+      <div class="testNav" style="height:">
         <div
           :class="{'selected':tab === 1,'testTitle':true}"
           @click="changTab(1)"
@@ -70,11 +70,11 @@
       </div>
     </div>
 	</div>
-  <div class="load_more" v-if="loading">
+  <!-- <div class="load_more" v-if="loading">
     <div class="load_loading"></div>
     <div class="load-tips">正在加载……</div>
   </div>
-  <div class="load_end" v-if="loaded">没有更多数据了……</div>
+  <div class="load_end" v-if="loaded">没有更多数据了……</div> -->
  <div class="bot_footer">
 
  </div>
@@ -237,29 +237,29 @@ import roomlate from "../../components/renting/roomlate"
       let that = this
       this.getData('short_rent')
     },
-    watch: {
-      '$store.state.searchValue': {
-        handler (newVal, oldVal) {
-          let type;
-          switch(this.tab){
-            case 1:
-              type = 'short_rent'
-              break;
-            case 2:
-              type = 'sublet'
-              break;
-            case 3:
-              type = 'find_mate'
-              break;
-          }
-          let title = newVal
-          if(title) {
-            this.getData(type, title)
-          }
-        },
-        deep: true,
-        }
-    },
+    // watch: {
+    //   '$store.state.searchValue': {
+    //     handler (newVal, oldVal) {
+    //       let type;
+    //       switch(this.tab){
+    //         case 1:
+    //           type = 'short_rent'
+    //           break;
+    //         case 2:
+    //           type = 'sublet'
+    //           break;
+    //         case 3:
+    //           type = 'find_mate'
+    //           break;
+    //       }
+    //       let title = newVal
+    //       if(title) {
+    //         this.getData(type, title)
+    //       }
+    //     },
+    //     deep: true,
+    //     }
+    // },
     methods: {
       getData(type, title) {
         let that = this
@@ -530,6 +530,7 @@ Page{
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 .main::-webkit-scrollbar {
   width: 0;

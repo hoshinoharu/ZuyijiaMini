@@ -64,34 +64,67 @@
       </div>
       
     </div>
-      <div v-for="(num, i) in dataArr" :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
-        <van-panel :title="num.title+'/'+num.typeStr" desc="描述信息" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
-            <div class="content_main">
-              <div class="remark"><span>{{num.description}}</span></div>
-              <div>
-                <div class="tubiao">
-                  <img class="home_img" :src="num.creator.headImg" alt="">
-                  <div class="name">
-                    <span>{{num.creator.username}}
-                      <i class="iconfont icon-xingbienan" style="float:right; color:#83b2f9" v-if="num.sex=='male'"></i>
-                      <i class="iconfont icon-xingbienv" style="float:right; color:#f983a9" v-else></i>
-                    </span>
+    <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden'}">
+      <scroll-view class="my_list" id="page"
+        @touchstart='touchStart'
+        @touchend='touchEnd'
+        @touchmove='touchMove'
+        :style='{height: (windowHeight - 210)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
+        @scroll="scroll"
+        @scrolltoupper="refresh"
+        @scrolltolower="loadMore"
+        lower-threshold="10">
+        <view v-if="showRefresh" 
+           style='width:100%;position:relative;padding:60rpx 0;padding-bottom: 30rpx'>
+          <view class="text-gray" style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>
+            <view v-if="freshStatus == 'fresh'" class="flex">
+              <view class="lzy-loading"></view>
+              <view>刷新中...</view>
+            </view>
+            <view class="text" v-else-if="freshStatus == 'more'">
+              <!-- 使用到了 colorUI 下拉箭头图标 -->
+              <text class="cuIcon-refresharrow">继续下拉刷新</text> 
+            </view>
+            <view class="text" v-else>
+              释放刷新
+            </view>
+          </view>
+        </view>
+        <div v-for="(num, i) in dataArr1" :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
+          <van-panel :title="num.title+'/'+num.typeStr" desc="描述信息" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
+              <div class="content_main">
+                <div class="remark"><span>{{num.description}}</span></div>
+                <div>
+                  <div class="tubiao">
+                    <img class="home_img" :src="num.creator.headImg" alt="">
+                    <div class="name">
+                      <span>{{num.creator.username}}
+                        <i class="iconfont icon-xingbienan" style="float:right; color:#83b2f9" v-if="num.sex=='male'"></i>
+                        <i class="iconfont icon-xingbienv" style="float:right; color:#f983a9" v-else></i>
+                      </span>
+                    </div>
+                    <div class="time">
+                      <span>发布时间：{{num.updateTime}}</span>
+                        <p>
+                        ￥{{num.priceEachMonth}}元/月
+                      </p>
+                    </div> 
                   </div>
-                  <div class="time">
-                    <span>发布时间：{{num.updateTime}}</span>
-                      <p>
-                      ￥{{num.priceEachMonth}}元/月
-                    </p>
-                  </div> 
+                  
                 </div>
-                
               </div>
+            <div slot="footer">
+              <van-button size="small" :icon="num.icon" :color="color" plain @tap.stop="collect(num)">收藏</van-button>
             </div>
-          <div slot="footer">
-            <van-button size="small" :icon="num.icon" :color="color" plain @tap.stop="collect(num)">收藏</van-button>
+          </van-panel>
+        </div>
+        <div class="load_more" v-if="loading">
+            <div class="load_loading"></div>
+            <div class="load-tips">正在加载……</div>
           </div>
-        </van-panel>
-      </div>
+          <div class="load_end" v-if="loaded">{{load_text}}</div>
+      </scroll-view>
+    </view>
     <div class="footer1">
 
     </div>
@@ -114,9 +147,18 @@
         value: "",
         sex: '男',
         sort: "desc",
+        loading: false,
+        loaded: false,
         color: '#FFCC66',
         switch1: false,
         switch2: false,
+        freshStatus: 'more', // 当前刷新的状态
+        showRefresh: false,   // 是否显示下拉刷新组件
+        windowHeight: 0,
+        isScrolling: false,
+        load_text: "加载更多数据",
+        windowWidth: "",
+        number: 1,
         navHeight: "",
         // icon: 'star-o',
         searchValue: "",
@@ -134,14 +176,135 @@
         ]
       }
     },
+    computed: {
+      dataArr1() {
+        return this.dataArr
+      }
+    },
     mounted () {
+      this.windowHeight = this.globalData.windowHeight
+      this.windowWidth = this.globalData.windowWidth
       // this.navHeight = this.globalData.navHeight
       // console.log(this.navHeight)
     },
     methods: {
+      touchStart(e) {
+        this.startY = e.mp.changedTouches[0].pageY;
+        this.freshStatus = 'more'
+      },
+    // 触摸移动
+      touchMove(e) {
+        let endY = e.mp.changedTouches[0].pageY;
+        let startY = this.startY;
+        let dis = endY - startY;
+        // 判断是否下拉
+        console.log(dis)
+        if (dis <= 0) {
+          return;
+        }
+        let offsetTop = e.mp.currentTarget.offsetTop;
+        if (dis > 20) {
+          this.showRefresh = true
+          // a.then(() => {
+            if (dis > 50) {
+              this.freshStatus = 'end'
+            } else {
+              this.freshStatus = 'more'
+            }
+        } else {
+          this.showRefresh = false
+        }
+      },
+    // 触摸结束
+      touchEnd(e) {
+        if (this.freshStatus == 'end') {
+          // 延迟 500 毫秒，显示 “刷新中”，防止请求速度过快不显示
+          // setTimeout(()=>{
+              this.getData(); // 获取最新列表数据
+          // }, 500);
+        } else {
+          this.showRefresh = false
+        }
+      },
+      scroll() {
+
+      },
+      refresh: function () {
+          console.log("下拉")
+      },
+      loadMore() {
+        let that = this;
+        let type = 'short_rent'
+        if(this.isScrolling===true) {
+          return;
+        }
+        this.isScrolling=true;
+        that.loading = true;
+        that.loaded = false;
+        that.number = that.number + 1
+        this.$http.get(`/app/house/export/list?pageIndex=${that.number}&pageSize=10&type=${type}`, res=> {
+          if(res.data.success) {
+            let a = new Promise((resolve, reject) => {
+              setTimeout(() => {
+                that.loading = false;
+                resolve() 
+              }, 500)
+            })
+            
+            a.then(() => {
+              if(res.data.data == [] || res.data.data.length == 0) {
+                that.load_text = "没有更多的数据......"
+              } else {
+                 that.load_text = "加载更多的数据"
+              }
+              that.loaded = true;
+              setTimeout(() => {
+                that.isScrolling=false;
+              },3000)
+              that.dataArr1 = that.dataArr1.concat(res.data.data)
+              that.dataArr1.forEach(num => {
+                  num.updateTime = num.updateTime.substring(0, 10)
+                  if(num.favorite == false) {
+                    num.icon="star-o"
+                  } else {
+                    num.icon = "star"
+                  }
+              })
+              
+            })
+            
+          }  
+        })
+      },
+      getData() {
+        let that = this
+        if(that.showRefresh == true) {
+          this.freshStatus = 'fresh'
+        }
+        that.number = 1
+        let type = 'short_rent'
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`, res=> {
+          if(res.data.success) {
+            setTimeout(() => {
+              this.showRefresh = false
+            }, 1000)
+            that.dataArr1 = [].concat(res.data.data)
+            that.dataArr1.forEach(num => {
+              num.updateTime = num.updateTime.substring(0, 10)
+              if(num.favorite == false) {
+                num.icon="star-o"
+              } else {
+                num.icon = "star"
+              }
+            })
+          }
+        })
+          
+      },
       checkboxChange(e){
         console.log('checkbox发生change事件，携带value值为：', e.mp.detail.value)
     },
+
     //添加class 样式
     addclass(e){
         let self = this
@@ -181,8 +344,25 @@
         this.switch2 = !this.switch2
       },
       onSearchSend(e) {
+        let that = this
         if(this.searchValue) {
-          this.$store.commit('changeValue', this.searchValue) 
+          that.number = 1
+          let title = this.searchValue
+          let type = 'short_rent'
+          this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}`, res=> {
+            if(res.data.success) {
+              that.dataArr1 = [].concat(res.data.data)
+              that.dataArr1.forEach(num => {
+                num.updateTime = num.updateTime.substring(0, 10)
+                if(num.favorite == false) {
+                  num.icon="star-o"
+                } else {
+                  num.icon = "star"
+                }
+              })
+            }
+          })
+          // this.$store.commit('changeValue', this.searchValue) 
         }
       },
       turnDetail(e,num) {
@@ -259,6 +439,40 @@
 #short {
   width: 100%;
 }
+#short .load_more {
+  width: 65%;
+  margin: 0rpx auto;
+  margin-bottom: 70rpx;
+  font-size: 14px;
+  text-align: center;
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: center;
+}
+#short .load_loading {
+  margin: 0 10rpx;
+  width: 40rpx;
+  /* display: inline-block;
+  vertical-align: middle; */
+  animation: weuiLoading 1s steps(12, end) infinite;
+  background: transparent url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGgxMDB2MTAwSDB6Ii8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMjAiIHg9IjQ2LjUiIHk9IjQwIiBmaWxsPSIjRTlFOUU5IiByeD0iNSIgcnk9IjUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgLTMwKSIvPjxyZWN0IHdpZHRoPSI3IiBoZWlnaHQ9IjIwIiB4PSI0Ni41IiB5PSI0MCIgZmlsbD0iIzk4OTY5NyIgcng9IjUiIHJ5PSI1IiB0cmFuc2Zvcm09InJvdGF0ZSgzMCAxMDUuOTggNjUpIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMjAiIHg9IjQ2LjUiIHk9IjQwIiBmaWxsPSIjOUI5OTlBIiByeD0iNSIgcnk9IjUiIHRyYW5zZm9ybT0icm90YXRlKDYwIDc1Ljk4IDY1KSIvPjxyZWN0IHdpZHRoPSI3IiBoZWlnaHQ9IjIwIiB4PSI0Ni41IiB5PSI0MCIgZmlsbD0iI0EzQTFBMiIgcng9IjUiIHJ5PSI1IiB0cmFuc2Zvcm09InJvdGF0ZSg5MCA2NSA2NSkiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgeD0iNDYuNSIgeT0iNDAiIGZpbGw9IiNBQkE5QUEiIHJ4PSI1IiByeT0iNSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDU4LjY2IDY1KSIvPjxyZWN0IHdpZHRoPSI3IiBoZWlnaHQ9IjIwIiB4PSI0Ni41IiB5PSI0MCIgZmlsbD0iI0IyQjJCMiIgcng9IjUiIHJ5PSI1IiB0cmFuc2Zvcm09InJvdGF0ZSgxNTAgNTQuMDIgNjUpIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMjAiIHg9IjQ2LjUiIHk9IjQwIiBmaWxsPSIjQkFCOEI5IiByeD0iNSIgcnk9IjUiIHRyYW5zZm9ybT0icm90YXRlKDE4MCA1MCA2NSkiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgeD0iNDYuNSIgeT0iNDAiIGZpbGw9IiNDMkMwQzEiIHJ4PSI1IiByeT0iNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTE1MCA0NS45OCA2NSkiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgeD0iNDYuNSIgeT0iNDAiIGZpbGw9IiNDQkNCQ0IiIHJ4PSI1IiByeT0iNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTEyMCA0MS4zNCA2NSkiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgeD0iNDYuNSIgeT0iNDAiIGZpbGw9IiNEMkQyRDIiIHJ4PSI1IiByeT0iNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDM1IDY1KSIvPjxyZWN0IHdpZHRoPSI3IiBoZWlnaHQ9IjIwIiB4PSI0Ni41IiB5PSI0MCIgZmlsbD0iI0RBREFEQSIgcng9IjUiIHJ5PSI1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjAgMjQuMDIgNjUpIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMjAiIHg9IjQ2LjUiIHk9IjQwIiBmaWxsPSIjRTJFMkUyIiByeD0iNSIgcnk9IjUiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAtNS45OCA2NSkiLz48L3N2Zz4=) no-repeat;
+  background-size: 100%;
+  
+}
+#short .load_tips {
+  display: inline-block;
+  vertical-align: middle;
+}
+#short .load_end {
+  width: 65%;
+  margin: 0rpx auto;
+  margin-bottom: 70rpx;
+  font-size: 14px;
+  text-align: center;
+  position: relative;
+}
+
 #short .footer1 {
   height: 40rpx;
 }
@@ -292,6 +506,7 @@
   width: 100%;
   display: flex;
   margin-left: 20rpx;
+  margin-bottom: 20rpx !important;
 }
  #short .bg_red {
   color: #1989fa !important;
@@ -353,7 +568,9 @@ padding-left: 10rpx;
   padding: 20rpx 30rpx !important;
   
 }
-
+#short .sublet:first-child {
+  padding-top: 0rpx !important;
+}
 #short .footer {
   text-align: right;
 }
@@ -421,5 +638,30 @@ padding-left: 10rpx;
 .symbolRental .van-cell__title,.van-cell__value {
 flex: none;
 }
+.lzy-loading{
+  margin-right: 20rpx;
+  float: left;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 1px solid #f0f0f0;
+  border-left: 1px solid #6190E8;
+  animation: load 1s linear infinite;
+  -webkit-animation: load 1s linear infinite;
+}
+.flex {
+  display: flex;
+  align-items: column;
+}
+@-webkit-keyframes load
+{
+  from{-webkit-transform:rotate(0deg);}
+  to{-webkit-transform:rotate(360deg);}
+}
+@keyframes load
+{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+  }
 
 </style>
