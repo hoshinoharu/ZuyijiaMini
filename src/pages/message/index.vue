@@ -165,7 +165,14 @@ import fun from '../../utils/index'
       this.windowHeight = this.globalData.windowHeight
       this.$http.get('/app/chat/list/all/user', res => {
         if(res.data.success) {
-          this.dataInfo = res.data.data
+          // this.dataInfo = res.data.data
+          this.dataInfo = []
+          let id = wx.getStorageSync("id")
+          res.data.data.forEach(num => {
+            if(num.receiverId != num.creatorId) {
+              this.dataInfo.push(num)
+            }
+          })
           this.dataInfo.forEach(num => {
             num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
             this.content.push(String(num.id))
@@ -177,7 +184,13 @@ import fun from '../../utils/index'
     onShow() {
       this.$http.get('/app/chat/list/all/user', res => {
         if(res.data.success) {
-          this.dataInfo = res.data.data
+          let id = wx.getStorageSync("id")
+          this.dataInfo = []
+          res.data.data.forEach(num => {
+            if(num.receiverId != num.creatorId) {
+              this.dataInfo.push(num)
+            }
+          })
           this.dataInfo.forEach(num => {
             num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
             this.content.push(String(num.id))
@@ -197,6 +210,7 @@ import fun from '../../utils/index'
           }, 1000)
           
           if(res.data.success) {
+            this.dataInfo = []
           this.dataInfo = res.data.data
           this.dataInfo.forEach(num => {
             num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
@@ -267,7 +281,13 @@ import fun from '../../utils/index'
           setTimeout(() => {
             this.showRefresh = false
           }, 1000)
-          this.dataInfo = res.data.data
+          this.dataInfo = []
+          let id = wx.getStorageSync("id")
+          res.data.data.forEach(num => {
+            if(num.receiverId != num.creatorId) {
+              this.dataInfo.push(num)
+            }
+          })
           this.dataInfo.forEach(num => {
             num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
             this.content.push(String(num.id))
@@ -321,7 +341,12 @@ import fun from '../../utils/index'
             this.$http.get('/app/chat/list/all/user', res => {
               if(res.data.success) {
                 this.dataInfo = [] 
-                this.dataInfo = res.data.data
+                let id = wx.getStorageSync("id")
+                res.data.data.forEach(num => {
+                  if(num.receiverId != num.creatorId) {
+                    this.dataInfo.push(num)
+                  }
+                 })
                 this.dataInfo.forEach(num => {
                   num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
                   this.content.push(String(num.id))

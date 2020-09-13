@@ -236,8 +236,9 @@ import Top from '../../components/head/index'
         if (this.freshStatus == 'end') {
           // 延迟 500 毫秒，显示 “刷新中”，防止请求速度过快不显示
           // setTimeout(()=>{
-            this.num++
-              this.getData(this.num); // 获取最新列表数据
+            this.num = this.num + 1
+            console.log("num",this.num)
+            this.getData(this.num); // 获取最新列表数据
           // }, 500);
         } else {
           this.showRefresh = false
@@ -271,12 +272,12 @@ import Top from '../../components/head/index'
           })
         }, 6000);
       },
-      getData(num) {
+      getData(num1) {
         if(this.showRefresh == true) {
           this.freshStatus = 'fresh'
         }
         let that = this
-        this.$http.get(`/app/chat/session?pageIndex=${num}&pageSize=10&receiverId=${that.id}`, res => {
+        this.$http.get(`/app/chat/session?pageIndex=${num1}&pageSize=10&receiverId=${that.id}`, res => {
           
           let a = new Promise ((resolve, reject) => {
             setTimeout(() => {
@@ -301,12 +302,27 @@ import Top from '../../components/head/index'
                  let len = this.content.length-1
                  this.content.unshift(...arr)
               }
+              this.toBottom(res.data.data.length,"len")
             }
           })
         })
       },
-      toBottom() {
-        this.total = 'item' + (this.content.length)
+      toBottom(type, len) {
+        this.total = ""
+        if(type||len == 'len') {
+          console.log("type",type, this.content.length)
+          let len = (this.num-1)*10
+          if(type > 1) {
+            len = len +1
+          } else {
+            len = len + type
+          }
+           this.total = 'item' + (this.content.length - len)
+          
+        } else {
+          this.total = 'item' + (this.content.length)
+        }
+        
         console.log(this.total)
         // let that1 = this
         // wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
