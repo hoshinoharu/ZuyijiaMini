@@ -104,6 +104,9 @@
         
       </div>
     </van-action-sheet> -->
+    <van-overlay :show="warningShow" @click="onClickWarning">
+       <img :src="bigPath" alt="" class="bmg">
+    </van-overlay>
   </div>
 </template>
 
@@ -125,11 +128,13 @@ import Top from '../../components/head/index'
         total: "item9",
         heightP: "",
         id: "",
+        warningShow: false,
         freshStatus: 'more', // 当前刷新的状态
         showRefresh: false,   // 是否显示下拉刷新组件
         msg:"",
         num: 1,
         path: "",
+        bigPath: "",
         windowWidth: "",
         user: {},
         scrollTop: 5,//控制上滑距离
@@ -187,7 +192,11 @@ import Top from '../../components/head/index'
 
     methods: {
       onPreview(e, path) {
-        
+        this.warningShow = true
+        this.bigPath = path
+      },
+      onClickWarning() {
+        // this.bagPath = ""
       },
       ascTime(arr) {
         arr.sort(function(a, b) {
@@ -430,6 +439,13 @@ import Top from '../../components/head/index'
 </script>
 
 <style scoped>
+.bmg{
+    width: 100%;
+    position: absolute;
+    top: 0;left: 0;right: 0;bottom: 0;
+    z-index: 1001;
+    margin: auto;
+}
   .chat_footer {
     position: fixed; 
     bottom: 0;

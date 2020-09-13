@@ -5,6 +5,7 @@
     "van-tag": "../../static/vant/tag/index",
     "van-action-sheet": "../../static/vant/action-sheet/index",
     "van-icon": "../../static/vant/icon/index",
+    "van-overlay": "../../static/vant/overlay/index",
     "van-uploader": "../../static/vant/uploader/index"
   },
   "navigationBarTitleText": "test",
