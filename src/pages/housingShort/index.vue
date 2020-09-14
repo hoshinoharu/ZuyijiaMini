@@ -233,7 +233,7 @@ import Top from '../../components/head/index'
         const { file } = event.mp.detail;
         let type = file.path.split('.')
         let name = event.mp.detail.index + 'tupian' + '.' + type[type.length - 1]
-        console.log(name)
+        console.log(name, file.path)
         this.fileList.push(
            { url: file.path, name: '图片2'},
         )
