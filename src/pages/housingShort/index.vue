@@ -205,6 +205,7 @@ import Top from '../../components/head/index'
         this.fileList.splice(e.mp.detail.index, 1)
       },
       urlTobase64(url, name){
+        console.log(url, "url")
         wx.request({
           url:url,
           responseType: 'arraybuffer', //最关键的参数，设置返回的数据格式为arraybuffer
@@ -226,7 +227,10 @@ import Top from '../../components/head/index'
                 console.log(this.files)
                 // /app/file/upload/base64
                 //打印出base64字符串，可复制到网页校验一下是否是你选择的原图片呢　
-              }
+              },
+          fail: res => {
+            console.log("res", res)
+          }
         })
     },
       afterRead(event) {
