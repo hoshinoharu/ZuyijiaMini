@@ -185,7 +185,8 @@ import roomlate from "../../components/renting/roomlate"
       this.gainMoreLoadingListData()  
   },
     created () {
-      this.getData('short_rent')
+      let type = this.$store.state.type
+      this.getData(type)
       // wx.hideTabBar({
       //   aniamtion: false,
       //   fail () {
@@ -235,7 +236,9 @@ import roomlate from "../../components/renting/roomlate"
     },
     onShow() {
       let that = this
-      this.getData('short_rent')
+      let type = this.$store.state.type
+      console.log(type, "type")
+      this.getData(type)
     },
     // watch: {
     //   '$store.state.searchValue': {

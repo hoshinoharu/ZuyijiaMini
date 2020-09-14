@@ -18,12 +18,13 @@
     >搜索</div>
     </van-search>
     <div class="choose">
-      <view hover-class="bg_red">
+      <!-- 时间排序 -->
+      <!-- <view hover-class="bg_red">
       <div :value="sort" @tap="sortClick" class="choose_div" @touchstart="sort">
         <span class="choose_time">发布时间</span><i style="font-size: 30rpx; color: #666666" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
         <i style="font-size: 30rpx;color: #666666" class="iconfont icon-sanjiaoxing_shang" v-else></i>
       </div>
-      </view>
+      </view> -->
       <!-- <span class="choose_time">发布时间</span><i @tip = "sort = asc" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
       <i class="icon-sanjiaoxing_shang" v-else></i> -->
       <div class="shaixuan">
@@ -39,13 +40,13 @@
               <van-switch v-model="switch2"></van-switch>
             </van-cell> -->
             <van-cell title="租房标识" class="symbolRental">
-              <checkbox-group @dchange="checkboxChange" class="boxflex">
+              <checkbox-group @change="checkboxChange" class="boxflex">
                   <label :class="['checkbox', num.checked?'active':'']"
                       v-for="(num, i) in items" 
                       :key="i"
                       @tap="addclass"
                       :data-index="i">
-                      <chechbox :value="i" :checked="num.checked">{{num.name}}</chechbox>
+                      <chechbox :value="num.value" :checked="num.checked">{{num.name}}</chechbox>
                   </label>
               </checkbox-group>
 
@@ -366,6 +367,8 @@
         }
       },
       turnDetail(e,num) {
+        console.log(num)
+        return
         let a = JSON.stringify(num)
           wx.navigateTo({
             url: '/pages/detail/main?dataDetail='+encodeURIComponent(a),

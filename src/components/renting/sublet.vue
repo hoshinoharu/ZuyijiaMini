@@ -18,12 +18,12 @@
     >搜索</div>
     </van-search>
     <div class="choose">
-      <view hover-class="bg_red">
+      <!-- <view hover-class="bg_red">
       <div :value="sort" @tap="sortClick" class="choose_div" @touchstart="sort">
         <span class="choose_time">发布时间</span><i style="font-size: 30rpx; color: #666666" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
         <i style="font-size: 30rpx;color: #666666" class="iconfont icon-sanjiaoxing_shang" v-else></i>
       </div>
-      </view>
+      </view> -->
       <!-- <span class="choose_time">发布时间</span><i @tip = "sort = asc" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
       <i class="icon-sanjiaoxing_shang" v-else></i> -->
       <div class="shaixuan">
@@ -90,8 +90,8 @@
             </view>
           </view>
         </view>
-        <div v-for="(num, i) in dataArr1" :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
-          <van-panel :title="num.title+'/'+num.typeStr" desc="描述信息" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
+        <div v-for="(num, i) in dataArr1" :key="i" class="sublet"> 
+          <van-panel @tap="turnDetail($enent, num,i)" :title="num.title+'/'+num.typeStr" desc="描述信息" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
               <div class="content_main">
                 <div class="remark"><span>{{num.description}}</span></div>
                 <div>
@@ -159,6 +159,7 @@
         load_text: "加载更多数据",
         windowWidth: "",
         number: 1,
+        // dataArr1: [],
         navHeight: "",
         // icon: 'star-o',
         searchValue: "",
@@ -182,6 +183,8 @@
       }
     },
     mounted () {
+      this.dataArr1 = [].concat(this.dataArr1)
+      // this.dataArr1 = this.dataArr
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
       // this.navHeight = this.globalData.navHeight
@@ -365,11 +368,15 @@
           // this.$store.commit('changeValue', this.searchValue) 
         }
       },
-      turnDetail(e,num) {
-        let a = JSON.stringify(num)
-          wx.navigateTo({
-            url: '/pages/detail/main?dataDetail='+encodeURIComponent(a),
-          })
+      turnDetail(e,num,i) {
+        let num1 = this.dataArr1[i]
+        // console.log()
+        // console.log(num,i)
+        // return
+        let a = JSON.stringify(num1)
+        wx.navigateTo({
+          url: '/pages/detail/main?dataDetail='+encodeURIComponent(a),
+        })
       },
       collect(val) {
         if(val.icon == 'star-o') {

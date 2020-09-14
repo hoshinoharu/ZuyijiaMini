@@ -95,6 +95,7 @@
             </div>
             <div slot="footer">
               <van-button size="small" :color="color" @tap.stop="onDelete(num)">删除</van-button>
+              <van-button size="small" :color="color1" @tap.stop="onModify(num)">修改</van-button>
             </div>
           </van-panel>
        </div>
@@ -138,6 +139,7 @@ let lastY = 0
         freshStatus: 'more', // 当前刷新的状态
         showRefresh: false,   // 是否显示下拉刷新组件
         color: '#CE0000',
+        color1: "#1989fa",
         switch1: false,
         load_text: "加载更多数据",
         switch2: false,
@@ -303,6 +305,26 @@ let lastY = 0
             })
             
           }  
+        })
+      },
+      onModify(num) {
+        console.log(num)
+        let url = ""
+        switch(num.type) {
+          case 'sublet':
+            url = '/pages/housingRental/main'
+            break;
+          case 'short_rent':
+            url = '/pages/housingShort/main'
+            break;
+          case 'find_mate':
+            url = '/pages/housingRomate/main'
+            break;
+        }
+        return
+        let a = JSON.stringify(num)
+        wx.navigateTo({
+          url: `${url}?dataDetail=`+encodeURIComponent(a),
         })
       },
       onDelete(num) {
@@ -580,6 +602,7 @@ padding-left: 10rpx;
 .send .footer .van-button {
    font-size: 28rpx;
    width: 140rpx;
+   margin-left: 20rpx;
    height: 64rpx;
 }
 .send .search .van-search__action--hover {

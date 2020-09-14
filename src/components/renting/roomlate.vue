@@ -18,12 +18,12 @@
     >搜索</div>
     </van-search>
     <div class="choose">
-      <view hover-class="bg_red">
+      <!-- <view hover-class="bg_red">
       <div :value="sort" @tap="sortClick" class="choose_div" @touchstart="sort">
         <span class="choose_time">发布时间</span><i style="font-size: 30rpx; color: #666666" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
         <i style="font-size: 30rpx;color: #666666" class="iconfont icon-sanjiaoxing_shang" v-else></i>
       </div>
-      </view>
+      </view> -->
       <!-- <span class="choose_time">发布时间</span><i @tip = "sort = asc" class="iconfont icon-sanjiaoxing" v-if="sort == 'desc'"></i>
       <i class="icon-sanjiaoxing_shang" v-else></i> -->
       <div class="shaixuan">

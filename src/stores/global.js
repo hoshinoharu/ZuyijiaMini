@@ -9,7 +9,8 @@ export default new Vuex.Store({
     count: 0,
     gg: "sss",
     style: {},
-    searchValue: ""
+    searchValue: "",
+    type: "short_rent"
   }, 
   mutations: {    
     increment: (state) => {
@@ -25,6 +26,10 @@ export default new Vuex.Store({
     changeValue: (state, data) => { 
       state.searchValue = ""
       state.searchValue = data
+    },
+    changeType: (state, data) => {
+      state.type = ""
+      state.type = data
     }
   }
 });

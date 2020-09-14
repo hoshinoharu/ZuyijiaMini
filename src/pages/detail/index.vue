@@ -108,6 +108,8 @@ import Top from '../../components/head/index'
     onLoad(option) {
       let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
       this.roomDetail = roomDetail
+      console.log(roomDetail.type)
+      this.$store.commit('changeType', roomDetail.type)
       this.imgUrls = JSON.parse(roomDetail.imgUrls)
       console.log( this.roomDetail)
     },
