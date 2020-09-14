@@ -367,8 +367,6 @@
         }
       },
       turnDetail(e,num) {
-        console.log(num)
-        return
         let a = JSON.stringify(num)
           wx.navigateTo({
             url: '/pages/detail/main?dataDetail='+encodeURIComponent(a),
