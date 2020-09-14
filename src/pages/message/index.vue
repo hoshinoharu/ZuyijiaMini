@@ -73,12 +73,21 @@
                 
               >
                 <!-- @click="toggle" -->
-                <div class="mess_info" slot="title">
+                <div class="mess_info" slot="title" v-if="id != num.creatorId">
                   <image class="home_img" :src="num.creator.headImg" alt="">
                     <i class="tip" v-show="num.status == 'unread'"></i>
                   </image>
                     <div class="mess_name">
                       <span>{{num.creator.username}}</span><br>
+                      <span>{{num.content}}</span>
+                    </div>
+                </div>
+                <div class="mess_info" slot="title" v-else>
+                  <image class="home_img" :src="num.receiver.headImg" alt="">
+                    <i class="tip" v-show="num.status == 'unread'"></i>
+                  </image>
+                    <div class="mess_name">
+                      <span>{{num.receiver.username}}</span><br>
                       <span>{{num.content}}</span>
                     </div>
                 </div>
@@ -156,7 +165,8 @@ import fun from '../../utils/index'
           flag: 'true'
         },
         windowHeight: 0,
-        scrollTop: 20
+        scrollTop: 20,
+        id: ""
       }
     },
     mounted () {
@@ -168,6 +178,7 @@ import fun from '../../utils/index'
           // this.dataInfo = res.data.data
           this.dataInfo = []
           let id = wx.getStorageSync("id")
+          this.id = wx.getStorageSync("id")
           res.data.data.forEach(num => {
             if(num.receiverId != num.creatorId) {
               this.dataInfo.push(num)
