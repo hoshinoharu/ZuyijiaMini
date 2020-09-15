@@ -5,6 +5,9 @@
 
     <div class="chat_all">
       <div class="chat_body"   :style="{height: heightP + 'rpx', width: '100%'}">
+        <div style="height: 40rpx; width: 100%; font-size: 26rpx; lineHeight: 40rpx;background: #FF5151; color: #fff;text-align:center">
+注意：以扫二维码/链接/去微信转账等形式让你转钱的都是骗子
+        </div>
         <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden'}">
         <scroll-view class="my_list" 
           id="page" 

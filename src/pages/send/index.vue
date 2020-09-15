@@ -174,6 +174,10 @@ let lastY = 0
       
       
     },
+    onShow() {
+      let id = wx.getStorageSync("id")
+      this.getData(id)
+    },
     onPullDownRefresh: function() { 
       // this.loadData()
       let num = this.num++
@@ -308,7 +312,6 @@ let lastY = 0
         })
       },
       onModify(num) {
-        console.log(num)
         let url = ""
         switch(num.type) {
           case 'sublet':
@@ -321,8 +324,8 @@ let lastY = 0
             url = '/pages/housingRomate/main'
             break;
         }
-        return
         let a = JSON.stringify(num)
+        console.log(a)
         wx.navigateTo({
           url: `${url}?dataDetail=`+encodeURIComponent(a),
         })
@@ -590,6 +593,9 @@ padding-left: 10rpx;
 }
 .send .sublet {
   padding: 20rpx 30rpx !important;
+}
+.send .sublet:first-child {
+  padding-top: 40rpx !important;
 }
 .send .sublet:last-child {
   padding: 20rpx 30rpx !important;

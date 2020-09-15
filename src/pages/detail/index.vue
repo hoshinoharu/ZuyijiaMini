@@ -47,7 +47,7 @@
             </div>
           </div>
           <div slot="footer" class="footer">
-            <van-button size="small" icon="chat-o" color="#07c160" plain @tap="message">留言</van-button>
+            <van-button size="small" icon="chat-o" color="#07c160" plain @tap="messageTurn">留言</van-button>
             <van-button size="small"  :icon="icon" :color="color" plain @tap="collect(roomDetail)">收藏</van-button>
           </div>
         </van-panel>
@@ -114,7 +114,10 @@ import Top from '../../components/head/index'
       console.log( this.roomDetail)
     },
     methods: {
-      message(){
+      messageTurn(){
+        wx.navigateTo({
+          url: "/page/detailInfo/main"
+        })
         // this.showMessage = true
       },
       onClose() {

@@ -29,7 +29,7 @@
     <van-overlay :show="show" @tap="onClickHide">
       <view class="wrapper">
         
-        <div class="block" @tap.stop="noop">
+        <div class="block" @tap.stop="noop1">
           <div style="height:700rpx">
             <van-tabs :active="active" animated @change="activeChange">
               <van-tab title="登录">
@@ -149,7 +149,7 @@
     </van-overlay>
     <van-overlay :show="warningShow" @click="onClickWarning">
       <div class="wrapper">
-        <div class="block black1" catch:tap="noop">
+        <div class="block black1" @tap.stop="noop">
           <div>
              <div id="style2">
                 <p>注意事项</p>
@@ -368,6 +368,9 @@ import Bottom from '../../components/bottom/index'
         
       },
       noop(e) {
+      // console.log(e)
+      },
+      noop1(e) {
       // console.log(e)
       },
       onReset(e, val) {

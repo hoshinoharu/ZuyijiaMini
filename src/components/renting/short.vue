@@ -1,5 +1,5 @@
 <template>
-  <div class="short" id="short">
+  <div id="short">
     <van-search
         v-model="searchValue"
         placeholder="请输入房源标题"
@@ -65,12 +65,13 @@
       </div>
       
     </div>
-    <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden'}">
+    <view :style="{width:(windowWidth - 10)*2 +'rpx', overflow: 'hidden'}">
       <scroll-view class="my_list" id="page"
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 210)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
+        :style='{height: (windowHeight - 210)*2+"rpx",width: ((windowWidth) * 2) + "rpx"}' 
+        scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
         @scrolltolower="loadMore"
@@ -91,8 +92,12 @@
             </view>
           </view>
         </view>
-        <div v-for="(num, i) in dataArr1" :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
-          <van-panel :title="num.title+'/'+num.typeStr" desc="描述信息" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
+        <div v-for="(num, i) in dataArr1" :key="i" :style="{width:(windowWidth -30)*2+'rpx'}" class="sublet" @tap="turnDetail($enent,num)"> 
+          <van-panel :title="num.title+'/'+num.typeStr"
+           desc="描述信息"
+           :status="num.statusStr"
+            use-footer-slot
+            class="sublet_main" footer-class="footer">
               <div class="content_main">
                 <div class="remark"><span>{{num.description}}</span></div>
                 <div>
@@ -544,6 +549,7 @@
   border: 2rpx solid#87caee;
   padding: 2rpx;
   border-radius: 5rpx;
+  margin: 0 auto;
 }
 #short .name span {
   width:auto;
@@ -567,6 +573,8 @@ padding-left: 10rpx;
 }
 #short .sublet {
   padding: 20rpx 30rpx !important;
+  
+   margin: 0 auto;
   
 }
 #short .sublet:first-child {
@@ -599,21 +607,21 @@ padding-left: 10rpx;
 #short .van-dropdown-item--down {
   top: 185px!important;
 }
-.shaixuan .van-cell .van-button {
+#short .shaixuan .van-cell .van-button {
   width: 200rpx;
   height: 80rpx;
    opacity: 0.8;
   font-size: 30rpx;
 }
-.checkbox{
+#short .checkbox{
     /* opacity: 0; */
     position: absolute;
     top: 0;
     left: 0;
     height: 50rpx;
     width: 100rpx;
-}
-.checkbox{
+} 
+#short .checkbox{
     position: relative;
     height: 50rpx;
     line-height: 50rpx;
@@ -627,19 +635,19 @@ padding-left: 10rpx;
     padding: 0 10rpx;
     box-sizing: border-box;
 }
-.boxflex{
+#short .boxflex{
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
-.active{
+#short .active{
     background: #1989fa;
 }
-.symbolRental .van-cell__title,.van-cell__value {
+#short .symbolRental .van-cell__title,.van-cell__value {
 flex: none;
 }
-.lzy-loading{
+#short .lzy-loading{
   margin-right: 20rpx;
   float: left;
   width: 40rpx;
@@ -650,7 +658,7 @@ flex: none;
   animation: load 1s linear infinite;
   -webkit-animation: load 1s linear infinite;
 }
-.flex {
+#short .flex {
   display: flex;
   align-items: column;
 }

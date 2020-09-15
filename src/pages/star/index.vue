@@ -569,6 +569,9 @@ padding-left: 10rpx;
 .star .sublet {
   padding: 20rpx 30rpx !important;
 }
+.star .sublet:first-child {
+  padding-top: 40rpx !important;
+}
 .star .sublet:last-child {
   padding: 20rpx 30rpx !important;
   padding-bottom: 10rpx!important;
