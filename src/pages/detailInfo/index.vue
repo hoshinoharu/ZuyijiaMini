@@ -360,17 +360,6 @@ import Top from '../../components/head/index'
           })
       },
       sendMessage(e,value) {
-        let that1 = this
-        // return
-      //   wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
-      //     console.log("react", rect)
-      // // 使页面滚动到底部
-      //      that1.scrollTop = rect.bottom
-      //         // wx.pageScrollTo({
-      //         //   scrollTop: rect.bottom+5000
-      //         // })
-      //   }).exec();
-        // return
         let val = value || this.msg
         let that = this
         let userId = wx.getStorageSync('id')

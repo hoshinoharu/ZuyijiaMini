@@ -3,7 +3,8 @@
   "usingComponents": {
     "van-field": "../../static/vant/field/index",
     "van-tag": "../../static/vant/tag/index",
-    "van-action-sheet": "../../static/vant/action-sheet/index"
+    "van-action-sheet": "../../static/vant/action-sheet/index",
+    "van-overlay": "../../static/vant/overlay/index"
   },
   "navigationBarTitleText": "test",
   "navigationStyle": "custom"

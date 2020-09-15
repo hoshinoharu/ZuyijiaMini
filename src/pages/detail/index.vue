@@ -7,7 +7,7 @@
           <swiper class='swiperClass' autoplay indicator-color="#a39f99" indicator-active-color="#f49641" indicator-dots  interval="2000" duration="1000" previous-margin="60px" next-margin="60px" circular @change="bindchange" :style="{height: swiperHeight+'px'}">
             <block v-for="(num, index) in imgUrls" :key="index">
               <swiper-item>
-                <image :src="num" class="slideImage" :class="swiperIdx == index ? 'active' : 'quiet'" mode='aspectFill'></image>
+                <image :src="num" class="slideImage" @tap="onPreview($event, num)" :class="swiperIdx == index ? 'active' : 'quiet'" mode='aspectFill'></image>
               </swiper-item>
             </block>
            </swiper>
@@ -47,7 +47,8 @@
             </div>
           </div>
           <div slot="footer" class="footer">
-            <van-button size="small" icon="chat-o" color="#07c160" plain @tap="messageTurn">留言</van-button>
+            <!-- v-if="flag" -->
+            <van-button size="small" icon="chat-o" color="#07c160"  v-if="flagMsg!='true'"  plain @tap="messageTurn">留言</van-button>
             <van-button size="small"  :icon="icon" :color="color" plain @tap="collect(roomDetail)">收藏</van-button>
           </div>
         </van-panel>
@@ -63,6 +64,9 @@
         
       </div>
     </van-action-sheet>
+    <van-overlay :show="warningShow" @click="onClickWarning">
+       <image :src="bigPath" alt="" class="bmg"></image>
+    </van-overlay>
   </div>
 </template>
 
@@ -86,9 +90,13 @@ import Top from '../../components/head/index'
           text: '房源详情', 
         },
         showMessage: false,
+        warningShow: false,
         color: '#FFCC66',
         icon: 'star',
+        flagMsg: 'false',
+        bigPath: "",
         sex: 'male',
+        userId: "",
         roomDetail: {},
         data1: {
           description: "速度大大大大大大大大大大大大大大大大大但是杀杀杀杀杀杀杀杀杀说的是事实",
@@ -106,17 +114,36 @@ import Top from '../../components/head/index'
       }
     },
     onLoad(option) {
+      this.userId = wx.getStorageSync("id")
       let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
       this.roomDetail = roomDetail
-      console.log(roomDetail.type)
+      // if(this.userId == roomDetail.creatorId) {
+      //   this.flag = true
+      // }
+      // console.log(this.flag, "flag")
+      console.log(this.userId, roomDetail.creatorId)
       this.$store.commit('changeType', roomDetail.type)
       this.imgUrls = JSON.parse(roomDetail.imgUrls)
-      console.log( this.roomDetail)
+    },
+    mounted () {
+       if(this.userId == this.roomDetail.creatorId) {
+        this.flagMsg = 'true'
+      }
+      this.$forceUpdate();
+      console.log(this.flagMsg, "flag")
     },
     methods: {
+      onPreview(e, path) {
+        this.warningShow = true
+        this.bigPath = path
+      },
+      onClickWarning() {
+        this.bagPath = ""
+        this.warningShow = false
+      },
       messageTurn(){
         wx.navigateTo({
-          url: "/page/detailInfo/main"
+          url: `/pages/detailInfo/main?id=${this.roomDetail.creatorId}` 
         })
         // this.showMessage = true
       },
@@ -165,6 +192,13 @@ import Top from '../../components/head/index'
 </script>
 
 <style>
+.bmg{
+    width: 100%;
+    position: absolute;
+    top: 0;left: 0;right: 0;bottom: 0;
+    z-index: 1001;
+    margin: auto;
+}
 .detail_main{
   display: flex;
   flex-direction: column;
