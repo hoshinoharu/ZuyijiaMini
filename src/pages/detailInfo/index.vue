@@ -199,7 +199,8 @@ import Top from '../../components/head/index'
         this.bigPath = path
       },
       onClickWarning() {
-        // this.bagPath = ""
+        this.bagPath = ""
+        this.warningShow = false
       },
       ascTime(arr) {
         arr.sort(function(a, b) {
