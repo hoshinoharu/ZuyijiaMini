@@ -619,20 +619,20 @@ padding-left: 10rpx;
     top: 0;
     left: 0;
     height: 50rpx;
-    width: 100rpx;
+    width: 120rpx;
 } 
 #short .checkbox{
     position: relative;
     height: 50rpx;
     line-height: 50rpx;
-    width: 100rpx;
+    width: 120rpx;
     background: #ccc;
     color: #fff;
-    font-size: 28rpx;
+    font-size: 26rpx;
     border-radius: 10rpx;
     margin: 10rpx;
     text-align: center;
-    padding: 0 10rpx;
+    padding: 0 5rpx;
     box-sizing: border-box;
 }
 #short .boxflex{

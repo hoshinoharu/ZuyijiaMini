@@ -49,7 +49,7 @@
                 <b class="l"></b>
                 <div class="text">
                   <span v-if="num.type=='text'">{{num.content}}</span>
-                  <image v-else class="chat_photo" :src="num.content" @tap.stop="onPreview($event, num.content)"></image>
+                  <image v-else class="chat_photo" :src="'https://www.zuyijia.cn:9443/app'+num.content" @tap.stop="onPreview($event, num.content)"></image>
 
                 </div>
               </div>
@@ -61,7 +61,7 @@
                 <b class="r"></b>
                 <div class="text">
                   <span v-if="num.type=='text'">{{num.content}}</span>
-                  <image v-else class="chat_photo" :src="num.content" @tap.stop="onPreview($event, num.content)"></image>
+                  <image v-else class="chat_photo" :src="'https://www.zuyijia.cn:9443/app'+num.content" @tap.stop="onPreview($event, num.content)"></image>
                 </div>
               </div>
               <div>
@@ -107,9 +107,20 @@
         
       </div>
     </van-action-sheet> -->
-    <van-overlay :show="warningShow" @click="onClickWarning">
-       <img :src="bigPath" alt="" class="bmg">
-    </van-overlay>
+    <!-- <van-overlay :show="warningShow" @click="onClickWarning">
+       <image :src="bigPath" alt="" class="bmg"></image>
+       <van-image
+          :width="windowWidth"
+          height="90%"
+          fit="contain"
+          class="bmg"
+          :src="bigPath + '?quality=1'" 
+        />
+    </van-overlay> -->
+    <canvas id="myCanvas" type="2d" 
+    :style="{width:canvasWidth + 'px',height:
+    canvasHeight + 'px',position:'fixed',top:'-9999px',left:'-9999px'}">
+    </canvas>
   </div>
 </template>
 
@@ -131,11 +142,14 @@ import Top from '../../components/head/index'
         total: "item9",
         heightP: "",
         id: "",
+        home_pics: [],
         warningShow: false,
         freshStatus: 'more', // 当前刷新的状态
         showRefresh: false,   // 是否显示下拉刷新组件
         msg:"",
         num: 1,
+        canvasWidth: "",
+        canvasHeight: "",
         path: "",
         bigPath: "",
         windowWidth: "",
@@ -156,6 +170,11 @@ import Top from '../../components/head/index'
         this.$http.get(`/app/chat/session?pageIndex=1&pageSize=10&receiverId=${option.id}`, res => {
           let arr = [].concat(res.data.data)
           this.content = this.ascTime(arr)
+          this.content.forEach(num => {
+            if(num.type == 'image') {
+              this.home_pics.push('https://www.zuyijia.cn:9443/app'+num.content)
+            }
+          })
           resolve()
         })
       }) 
@@ -165,8 +184,6 @@ import Top from '../../components/head/index'
           total: 'item'+(this.content.length)
         })
         _this.total = _this.$mp.page.data.total
-        console.log(_this.$mp.page.data.total)
-        console.log(_this.total)
         // this.toBottom()
       })
     },
@@ -192,11 +209,99 @@ import Top from '../../components/head/index'
       this.toBottom()
     },
  
-
     methods: {
+      previewImage: function (e) {  
+        var current=e.mp.target.dataset.src;
+        console.log(current)
+        wx.previewImage({
+              current: current, // 当前显示图片的http链接
+              urls: this.home_pics // 需要预览的图片http链接列表
+        })
+      },
+      canvas(path, name) {
+        wx.getSystemInfo({
+          success: res => {
+              let windowWidth = res.windowWidth;
+              // 获取图片信息
+              wx.getImageInfo({
+                  src: path,
+                  success: res => {
+                      // 比例
+                      var scale = 1;
+                      if (res.width > windowWidth) {
+                          scale = windowWidth / res.width;
+                      }
+                      // 宽
+                      let imgWidth = res.width * scale;
+                      // 高
+                      let imgHeight = res.height * scale;
+                      //设置canvas标签宽高
+                      this.canvasWidth = imgWidth
+                      this.canvasHeight = imgHeight
+                      //获取canvas-----------------------------------------
+                      const query = wx.createSelectorQuery();
+                      query.select('#myCanvas').fields({
+                          node: true,
+                          size: true
+                      }).exec(async res => {
+                          const canvas = res[0].node;
+                          canvas.width = imgWidth;
+                          canvas.height = imgHeight;
+                          //2d画布
+                          const ctx = canvas.getContext('2d');
+                          //创建图片
+                          const mainImg = canvas.createImage();
+                          mainImg.src = path
+                          const mainImgs = await new Promise((resolve, reject) => {
+                              mainImg.onload = () => resolve(mainImg);
+                              mainImg.onerror = (e) => reject(e);
+                          });
+                          // 绘制图像到画布
+                          ctx.drawImage(mainImgs, 0, 0, imgWidth, imgHeight);
+                          let base64 = canvas.toDataURL('image/jpeg', 0.9).replace('data:image/jpeg;base64,', "");
+                          this.sendImg(canvas.toDataURL('image/jpeg', 0.9), name)
+                          callBack(base64);
+                      })
+                  },
+                  fail: err => {
+                      console.log(err);
+                      modal('获取图片信息失败，请稍后重试！');
+                  }
+              })
+          }
+      })
+
+      },
+      sendImg(file, name) {
+        this.$http.post('/app/file/upload/base64', {
+                  fileName: name,
+                  base64Content: file
+                }, res => {
+                  if(res.data.success) {
+                    let userId = wx.getStorageSync('id')
+                    this.files.push(res.data.data)
+                    this.$http.post('/app/chat/send',{
+                      content: this.files[0],
+                      receiverId: this.id,
+                      type: 'image'
+                    }, res => {
+                      if(res.data.success) {
+                        this.shuaxin()
+                      }
+                    })
+                  }
+                }
+        )
+      },
       onPreview(e, path) {
+        
         this.warningShow = true
         this.bigPath = path
+        if(path.indexOf('http') != 0) {
+          this.bigPath = 'https://www.zuyijia.cn:9443/app' + path
+          // this.home_pics.push(this.bigPath)
+        }
+        this.previewImage(e)
       },
       onClickWarning() {
         this.bagPath = ""
@@ -389,7 +494,7 @@ import Top from '../../components/head/index'
         let type = file.path.split('.')
         let name = e.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
         console.log(name)
-       this.urlTobase64(file.path, name)
+       this.canvas(file.path, name)
         // console.log()
       },
       urlTobase64(url, name){
@@ -661,4 +766,18 @@ import Top from '../../components/head/index'
   from{transform:rotate(0deg);}
   to{transform:rotate(360deg);}
   }
+  .container {
+    box-sizing:border-box;
+    padding:20px;
+} 
+.previewimg{
+    float:left;
+    width:45%;
+    height:200px;
+    margin:2%;
+}
+.previewimg image{
+    width:100%;
+    height:100%;
+}
 </style>

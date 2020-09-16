@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App'
 import Store from './stores/global'
 import http from './utils/http'
-Vue.config.productionTip = false
 
+Vue.config.productionTip = false
 
 App.mpType = 'app'
 

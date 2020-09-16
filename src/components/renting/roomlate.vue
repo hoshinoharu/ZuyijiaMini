@@ -164,14 +164,14 @@
         searchValue: "",
         status: "",
         items: [
-            { name: 'USA', value: '美国', checked: false },
-            { name: 'CHN', value: '中国', checked: true },
-            { name: 'BRA', value: '巴西', checked: false },
-            { name: 'JPN', value: '日本', checked: false },
-            { name: 'ENG', value: '英国', checked: false },
-            { name: 'TUR', value: '法国', checked: false },
-            { name: 'TUR', value: '法国', checked: false },
-            { name: 'TUR', value: '法国', checked: false },
+            { name: '地铁站', value: '地铁站', checked: false },
+            { name: '火车站', value: '火车站', checked: false },
+            { name: '学校', value: '学校', checked: false },
+            { name: '医院', value: '医院', checked: false },
+            { name: '购物广场', value: '购物广场', checked: false },
+            { name: '超市', value: '超市', checked: false },
+            { name: '体育馆', value: '体育馆', checked: false },
+            { name: '菜市场', value: '菜市场', checked: false },
              
         ]
       }
@@ -610,20 +610,20 @@ padding-left: 10rpx;
     top: 0;
     left: 0;
     height: 50rpx;
-    width: 100rpx;
+    width: 120rpx;
 }
 .checkbox{
     position: relative;
     height: 50rpx;
     line-height: 50rpx;
-    width: 100rpx;
+    width: 120rpx;
     background: #ccc;
     color: #fff;
-    font-size: 28rpx;
+    font-size: 26rpx;
     border-radius: 10rpx;
     margin: 10rpx;
     text-align: center;
-    padding: 0 10rpx;
+    padding: 0 5rpx;
     box-sizing: border-box;
 }
 .boxflex{
