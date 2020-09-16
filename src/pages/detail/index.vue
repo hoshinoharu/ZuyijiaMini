@@ -74,16 +74,16 @@
         
       </div>
     </van-action-sheet>
-    <van-overlay :show="warningShow" @click="onClickWarning">
+    <!-- <van-overlay :show="warningShow" @click="onClickWarning"> -->
        <!-- <image :src="bigPath" alt="" class="bmg"></image> -->
-       <van-image
+       <!-- <van-image
           :width="windowWidth"
           height="90%"
           fit="contain"
           class="bmg"
           :src="bigPath + '?quality=1'" 
         />
-    </van-overlay>
+    </van-overlay> -->
   </div>
 </template>
 
@@ -113,6 +113,7 @@ import Top from '../../components/head/index'
         flagMsg: 'false',
         bigPath: "",
         sex: 'male',
+        home_pics: [],
         windowWidth: "",
         userId: "",
         roomDetail: {},
@@ -149,9 +150,14 @@ import Top from '../../components/head/index'
         }
         
       })
+      this.home_pics = [].concat(this.imgUrls)
+      this.home_pics.forEach((num, i) => {
+         this.home_pics[i] = num + '?quality=1'
+      })
       console.log(this.imgUrls)
     },
     mounted () {
+      
        if(this.userId == this.roomDetail.creatorId) {
         this.flagMsg = 'true'
       }
@@ -159,13 +165,21 @@ import Top from '../../components/head/index'
       console.log(this.flagMsg, "flag")
     },
     methods: {
+      previewImage: function (path) {  
+        var current=path
+        wx.previewImage({
+              current: current + '?quality=1', // 当前显示图片的http链接
+              urls: this.home_pics // 需要预览的图片http链接列表
+        })
+      },
       onPreview(e, path) {
-        this.warningShow = true
+        // this.warningShow = true
         this.bigPath = path
+        this.previewImage(path)
       },
       onClickWarning() {
         this.bagPath = ""
-        this.warningShow = false
+        // this.warningShow = false
       },
       messageTurn(){
         wx.navigateTo({
