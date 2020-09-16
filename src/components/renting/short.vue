@@ -170,14 +170,14 @@
         searchValue: "",
         status: "",
         items: [
-            { name: 'USA', value: '美国', checked: false },
-            { name: 'CHN', value: '中国', checked: true },
-            { name: 'BRA', value: '巴西', checked: false },
-            { name: 'JPN', value: '日本', checked: false },
-            { name: 'ENG', value: '英国', checked: false },
-            { name: 'TUR', value: '法国', checked: false },
-            { name: 'TUR', value: '法国', checked: false },
-            { name: 'TUR', value: '法国', checked: false },
+            { name: '地铁站', value: '地铁站', checked: false },
+            { name: '火车站', value: '火车站', checked: false },
+            { name: '学校', value: '学校', checked: false },
+            { name: '医院', value: '医院', checked: false },
+            { name: '购物广场', value: '购物广场', checked: false },
+            { name: '超市', value: '超市', checked: false },
+            { name: '体育馆', value: '体育馆', checked: false },
+            { name: '菜市场', value: '菜市场', checked: false },
              
         ]
       }

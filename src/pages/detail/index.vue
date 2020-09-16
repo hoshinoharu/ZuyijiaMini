@@ -124,6 +124,9 @@ import Top from '../../components/head/index'
       console.log(this.userId, roomDetail.creatorId)
       this.$store.commit('changeType', roomDetail.type)
       this.imgUrls = JSON.parse(roomDetail.imgUrls)
+      this.imgUrls.forEach(num => {
+        num = '/app' + num
+      })
     },
     mounted () {
        if(this.userId == this.roomDetail.creatorId) {

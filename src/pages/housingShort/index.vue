@@ -122,18 +122,21 @@ import Top from '../../components/head/index'
         files: [],
         show: false,
         multiIndex: "",
-        columns: ['地铁站', '超市', '火车站', '购物广场', '学校']
+        columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场']
       }
     },
     onLoad(option) {
       this.resetRoom()
-      let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
-      console.log(roomDetail)
-      if(roomDetail.id) {
-        this.modify(roomDetail)
-      } else {
-        this.resetRoom()
+      if(option.dataDetail) {
+        let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
+        console.log(roomDetail)
+        if(roomDetail.id) {
+          this.modify(roomDetail)
+        } else {
+          this.resetRoom()
+        }
       }
+      
       
     },
     methods: {

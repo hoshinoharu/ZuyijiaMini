@@ -91,8 +91,9 @@
                   @delete="deleteImg"
                   @afterread="afterRead" />
                 <div class="button">
-                  <button type="button" class="bt_connect" @tap="checkForm(this)" style="float: left">发布</button>
-                  <button type="button" class="bt_connect"  @tap.stop="resetRoom()" style="float: right">重置</button>
+                  <button type="button" class="bt_connect"  @tap.stop="resetRoom()" style="float: left">重置</button>
+                  <button type="button" class="bt_connect" @tap="checkForm(this)" style="float: right">发布</button>
+                  
                 </div>
               </div>
               
@@ -103,6 +104,8 @@
        <van-picker show-toolbar :columns="columns" @cancel="onCancel" @change="onChange"  @confirm="onConfirm"/>
     </van-action-sheet>
     <span v-show="show1"></span>
+    <canvas id="myCanvas" type="2d" :style="{width:canvasWidth + 'px',height:
+canvasHeight + 'px',position:'fixed',top:'-9999px',left:'-9999px'}"></canvas>
   </div>
 </template>
 
@@ -119,6 +122,8 @@ import Top from '../../components/head/index'
           flag: true,
           text: '寻找室友'
         },
+        canvasWidth: "",
+        canvasHeight: "",
         room: {
           type: [],
           title: "",
@@ -131,13 +136,105 @@ import Top from '../../components/head/index'
         files: [],
         show: false,
         multiIndex: "",
-        columns: ['WIFI', '洗衣机', '冰箱', '煤气', '热水器']
+        columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场']
       }
     },
-    onLoad() {
+    onLoad(option) {
       this.resetRoom()
+      if(option.dataDetail) {
+        let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
+        console.log(roomDetail)
+        if(roomDetail.id) {
+          this.modify(roomDetail)
+        } else {
+          this.resetRoom()
+        }
+      }
     },
     methods: {
+      modify(num) {
+        this.room.title = num.title
+        this.room.description = num.description
+        this.modifyId = num.id
+        this.room.male = num.male
+        this.room.female = num.female
+        this.room.type = JSON.parse(num.tags)
+        this.room.priceEachMonth = num.priceEachMonth
+        this.room.liveDuration = num.liveDuration
+        let arr = JSON.parse(num.imgUrls)
+        arr.forEach(num => {
+          this.fileList.push({
+            url:num, 
+            name: '图片2'
+          })
+          this.files.push(num)
+        })
+      },
+      canvas(path, name) {
+        wx.getSystemInfo({
+          success: res => {
+              let windowWidth = res.windowWidth;
+              // 获取图片信息
+              wx.getImageInfo({
+                  src: path,
+                  success: res => {
+                      // 比例
+                      var scale = 1;
+                      if (res.width > windowWidth) {
+                          scale = windowWidth / res.width;
+                      }
+                      // 宽
+                      let imgWidth = res.width * scale;
+                      // 高
+                      let imgHeight = res.height * scale;
+                      //设置canvas标签宽高
+                      this.canvasWidth = imgWidth
+                      this.canvasHeight = imgHeight
+                      //获取canvas-----------------------------------------
+                      const query = wx.createSelectorQuery();
+                      query.select('#myCanvas').fields({
+                          node: true,
+                          size: true
+                      }).exec(async res => {
+                          const canvas = res[0].node;
+                          canvas.width = imgWidth;
+                          canvas.height = imgHeight;
+                          //2d画布
+                          const ctx = canvas.getContext('2d');
+                          //创建图片
+                          const mainImg = canvas.createImage();
+                          mainImg.src = path
+                          const mainImgs = await new Promise((resolve, reject) => {
+                              mainImg.onload = () => resolve(mainImg);
+                              mainImg.onerror = (e) => reject(e);
+                          });
+                          // 绘制图像到画布
+                          ctx.drawImage(mainImgs, 0, 0, imgWidth, imgHeight);
+                          let base64 = canvas.toDataURL('image/jpeg', 0.9).replace('data:image/jpeg;base64,', "");
+                          this.sendImg(canvas.toDataURL('image/jpeg', 0.9), name)
+                          callBack(base64);
+                      })
+                  },
+                  fail: err => {
+                      console.log(err);
+                      modal('获取图片信息失败，请稍后重试！');
+                  }
+              })
+          }
+      })
+
+      },
+      sendImg(file, name) {
+        this.$http.post('/app/file/upload/base64', {
+            fileName: name,
+            base64Content: file
+          }, res => {
+            console.log(res)
+            if(res.data.success) {
+              this.files.push(res.data.data)
+            }
+          })
+      },
       onChangeSex(e, type) {
         if(type == 'male') {
           console.log(e.mp.detail)
@@ -263,7 +360,8 @@ import Top from '../../components/head/index'
         this.fileList.push(
            { url: file.path, name: '图片2'},
         )
-       this.urlTobase64(file.path, name)
+      //  this.urlTobase64(file.path, name)
+      this.canvas(file.path, name)
       },
     }
   }
