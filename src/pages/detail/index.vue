@@ -7,7 +7,17 @@
           <swiper class='swiperClass' autoplay indicator-color="#a39f99" indicator-active-color="#f49641" indicator-dots  interval="2000" duration="1000" previous-margin="60px" next-margin="60px" circular @change="bindchange" :style="{height: swiperHeight+'px'}">
             <block v-for="(num, index) in imgUrls" :key="index">
               <swiper-item>
-                <image :src="num" class="slideImage" @tap="onPreview($event, num)" :class="swiperIdx == index ? 'active' : 'quiet'" mode='aspectFill'></image>
+                <!-- <image :src="num" class="slideImage" @tap="onPreview($event, num)" 
+                :class="swiperIdx == index ? 'active' : 'quiet'" mode='aspectFill'></image> -->
+                <van-image
+                  width="100%"
+                  height="90%"
+                  fit="cover"
+                  @tap="onPreview($event, num)" 
+                 :src="num"
+                 :image-class="swiperIdx == index ? 'active' : 'quiet'" 
+                  class="slideImage"
+                />
               </swiper-item>
             </block>
            </swiper>
@@ -65,7 +75,14 @@
       </div>
     </van-action-sheet>
     <van-overlay :show="warningShow" @click="onClickWarning">
-       <image :src="bigPath" alt="" class="bmg"></image>
+       <!-- <image :src="bigPath" alt="" class="bmg"></image> -->
+       <van-image
+          :width="windowWidth"
+          height="90%"
+          fit="contain"
+          class="bmg"
+          :src="bigPath + '?quality=1'" 
+        />
     </van-overlay>
   </div>
 </template>
@@ -96,6 +113,7 @@ import Top from '../../components/head/index'
         flagMsg: 'false',
         bigPath: "",
         sex: 'male',
+        windowWidth: "",
         userId: "",
         roomDetail: {},
         data1: {
@@ -114,6 +132,7 @@ import Top from '../../components/head/index'
       }
     },
     onLoad(option) {
+      this.windowWidth = this.globalData.windowWidth
       this.userId = wx.getStorageSync("id")
       let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
       this.roomDetail = roomDetail
@@ -124,9 +143,13 @@ import Top from '../../components/head/index'
       console.log(this.userId, roomDetail.creatorId)
       this.$store.commit('changeType', roomDetail.type)
       this.imgUrls = JSON.parse(roomDetail.imgUrls)
-      this.imgUrls.forEach(num => {
-        num = '/app' + num
+      this.imgUrls.forEach((num, i)=> {
+        if(num.indexOf('http') != 0) {
+          this.imgUrls[i] = 'https://www.zuyijia.cn:9443/app' + num
+        }
+        
       })
+      console.log(this.imgUrls)
     },
     mounted () {
        if(this.userId == this.roomDetail.creatorId) {
@@ -202,6 +225,10 @@ import Top from '../../components/head/index'
     z-index: 1001;
     margin: auto;
 }
+.bmg .van-image {
+  margin-top: 15%;
+  /* top: calc(50% - 200px); */
+}
 .detail_main{
   display: flex;
   flex-direction: column;
@@ -271,7 +298,7 @@ import Top from '../../components/head/index'
   box-shadow: 0 2rpx 25rpx rgb(166,124,64)
 }
 .pageTwo .swiperClass {margin: 0;margin-top: 10px;}
-.pageTwo .slideImage {width: 100%;height: 90%;border-radius: 10px;position: relative;box-shadow: 0 0 10rpx rgba(0, 0, 0, .8)}
-.pageTwo image.active {transform: none;transition: all 0.2s ease-in 0s;}
-.pageTwo image.quiet {transform: scale(0.8333333);transition: all 0.2s ease-in 0s;}
+.pageTwo .slideImage .van-image image{width: 100%;height: 90%;border-radius: 10px;position: relative;box-shadow: 0 0 10rpx rgba(0, 0, 0, .8)}
+.pageTwo .van-image image.active {transform: none;transition: all 0.2s ease-in 0s;}
+.pageTwo .van-image image.quiet {transform: scale(0.8333333);transition: all 0.2s ease-in 0s;}
 </style>

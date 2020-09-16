@@ -4,7 +4,8 @@
     "van-field": "../../static/vant/field/index",
     "van-tag": "../../static/vant/tag/index",
     "van-action-sheet": "../../static/vant/action-sheet/index",
-    "van-overlay": "../../static/vant/overlay/index"
+    "van-overlay": "../../static/vant/overlay/index",
+    "van-image": "../../static/vant/image/index"
   },
   "navigationBarTitleText": "test",
   "navigationStyle": "custom"
