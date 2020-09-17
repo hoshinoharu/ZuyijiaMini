@@ -158,6 +158,8 @@
         color: '#FFCC66',
         switch1: false,
         switch2: false,
+        tags: [],
+        flagType: false,
         freshStatus: 'more', // 当前刷新的状态
         showRefresh: false,   // 是否显示下拉刷新组件
         windowHeight: 0,
@@ -168,7 +170,7 @@
         navHeight: "",
         // icon: 'star-o',
         searchValue: "",
-        status: "",
+        status: "persistent",
         items: [
             { name: '地铁站', value: '地铁站', checked: false },
             { name: '火车站', value: '火车站', checked: false },
@@ -226,7 +228,12 @@
         if (this.freshStatus == 'end') {
           // 延迟 500 毫秒，显示 “刷新中”，防止请求速度过快不显示
           // setTimeout(()=>{
-              this.getData(); // 获取最新列表数据
+            if(this.flagType == true) {
+              this.onSearchSend1(this.tags, this.status)
+            }else {
+              this.getData();
+            }
+              // 获取最新列表数据
           // }, 500);
         } else {
           this.showRefresh = false
@@ -248,7 +255,13 @@
         that.loading = true;
         that.loaded = false;
         that.number = that.number + 1
-        this.$http.get(`/app/house/export/list?pageIndex=${that.number}&pageSize=10&type=${type}`, res=> {
+        let url = ""
+        if(this.flagType == true) {
+          url = `/app/house/export/list?pageIndex=${that.number}&pageSize=10&type=${type}&tags=${ JSON.stringify(this.tags) }&status=${this.status}`
+        } else {
+          url = `/app/house/export/list?pageIndex=${that.number}&pageSize=10&type=${type}`
+        }
+        this.$http.get(url, res=> {
           if(res.data.success) {
             let a = new Promise((resolve, reject) => {
               setTimeout(() => {
@@ -284,9 +297,14 @@
       },
       getData() {
         let that = this
-        if(that.showRefresh == true) {
-          this.freshStatus = 'fresh'
-        }
+        // this.items.forEach(num => {
+        //   num.checked = false
+        // })
+        // this.flagType = false
+        // this.switch1 = false
+        // if(that.showRefresh == true) {
+        //   this.freshStatus = 'fresh'
+        // }
         that.number = 1
         let type = 'short_rent'
         this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`, res=> {
@@ -329,13 +347,29 @@
     },    
       onConfirm() {
         this.$root.$mp.page.selectComponent('#item').toggle();
+        this.flagType = true
+        let tags = []
+        this.items.forEach((num, i) => {
+          if(num.checked == true) {
+            tags.push({
+              value: num.value,
+              index: i
+            })
+          }
+        })
+        this.tags = [].concat(tags)
+        this.onSearchSend1(this.tags, this.status)
+
       },
       onConfirmReset() {
         this.items.forEach(num => {
           num.checked = false
         })
+        this.flagType = false
         this.switch1 = false
+        this.getData();
         this.$root.$mp.page.selectComponent('#item').toggle();
+        
       },
       onInput () {
         this.switch1 = !this.switch1
@@ -349,13 +383,50 @@
       onInput1 () {
         this.switch2 = !this.switch2
       },
+      onSearchSend1(tags, status){
+          let that = this
+          if(this.flagType == true) {
+            if(that.showRefresh == true) {
+              this.freshStatus = 'fresh'
+            }
+            that.number = 1
+          }
+          
+          let type = 'short_rent'
+          let title = this.searchValue
+          let tag = JSON.stringify(tags)
+          this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}&tags=${tag}&status=${status}`, res=> {
+            if(res.data.success) {
+              that.dataArr1 = [].concat(res.data.data)
+              that.dataArr1.forEach(num => {
+                num.updateTime = num.updateTime.substring(0, 10)
+                if(num.favorite == false) {
+                  num.icon="star-o"
+                } else {
+                  num.icon = "star"
+                }
+              })
+          }
+          if(that.flagType == true) {
+            setTimeout(() => {
+              that.showRefresh = false
+            }, 1000)
+          }
+        })
+      },
       onSearchSend(e) {
         let that = this
         if(this.searchValue) {
           that.number = 1
           let title = this.searchValue
           let type = 'short_rent'
-          this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}`, res=> {
+          let url = ""
+          if(this.flagType == true) {
+            url = `/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}&tags=${ JSON.stringify(this.tags) }&status=${this.status}`
+          } else {
+            url = `/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}`
+          }
+          this.$http.get(url, res=> {
             if(res.data.success) {
               that.dataArr1 = [].concat(res.data.data)
               that.dataArr1.forEach(num => {
