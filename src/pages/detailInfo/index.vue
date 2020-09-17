@@ -172,7 +172,7 @@ import Top from '../../components/head/index'
           this.content = this.ascTime(arr)
           this.content.forEach(num => {
             if(num.type == 'image') {
-              this.home_pics.push('https://www.zuyijia.cn:9443/app'+num.content)
+              this.home_pics.push('https://www.zuyijia.cn:9443/app'+num.content + '?quality=1')
             }
           })
           resolve()
