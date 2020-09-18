@@ -33,7 +33,7 @@
           <van-dropdown-item title="筛选" ref="item" id="item">
             <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
             <!-- <van-cell :title="'性别: '+sex"> -->
-            <van-cell title="租房状态">
+            <van-cell title="已出租">
               <van-switch v-model="switch1"  @input="onInput"></van-switch>
             </van-cell>
             <!-- <van-cell  title="团购">

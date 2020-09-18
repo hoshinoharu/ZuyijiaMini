@@ -182,9 +182,18 @@ import Top from '../../components/head/index'
         // this.warningShow = false
       },
       messageTurn(){
-        wx.navigateTo({
-          url: `/pages/detailInfo/main?id=${this.roomDetail.creatorId}` 
-        })
+        if(this.globalData.tokenFlag == undefined || this.globalData.tokenFlag == null ||this.globalData.tokenFlag==false) {
+            wx.showToast({
+                title: '请用户先登录',
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+          } else {
+          wx.navigateTo({
+            url: `/pages/detailInfo/main?id=${this.roomDetail.creatorId}` 
+          })
+        }
         // this.showMessage = true
       },
       onClose() {
