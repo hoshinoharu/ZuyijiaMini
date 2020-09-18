@@ -37,18 +37,18 @@
     
     methods: {
       onClickBack () {
-        if(this.back.switch) {
-          wx.switchTab({
-            url: "/pages/nav/main",
-            success: (res) => {
-              let page = getCurrentPages().pop();
-              if(page == undefined || page == null){
-                    return
-              }
-              page.onLoad();
-            }
-          })
-        } else {
+        // if(this.back.switch) {
+        //   wx.switchTab({
+        //     url: "/pages/nav/main",
+        //     success: (res) => {
+        //       let page = getCurrentPages().pop();
+        //       if(page == undefined || page == null){
+        //             return
+        //       }
+        //       page.onLoad();
+        //     }
+        //   })
+        // } else {
           if(this.back.url) {
             wx.navigateTo({
               url: this.back.url,
@@ -63,7 +63,7 @@
         
         // wx.navigateBack({ changed: true });
       }
-    }
+    
   }
 </script>
 

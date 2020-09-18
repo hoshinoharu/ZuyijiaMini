@@ -136,7 +136,7 @@ import Top from '../../components/head/index'
         files: [],
         show: false,
         multiIndex: "",
-        columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场']
+        columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场', '体育馆', '医院']
       }
     },
     onLoad(option) {

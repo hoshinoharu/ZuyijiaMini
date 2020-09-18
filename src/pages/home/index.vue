@@ -69,7 +69,16 @@ import item from "../item/index"
           }
         })
     },
+    mounted () {
+      this.getCity()
+    },
     methods: {
+      getCity() {
+        this.$http.get('/app/district/export/country/grouped', res => {
+          console.log(res)
+        })
+        
+      },
       onChange(event) {
         console.log(event.mp.detail)
         this.active = event.mp.detail

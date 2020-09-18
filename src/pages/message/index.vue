@@ -75,20 +75,22 @@
                 <!-- @click="toggle" -->
                 <div class="mess_info" slot="title" v-if="id != num.creatorId">
                   <image class="home_img" :src="num.creator.headImg" alt="">
-                    <i class="tip" v-show="num.status == 'unread'"></i>
+                    <i class="tip" v-if="num.status == 'unread'"></i>
                   </image>
                     <div class="mess_name">
                       <span>{{num.creator.username}}</span><br>
-                      <span>{{num.content}}</span>
+                      <span v-if="num.type=='text'">{{num.content}}</span>
+                      <span v-else>图片</span>
                     </div>
                 </div>
                 <div class="mess_info" slot="title" v-else>
                   <image class="home_img" :src="num.receiver.headImg" alt="">
-                    <i class="tip" v-show="num.status == 'unread'"></i>
+                    <i class="tip" v-if="num.status == 'unread'"></i>
                   </image>
                     <div class="mess_name">
                       <span>{{num.receiver.username}}</span><br>
-                      <span>{{num.content}}</span>
+                      <span v-if="num.type=='text'">{{num.content}}</span>
+                      <span v-else>图片</span>
                     </div>
                 </div>
                 <div slot="right-icon" class="rightArea">
@@ -128,7 +130,7 @@
           <van-goods-action-button
             text="清除未读"
             type="warning"
-            bind:click="onShread"
+            @click="onShread"
           />
           <van-goods-action-button text="删除" bind:click="onShdelete" />
         </van-goods-action>
@@ -206,6 +208,8 @@ import fun from '../../utils/index'
             num.createTimeStr = fun.getTimeInfo(num.createTimeStr)
             this.content.push(String(num.id))
           })
+          this.modifyShow  = true
+          this.result = []
         }
         console.log(res.data.success)
       })
@@ -308,17 +312,32 @@ import fun from '../../utils/index'
       })
     },
       onShread(e, num) {
-        this.$http.post('/app/chat/read/all', {
-          id: id
-        }, res => {
+        
+        console.log(this.result)
+        // return
+        this.$http.put('/app/chat/read/all', JSON.stringify(this.result), res => {
           console.log(res)
+          wx.showToast({
+                title: res.data.msg,  // 标题
+                icon: 'success',
+                // icon: 'none',
+                mask:true,   // 图标类型，默认success
+                duration: 1500   // 提示窗停留时间，默认1500ms
+            })
+          this.getData()
         })
       },
       onShdelete(e, num) {
-        this.$http.post('', {
-          id: id
-        }, res => {
-          console.log(res)
+        this.$http.delete('/app/house/delete/all', JSON.stringify(this.result), 
+        res => {
+          wx.showToast({
+                title: res.data.msg,  // 标题
+                icon: 'success',
+                // icon: 'none',
+                mask:true,   // 图标类型，默认success
+                duration: 1500   // 提示窗停留时间，默认1500ms
+            })
+          this.getData()
         })
       },
       turnDataInfo(e, num) {
@@ -369,10 +388,16 @@ import fun from '../../utils/index'
         })
       },
       onDelete(e, id) {
-        this.$http.post('/app/house/delete',{
+        this.$http.delete('/app/house/delete',{
           id: id
         }, res => {
-          console.log(res)
+          wx.showToast({
+            title: res.data.msg,  // 标题
+            icon: 'success',
+            // icon: 'none',
+            mask:true,   // 图标类型，默认success
+            duration: 1500   // 提示窗停留时间，默认1500ms
+          })
         })
       },
       allModify() {
@@ -489,7 +514,7 @@ import fun from '../../utils/index'
   height: 80rpx;
   border-radius: 10rpx;
   /* margin: 100rpx 0; */
-  border: 1px solid #fff;
+  border: 1px solid #bbb;
 }
 .message .mess_info{
   width: auto;

@@ -275,6 +275,7 @@ import Bottom from '../../components/bottom/index'
         this.$http.get('/app/login/validate', res => {
           console.log(res)
           if(res.data.success) {
+            this.globalData.tokenFlag = true;
             this.loginSuccess = true;
             this.warningFlag = false;
           }
@@ -295,19 +296,27 @@ import Bottom from '../../components/bottom/index'
         if(type == 'flag') {
           this.warningShow = true
         } else {
-          wx.navigateTo({
-            url: type + `?creatorId=${wx.getStorageSync('id')}`,
-            events: {
-              // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-              acceptDataFromOpenedPage: function(data) {
-                console.log(data)
+          if(this.globalData.tokenFlag == undefined || this.globalData.tokenFlag == null ||this.globalData.tokenFlag==false) {
+            wx.showToast({
+                title: '请用户先登录',
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+          } else {
+            wx.navigateTo({
+              url: type + `?creatorId=${wx.getStorageSync('id')}`,
+              events: {
+                // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+                acceptDataFromOpenedPage: function(data) {
+                  console.log(data)
+                },
+                someEvent: function(data) {
+                  console.log(data)
+                }
               },
-              someEvent: function(data) {
-                console.log(data)
-              }
-            },
-          })
-        }
+            })
+          }}
       },
       login() {
         this.type = '登录'
@@ -462,6 +471,7 @@ import Bottom from '../../components/bottom/index'
               mask:true,
               duration: 2000
             })
+            this.globalData.tokenFlag = true;
             this.loginSuccess = true
             this.show = false
             this.warningFlag = false

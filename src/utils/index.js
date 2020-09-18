@@ -20,7 +20,7 @@ export function formatTime (date) {
 
 const getTimeInfo = str => {
   if (!str) return ''
-  const date = new Date(str);
+  const date = new Date(str.replace(/-/g, '/'));
   const time = new Date().getTime() - date.getTime();
   if (time < 0) {
     return '';
