@@ -74,64 +74,6 @@
 </template>
 
 <script>
-let a = {
-  A: [
-    {
-      cityCode: "131100",
-      cityName: "衡水市",
-      counCode: "131125",
-      counName: "安平县",
-      createTimeStr: "",
-      provCode: "130000",
-      provName: "河北省",
-      status: "persistent",
-      statusStr: "persistent",
-      updateTimeStr: ""
-    }
-  ],
-  B: [
-    {
-      cityCode: "131100",
-      cityName: "衡水市",
-      counCode: "131125",
-      counName: "安平县",
-      createTimeStr: "",
-      provCode: "130000",
-      provName: "河北省",
-      status: "persistent",
-      statusStr: "persistent",
-      updateTimeStr: ""
-    }
-  ],
-  C:[
-    {
-      cityCode: "131100",
-      cityName: "衡水市",
-      counCode: "131125",
-      counName: "安平县",
-      createTimeStr: "",
-      provCode: "130000",
-      provName: "河北省",
-      status: "persistent",
-      statusStr: "persistent",
-      updateTimeStr: ""
-    }
-  ],
-  D:[
-    {
-      cityCode: "131100",
-      cityName: "衡水市",
-      counCode: "131125",
-      counName: "安平县",
-      createTimeStr: "",
-      provCode: "130000",
-      provName: "河北省",
-      status: "persistent",
-      statusStr: "persistent",
-      updateTimeStr: ""
-    }
-  ],
-}
 let areaName = [
    {
     name: "北京",
@@ -175,6 +117,9 @@ let areaName = [
   },
 ]
 import Top from '../../components/head/index'
+import item from "../item/index"
+let bmap = require('../../../static/libs/bmap-wx.min.js');
+let wxMarkerData = [];    //  定位成功回调对象
   export default {
     name: '',
     components: {
@@ -183,7 +128,7 @@ import Top from '../../components/head/index'
     data() {
       return {
         areaName,
-        a,
+        ak:"UNrOozLxSIPT9tHTA6hMzKmKugTFIlPu", 
         keys: [],
         cityName: [],
         back: {
@@ -193,6 +138,7 @@ import Top from '../../components/head/index'
           url: "/pages/home/main",
         },
         location: "上海",
+        city: "",
         replay: false,
         value: ""
       }
@@ -203,6 +149,47 @@ import Top from '../../components/head/index'
       this.keys = Object.keys(this.a)
     },
     methods: {
+      location1() {
+        var that = this;
+    // 获取定位地理位置
+    // 新建bmap对象
+        let BMap = new bmap.BMapWX({
+          ak:that.ak
+        });
+        let fail = function(data){
+          console.log(data);
+        };
+        let success = function(data){
+          // 返回数据内，已经包含经纬度
+          let arr = data.originalData.result
+          that.globalData.location = {
+            longitude: arr.location.lng,
+            latitude: arr.location.lat,
+            provName: arr.addressComponent.province,
+            cityName: arr.addressComponent.city,
+            counName: arr.addressComponent.district,
+            townName: arr.addressComponent.street,
+          }
+          that.globalData.addressComponent = Object.assign({}, arr.addressComponent) 
+          // 使用wxMarkerData获取数据
+          that.city = arr.addressComponent.city
+          wxMarkerData = data.wxMarkerData;
+          // 把所有数据放在初始化data内
+          // that.location = {
+          //   markers:wxMarkerData,
+          //   latitude: wxMarkerData[0].latitude,
+          //   longitude: wxMarkerData[0].longitude,
+          //   address:wxMarkerData[0].address,
+          //   cityInfo:data.originalData.result.addressComponent
+          // }
+        };
+
+    // 发起regeocoding检索请求
+        BMap.regeocoding({
+          fail:fail,
+          success:success
+        })
+      },
       onTurnCity(e, num) {
         console.log(num)
         this.$store.commit('changeCounCode', num.counCode)
@@ -251,20 +238,31 @@ import Top from '../../components/head/index'
         this.getCity(this.value)
       },
       onReplay() {
+       
         this.replay = true
-        setTimeout(() => { 
-          this.replay = false
-          if(JSON.stringify(this.globalData.location) != "{}") {
-            this.location = this.globalData.location.cityName
-          } else {
-            wx.showToast({
-                title: '重新定位失败',
-                icon: 'none',
-                mask:true,
-                duration: 2000
+        let a = new Promise((resolve, reject) => {
+          this.location1()
+          resolve()
+        })
+        a.then(() => {
+          setTimeout(() => {
+            this.replay = false
+            if(this.city != "") {
+              this.location = this.city
+              this.areaName.forEach(num =>{
+                num.checked = false
               })
-          }
-        }, 1000)
+            } else {
+              wx.showToast({
+                  title: '重新定位失败',
+                  icon: 'none',
+                  mask:true,
+                  duration: 2000
+                })
+            }
+          }, 1000)
+        })
+        
       },
     }
   }
