@@ -203,6 +203,7 @@
               that.dataArr1[i] = newValue[i]
 　　　　　　　}
 　　　　　　}
+          this.counCode = this.$store.state.counCode
   　　　　},
   　　　　deep: true
   　　}
@@ -211,9 +212,6 @@
       setTimeout(() => {
         this.counCode = this.$store.state.counCode
       }, 1500)
-        
-      
-      
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
       // this.navHeight = this.globalData.navHeight

@@ -185,12 +185,16 @@
     watch: {
       dataArr: {
 　　　　handler(newValue, oldValue) {
-       let that = this
+          let that = this
+          if(newValue.length == 0) {
+            that.dataArr1 = []
+          }
 　　　　　　for (let i = 0; i < newValue.length; i++) {
 　　　　　　　if (oldValue[i] != newValue[i]) {
               that.dataArr1[i] = newValue[i]
 　　　　　　　}
 　　　　　　}
+          this.counCode = this.$store.state.counCode
   　　　　},
   　　　　deep: true
   　　}
