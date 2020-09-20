@@ -169,7 +169,7 @@
         searchValue: "",
         status: "persistent",
         tags: [],
-         items: [
+        items: [
             { name: '地铁站', value: '地铁站', checked: false },
             { name: '火车站', value: '火车站', checked: false },
             { name: '学校', value: '学校', checked: false },
@@ -178,7 +178,6 @@
             { name: '超市', value: '超市', checked: false },
             { name: '体育馆', value: '体育馆', checked: false },
             { name: '菜市场', value: '菜市场', checked: false },
-             
         ]
       }
     },
@@ -346,19 +345,28 @@
 
     //添加class 样式
     addclass(e){
+      console.log(e)
         let self = this
         //获取数据
         let list = self.items
         //获取index
         let index = e.mp.currentTarget.dataset.index
         //如果为true变为false
-        if(list[index].checked){
-            list[index].checked=false
-        }else{
-            list[index].checked = true
-        }
+        console.log(index)
+        list.forEach((num, i) => {
+          if(i == index) {
+            list[i].checked = !list[i].checked 
+          }
+        })
+        // if(list[index].checked){
+        //     list[index].checked=false
+        // }else{
+        //     list[index].checked = true
+        // }
         //重新赋值
-        self.items = [] .concat(list)
+        console.log(list, "list")
+        self.items = []
+        self.items = [].concat(list)
     },   
       onConfirm() {
         this.$root.$mp.page.selectComponent('#item').toggle();
@@ -741,7 +749,7 @@ padding-left: 10rpx;
     align-items: center;
     flex-wrap: wrap;
 }
-.active{
+.sublet1 .symbolRental .active{
     background: #1989fa;
 }
 .symbolRental .van-cell__title,.van-cell__value {

@@ -400,8 +400,9 @@ let lastY = 0
         console.log(e.mp)
       },
       turnDetail(e,num) {
+         let a = JSON.stringify(num)
           wx.navigateTo({
-            url: `/pages/detail/main?dataDetail=${JSON.stringify(num)}`,
+            url: '/pages/detail/main?dataDetail='+encodeURIComponent(a),
           })
       },
       collect(val) {

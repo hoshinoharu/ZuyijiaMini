@@ -137,9 +137,11 @@ import Top from '../../components/head/index'
       }
     },
     onLoad(option) {
+      
       this.windowWidth = this.globalData.windowWidth
       this.userId = wx.getStorageSync("id")
       let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
+      console.log(roomDetail)
       this.roomDetail = roomDetail
       // if(this.userId == roomDetail.creatorId) {
       //   this.flag = true

@@ -39,6 +39,7 @@ wx.getSystemInfo({
     console.log(err);
   }
 })
+Vue.prototype.$url = "https://www.zuyijia.cn:9443/app"
 Vue.prototype.globalData = this.globalData
 Vue.prototype.$http = http
 // Vue.prototype.$globalArr = getApp().globalData

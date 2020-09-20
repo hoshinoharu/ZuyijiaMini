@@ -128,7 +128,6 @@ import Top from '../../components/head/index'
       this.resetRoom()
       if(option.dataDetail) {
         let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
-        console.log(roomDetail)
         if(roomDetail.id) {
           this.modify(roomDetail)
         } else {
@@ -147,7 +146,7 @@ import Top from '../../components/head/index'
         let arr = JSON.parse(num.imgUrls)
         arr.forEach(num => {
           this.fileList.push({
-            url:num, 
+            url: this.$url + num + '?quality=1',
             name: '图片2'
           })
           this.files.push(num)
