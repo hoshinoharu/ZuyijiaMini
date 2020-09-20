@@ -36,7 +36,7 @@
             @touchstart='touchStart'
             @touchend='touchEnd'
             @touchmove='touchMove'
-            :style='{height: (windowHeight - 140)*2+"rpx"}' scroll-y="true" :scroll-top="scrollTop"
+            :style='{height: (windowHeight - 80)*2+"rpx"}' scroll-y="true" :scroll-top="scrollTop"
             @scroll="scroll" @scrolltoupper="refresh">
           <view v-if="showRefresh" style='width:100%;position:relative;padding:30rpx 0; fontSize: 30rpx'>
             <view class="text-gray" style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>

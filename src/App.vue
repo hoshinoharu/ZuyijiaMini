@@ -41,6 +41,21 @@ export default {
   padding: 200rpx 0;
   box-sizing: border-box;
 }
+.content_main .spl{
+  margin: 0rpx auto;
+  margin-top: 10rpx;
+  margin-left: 24rpx;
+  display: -webkit-box;
+  text-indent: 0rpx !important;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  word-wrap:break-word;
+  font-size: 24rpx;
+  letter-spacing: 3rpx;
+  text-overflow:ellipsis;
+  font-family: '微软雅黑';
+  color:#888888;
+}
 /* this rule will be remove */
 * {
   transition: width 2s;

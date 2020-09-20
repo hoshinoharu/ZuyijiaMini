@@ -168,7 +168,6 @@ let wxMarkerData = [];    //  定位成功回调对象
         that.globalData.userInfo = that.userInfo
         // console.log(e.detail.userInfo);
         //接下来写业务代码
-        that.showHome = false
         console.log("that.location1()")
         that.location1()
       },

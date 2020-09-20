@@ -44,12 +44,12 @@
       <div>
 
       </div>
-      <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden'}">
+      <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden',height: (windowHeight - 20)*2+'rpx'}">
       <scroll-view class="my_list" id="page"
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 80)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
+        :style='{height: (windowHeight - 20)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
         @scrolltolower="loadMore"
@@ -71,8 +71,10 @@
           </view>
         </view>
         <div v-for="(num, i) in dataArr" :key="i" class="sublet" @tap="turnDetail($enent,num)" >
-          <van-panel :title="num.house.title+'/'+num.house.typeStr" desc="描述信息" :status="num.house.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
+          <van-panel :title="num.house.title+'/'+num.house.typeStr" :desc="num.tagsName" :status="num.house.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
             <div class="content_main">
+            <span class="spl">地点：{{num.provName + '-' + num.cityName+'-'+num.counName+' '+""}}</span><br/>
+
               <div class="remark"><span>{{num.house.description}}</span></div>
               <div>
                 <div class="tubiao">
@@ -287,6 +289,12 @@ let lastY = 0
               
               that.dataArr = that.dataArr.concat(res.data.data)
               that.dataArr.forEach(num => {
+                let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
                 num.house.updateTime = num.house.updateTime.substring(0, 10)
                 num.creator = {}
                 num.creator.headImg = that.globalData.userInfo.avatarUrl
@@ -332,6 +340,12 @@ let lastY = 0
           }, 1000)
             this.dataArr = [].concat(res.data.data)
             that.dataArr.forEach(num => {
+              let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
               num.house.updateTime = num.house.updateTime.substring(0, 10)
               num.creator = {}
               num.creator.headImg = that.globalData.userInfo.avatarUrl

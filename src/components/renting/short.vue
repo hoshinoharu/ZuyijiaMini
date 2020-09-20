@@ -70,7 +70,7 @@
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 210)*2+"rpx",width: ((windowWidth) * 2) + "rpx"}' 
+        :style='{height: (windowHeight - 190)*2+"rpx",width: ((windowWidth) * 2) + "rpx"}' 
         scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
@@ -93,13 +93,17 @@
           </view>
         </view>
         <div v-for="(num, i) in dataArr1" :key="i" :style="{width:(windowWidth -30)*2+'rpx'}" class="sublet" @tap="turnDetail($enent,num)"> 
-          <van-panel :title="num.title+'/'+num.typeStr"
-           desc="描述信息"
+          <van-panel :title=" num.title+'/'+num.typeStr"
+           :desc="num.tagsName"
            :status="num.statusStr"
             use-footer-slot
             class="sublet_main" footer-class="footer">
               <div class="content_main">
-                <div class="remark"><span>{{num.description}}</span></div>
+                <span class="spl">地点：{{num.provName + '-' + num.cityName+'-'+num.counName+' '+""}}</span><br/>
+
+                <div class="remark">
+                  <span>{{num.description}}</span>
+                </div>
                 <div>
                   <div class="tubiao">
                     <img class="home_img" :src="num.creator.headImg" alt="">
@@ -216,6 +220,19 @@
       // console.log(this.navHeight)
     },
     methods: {
+      filterFn(val) {
+        let str = "";
+        let arr = JSON.parse(val)
+        if (!val) {
+          return ''
+        } else {
+         for(let i in arr) {
+          str = str + arr[i].value
+         }
+         console.log("是")
+         return str
+        }
+      },
       touchStart(e) {
         this.startY = e.mp.changedTouches[0].pageY;
         this.freshStatus = 'more'
@@ -302,6 +319,12 @@
               },3000)
               that.dataArr1 = that.dataArr1.concat(res.data.data)
               that.dataArr1.forEach(num => {
+                  let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
                   num.updateTime = num.updateTime.substring(0, 10)
                   if(num.favorite == false) {
                     num.icon="star-o"
@@ -334,6 +357,12 @@
             }, 1000)
             that.dataArr1 = [].concat(res.data.data)
             that.dataArr1.forEach(num => {
+              let tags = JSON.parse(num.tags)
+              let str = "";
+              for(let i in tags) {
+                str = str + tags[i].value + " "
+              }
+              num.tagsName = str
               num.updateTime = num.updateTime.substring(0, 10)
               if(num.favorite == false) {
                 num.icon="star-o"
@@ -421,6 +450,12 @@
               that.dataArr1 = [].concat(res.data.data)
               if(that.dataArr1.length > 0) {
                 that.dataArr1.forEach(num => {
+                  let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
                   num.updateTime = num.updateTime.substring(0, 10)
                   if(num.favorite == false) {
                     num.icon="star-o"
@@ -453,6 +488,12 @@
             if(res.data.success) {
               that.dataArr1 = [].concat(res.data.data)
               that.dataArr1.forEach(num => {
+                  let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
                 num.updateTime = num.updateTime.substring(0, 10)
                 if(num.favorite == false) {
                   num.icon="star-o"
@@ -627,6 +668,21 @@
   letter-spacing: 3rpx;
   text-indent: 40rpx;
   overflow:hidden;
+  text-overflow:ellipsis;
+  font-family: '微软雅黑';
+  color:#888888;
+}
+#short .content_main .spl{
+  margin: 0rpx auto;
+  margin-top: 10rpx;
+  margin-left: 24rpx;
+  display: -webkit-box;
+  text-indent: 0rpx !important;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  word-wrap:break-word;
+  font-size: 24rpx;
+  letter-spacing: 3rpx;
   text-overflow:ellipsis;
   font-family: '微软雅黑';
   color:#888888;

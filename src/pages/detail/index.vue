@@ -24,9 +24,10 @@
         </div>
       </div>
       <div>
-        <van-panel :title="roomDetail.title" desc="标识位" :status="roomDetail.statusStr" use-footer-slot>
+        <van-panel :title="roomDetail.title" :desc="roomDetail.tagsName" :status="roomDetail.statusStr" use-footer-slot>
           <div>
             <div class="detail_main">
+              
               <div class="remark">
                 <span>{{roomDetail.description}}</span>
               </div>
@@ -41,7 +42,10 @@
           
                 </div>
               </div>
-              
+              <div class="detail_main_item">
+                <span class="label">地点</span>
+                <span class="info">{{roomDetail.provName + '-' + roomDetail.cityName+'-'+roomDetail.counName+' '+""}}</span>
+              </div>
               <div class="detail_main_item">
                 <span class="label">租期</span>
                 <span class="info">{{roomDetail.liveDuration}}&nbsp;&nbsp;/月</span>

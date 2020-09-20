@@ -75,9 +75,6 @@
     <div class="load-tips">正在加载……</div>
   </div>
   <div class="load_end" v-if="loaded">没有更多数据了……</div> -->
- <div class="bot_footer">
-
- </div>
 	<div class="footer">
     
     <!-- <Bottom :selected="0" @updateInfo="updateInfo"></Bottom> -->
@@ -271,6 +268,12 @@ import roomlate from "../../components/renting/roomlate"
             this.$forceUpdate()
             if(that.dataArr.length > 0) {
               that.dataArr.forEach(num => {
+                let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + "  "
+                  }
+                  num.tagsName = str
                 num.updateTime = num.updateTime.substring(0, 10)
                 if(num.favorite == false) {
                   num.icon="star-o"
@@ -546,14 +549,14 @@ Page{
   height: 4rpx;
   background-color:#87caee;
 }
-.slideshow image{
+.nav_all .slideshow image{
   width: 100%;
   height: 600rpx;
 }
-.bot_footer {
+.nav_all .bot_footer {
   position: relative;
   width: 100%;
-  height: 80rpx;
+  /* height: 80rpx; */
   margin-bottom: 0rpx;
    background-color: rgba(255, 255, 255, 0.4)
 }

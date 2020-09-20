@@ -69,7 +69,7 @@
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 210)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
+        :style='{height: (windowHeight - 190)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
         @scrolltolower="loadMore"
@@ -91,8 +91,10 @@
           </view>
         </view>
         <div v-for="(num, i) in dataArr1" :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
-          <van-panel :title="num.title+'/'+num.typeStr" desc="描述信息" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
+          <van-panel :title="num.title+'/'+num.typeStr" :desc="num.tagsName" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
               <div class="content_main">
+              <span class="spl">地点：{{num.provName + '-' + num.cityName+'-'+num.counName+' '+""}}</span><br/>
+
                 <div class="remark"><span>{{num.description}}</span></div>
                 <div>
                   <div class="tubiao">
@@ -288,6 +290,12 @@
               },3000)
               that.dataArr1 = that.dataArr1.concat(res.data.data)
               that.dataArr1.forEach(num => {
+                let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
                   num.updateTime = num.updateTime.substring(0, 10)
                   if(num.favorite == false) {
                     num.icon="star-o"
@@ -315,6 +323,12 @@
             }, 1000)
             that.dataArr1 = [].concat(res.data.data)
             that.dataArr1.forEach(num => {
+              let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
               num.updateTime = num.updateTime.substring(0, 10)
               if(num.favorite == false) {
                 num.icon="star-o"
@@ -388,6 +402,12 @@
             if(res.data.success) {
               that.dataArr1 = [].concat(res.data.data)
               that.dataArr1.forEach(num => {
+                let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
                 num.updateTime = num.updateTime.substring(0, 10)
                 if(num.favorite == false) {
                   num.icon="star-o"
@@ -431,6 +451,12 @@
             if(res.data.success) {
               that.dataArr1 = [].concat(res.data.data)
               that.dataArr1.forEach(num => {
+                let tags = JSON.parse(num.tags)
+                  let str = "";
+                  for(let i in tags) {
+                    str = str + tags[i].value + " "
+                  }
+                  num.tagsName = str
                 num.updateTime = num.updateTime.substring(0, 10)
                 if(num.favorite == false) {
                   num.icon="star-o"
