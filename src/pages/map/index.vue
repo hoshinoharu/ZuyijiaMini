@@ -190,7 +190,7 @@ import Top from '../../components/head/index'
           flag: true,
           text: "房源地点",
           type: 'redictive',
-          url: "/pages/nav/main",
+          url: "/pages/home/main",
         },
         location: "上海",
         replay: false,
@@ -199,7 +199,6 @@ import Top from '../../components/head/index'
     },
     mounted () {
       this.location = this.globalData.location.cityName
-      console.log(this.globalData.location,"this.globalData.location")
       this.getCity()
       this.keys = Object.keys(this.a)
     },
@@ -207,8 +206,8 @@ import Top from '../../components/head/index'
       onTurnCity(e, num) {
         console.log(num)
         this.$store.commit('changeCounCode', num.counCode)
-        this.globalData.location.counName = ""
-        this.globalData.location.counName = num.counName
+        this.globalData.location.cityName = ""
+        this.globalData.location.cityName = num.cityName
         wx.redirectTo({
           url: `/pages/home/main?counName=${num.counName}`,
         })
@@ -223,6 +222,7 @@ import Top from '../../components/head/index'
         })
         this.areaName.forEach(m => {
           if(m.checked == true) {
+            this.location = m.name
             this.getCity(m.name)
           }
         })
@@ -238,11 +238,17 @@ import Top from '../../components/head/index'
       },
       onChange(e) {
         this.value = e.mp.detail
+        
         console.log(this.value)
       },
-      onSearch() {},
+      onSearch() {
+        this.getCity(this.value)
+      },
       onClick(e) {
-        this.value = e.mp.detail
+        // this.value = e.mp.detail
+        // console.log(this.value)
+        // return
+        this.getCity(this.value)
       },
       onReplay() {
         this.replay = true

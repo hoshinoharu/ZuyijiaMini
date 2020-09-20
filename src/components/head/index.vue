@@ -50,12 +50,19 @@
         //   })
         // } else {
           if(this.back.url) {
-            wx.navigateTo({
-              url: this.back.url,
-              success: () => {
-                clearInterval(this.myInterval)
-              }
-            })
+            if(this.back.type) {
+               wx.redirectTo({
+                  url: this.back.url,
+                })
+            } else {
+              wx.navigateTo({
+                url: this.back.url,
+                success: () => {
+                  clearInterval(this.myInterval)
+                }
+              })
+            }
+            
           } else {
             wx.navigateBack({ changed: true });
           }
