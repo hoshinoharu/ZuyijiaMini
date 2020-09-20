@@ -204,6 +204,7 @@ import roomlate from "../../components/renting/roomlate"
     created () {
       // let type = this.$store.state.type
       // this.getData(type)
+      console.log("created")
       setTimeout(() => {
         this.address = this.globalData.location.counName
         this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
@@ -220,9 +221,6 @@ import roomlate from "../../components/renting/roomlate"
       //     scrollTop: 0
       //   })
       // }
-    },
-    mounted() {
-     
     },
     onLoad() {
       let that = this
@@ -264,8 +262,10 @@ import roomlate from "../../components/renting/roomlate"
         let that = this
         this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&title=${title}`, res=> {
             that.dataArr = []
-            that.dataArr = [].concat(res.data.data)
-            this.$forceUpdate()
+            res.data.data.forEach((num, i) => {
+              that.dataArr[i] = num
+            })
+            // that.dataArr = [].concat(res.data.data)
             if(that.dataArr.length > 0) {
               that.dataArr.forEach(num => {
                 let tags = JSON.parse(num.tags)

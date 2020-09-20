@@ -191,7 +191,7 @@
           }
 　　　　　　for (let i = 0; i < newValue.length; i++) {
 　　　　　　　if (oldValue[i] != newValue[i]) {
-              that.dataArr1[i] = newValue[i]
+              that.dataArr1.push(newValue[i])
 　　　　　　　}
 　　　　　　}
           this.counCode = this.$store.state.counCode

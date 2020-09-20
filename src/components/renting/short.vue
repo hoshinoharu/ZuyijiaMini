@@ -200,7 +200,7 @@
            }
 　　　　　　for (let i = 0; i < newValue.length; i++) {
 　　　　　　　if (oldValue[i] != newValue[i]) {
-              that.dataArr1[i] = newValue[i]
+              that.dataArr1.push(newValue[i]) 
 　　　　　　　}
 　　　　　　}
           this.counCode = this.$store.state.counCode
@@ -215,7 +215,7 @@
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
       // this.navHeight = this.globalData.navHeight
-      // console.log(this.navHeight)
+      console.log("mounted")
     },
     methods: {
       filterFn(val) {

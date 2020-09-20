@@ -145,8 +145,10 @@ let wxMarkerData = [];    //  定位成功回调对象
     },
     mounted () {
       this.location = this.globalData.location.cityName
+      this.areaName.forEach(num => {
+        num.checked = false
+      })
       this.getCity()
-      this.keys = Object.keys(this.a)
     },
     methods: {
       location1() {
@@ -191,10 +193,13 @@ let wxMarkerData = [];    //  定位成功回调对象
         })
       },
       onTurnCity(e, num) {
-        console.log(num)
+        this.globalData.roomData = {}
+        this.globalData.roomData = {...num}
+        console.log(this.globalData.roomData, "this.globalData.roomData")
         this.$store.commit('changeCounCode', num.counCode)
         this.globalData.location.cityName = ""
         this.globalData.location.cityName = num.cityName
+
         wx.redirectTo({
           url: `/pages/home/main?counName=${num.counName}`,
         })
