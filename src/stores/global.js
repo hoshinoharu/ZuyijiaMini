@@ -10,7 +10,8 @@ export default new Vuex.Store({
     gg: "sss",
     style: {},
     searchValue: "",
-    type: "short_rent"
+    type: "short_rent",
+    counCode: ""
   }, 
   mutations: {    
     increment: (state) => {
@@ -30,6 +31,11 @@ export default new Vuex.Store({
     changeType: (state, data) => {
       state.type = ""
       state.type = data
+    },
+    changeCounCode: (state, data) => {
+      state.counCode = ""
+      console.log(data, "dfdrrr")
+      state.counCode = data
     }
   }
 });

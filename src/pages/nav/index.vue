@@ -11,7 +11,7 @@
 							<div class="weui-navigation-bar__btn_goback1">
                 <div class="header-l" @click="addressClick">
                   <i class="iconfont icon-ditu" :style="{color: '#434343', 'font-size': 35 + 'rpx'}"></i>
-                  <span>上海市</span>
+                  <span>{{address}}</span>
                   <i class="iconfont icon-sanjiaoxing " :style="{color: '#434343', 'font-size': 40 + 'rpx'}"></i>
                 </div>
               </div>
@@ -99,6 +99,16 @@ import roomlate from "../../components/renting/roomlate"
       roomlate,
       Bottom
     },
+    props: {
+      loc: {
+        type: Object,
+        default: {}
+      },
+      add: {
+        type: String,
+        default: ""
+      }
+    },
     data() {
       return {
     //导航数组
@@ -108,6 +118,7 @@ import roomlate from "../../components/renting/roomlate"
        timeNow: "",
        hidden: 'hidden',
        ios: "",
+       address: "",
        navHeight: "",
        hidden1: true,
        loading: false,
@@ -116,6 +127,7 @@ import roomlate from "../../components/renting/roomlate"
        innerWidth: "",
        num: 1,
        searchValue: "",
+       counCode: "",
        innerPaddingRight: "",
        leftWidth: "",
        dataArr: [],
@@ -177,25 +189,33 @@ import roomlate from "../../components/renting/roomlate"
           //状态由等待变为失败，传的参数作为then函数中失败函数的实参
       })
     },
-    onReachBottom: function() {  
-      console.log("上拉加载")
-      let that = this;
-      that.loading = true;
-      that.loaded = false
-      this.gainMoreLoadingListData()  
-  },
+    watch: {
+      '$store.state.counCode': {
+        handler(newValue, oldValue) {
+　　　　　　this.counCode = newValue
+          let type = this.$store.state.type
+          this.getData(type)
+　　　　},
+　　　　deep: true
+      },
+      add(new1, old){
+        if(new1) {
+          this.address = new1
+        }
+      }
+    },
     created () {
-      let type = this.$store.state.type
-      this.getData(type)
-      // wx.hideTabBar({
-      //   aniamtion: false,
-      //   fail () {
-      //     setTimeout(function () {
-      //       wx.hideTabBar({ aniamtion: false })
-      //     }, 500)
-      //   }
-      // })
-      
+      // let type = this.$store.state.type
+      // this.getData(type)
+      setTimeout(() => {
+        this.address = this.globalData.location.counName
+        this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
+        , res => {
+          console.log(res)
+          this.globalData.roomData = res.data.data
+          this.$store.commit('changeCounCode', this.globalData.roomData.counCode)
+        })
+      }, 1000)
     },
      onPageScroll:function(e){
       // if(e.mp.scrollTop<0){
@@ -204,9 +224,12 @@ import roomlate from "../../components/renting/roomlate"
       //   })
       // }
     },
+    mounted() {
+     
+    },
     onLoad() {
       let that = this
-      // that.attached();
+      this.counCode = this.$store.state.counCode
       let type;
       switch(this.tab){
         case 1:
@@ -219,63 +242,43 @@ import roomlate from "../../components/renting/roomlate"
           type = 'find_mate'
           break;
       }
-      console.log(type, 'type')
-      this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`,{
-        type: 'short_rent'
-      }, res=> {
-        that.dataArr = [].concat(res.data.data)
-        that.dataArr.forEach(num => {
-            num.updateTime = num.updateTime.substring(0, 10)
-            if(num.favorite == false) {
-              num.icon="star-o"
-            } else {
-              num.icon = "star"
-            }
-          })
-      })
+      // this.getData(type)
+      // this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}`,{
+      //   type: 'short_rent'
+      // }, res=> {
+      //   that.dataArr = [].concat(res.data.data)
+      //   that.dataArr.forEach(num => {
+      //       num.updateTime = num.updateTime.substring(0, 10)
+      //       if(num.favorite == false) {
+      //         num.icon="star-o"
+      //       } else {
+      //         num.icon = "star"
+      //       }
+      //     })
+      // })
     },
     onShow() {
       let that = this
       let type = this.$store.state.type
-      console.log(type, "type")
       this.getData(type)
     },
-    // watch: {
-    //   '$store.state.searchValue': {
-    //     handler (newVal, oldVal) {
-    //       let type;
-    //       switch(this.tab){
-    //         case 1:
-    //           type = 'short_rent'
-    //           break;
-    //         case 2:
-    //           type = 'sublet'
-    //           break;
-    //         case 3:
-    //           type = 'find_mate'
-    //           break;
-    //       }
-    //       let title = newVal
-    //       if(title) {
-    //         this.getData(type, title)
-    //       }
-    //     },
-    //     deep: true,
-    //     }
-    // },
     methods: {
       getData(type, title) {
         let that = this
-        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}`, res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&title=${title}`, res=> {
+            that.dataArr = []
             that.dataArr = [].concat(res.data.data)
-            that.dataArr.forEach(num => {
-              num.updateTime = num.updateTime.substring(0, 10)
-              if(num.favorite == false) {
-                num.icon="star-o"
-              } else {
-                num.icon = "star"
-              }
-            })
+            this.$forceUpdate()
+            if(that.dataArr.length > 0) {
+              that.dataArr.forEach(num => {
+                num.updateTime = num.updateTime.substring(0, 10)
+                if(num.favorite == false) {
+                  num.icon="star-o"
+                } else {
+                  num.icon = "star"
+                }
+              })
+            }
         })
       },
      updateInfo(value) {
@@ -307,39 +310,6 @@ import roomlate from "../../components/renting/roomlate"
             break;
         }
         this.getData(type)
-      },
-      gainMoreLoadingListData: function () {
-        let that = this;
-        let type;
-        switch(this.tab){
-          case 1:
-            type = 'short_rent'
-            break;
-          case 2:
-            type = 'sublet'
-            break;
-          case 3:
-            type = 'find_mate'
-            break;
-        }
-        that.num = that.num + 1
-        this.$http.get(`/app/house/export/list?pageIndex=${that.num}&pageSize=10&type=${type}`, res=> {
-        that.dataArr = that.dataArr.concat(res.data.data)
-        that.dataArr.forEach(num => {
-            num.updateTime = num.updateTime.substring(0, 10)
-            if(num.favorite == false) {
-              num.icon="star-o"
-            } else {
-              num.icon = "star"
-            }
-          })
-         
-          setTimeout(() => {
-             that.loading = false; //把"上拉加载"的变量设为true，隐藏
-            that.loaded = true; //把"上拉加载完成"的变量设为false，显示
-          }, 1000)
-          
-      })
       },
       /** 
      * 加载数据 
@@ -411,8 +381,8 @@ import roomlate from "../../components/renting/roomlate"
 .header-l {
   display: flex;
   align-items: center;
-  width: 150rpx;
-  margin-left: 20rpx;
+  width: 180rpx;
+  margin-left: 10rpx;
   margin-bottom: 0px;
 }
 .weui-navigation-bar__inner {

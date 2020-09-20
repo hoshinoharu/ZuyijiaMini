@@ -245,6 +245,8 @@ import Top from '../../components/head/index'
             wx.navigateBack({ changed: true });
           })
         } else {
+            let arr = Object.assign({}, this.globalData.roomData)
+            delete arr.id
             this.$http.post('/app/house/add', {
               title: this.room.title,
               description: this.room.description,
@@ -252,7 +254,8 @@ import Top from '../../components/head/index'
               liveDuration: this.room.liveDuration,
               tags: JSON.stringify(this.room.type),
               imgUrls: JSON.stringify(this.files),
-              type: "short_rent"
+              type: "short_rent",
+              ...arr
             }, res=> {
               console.log(res)
               wx.navigateBack({ changed: true });

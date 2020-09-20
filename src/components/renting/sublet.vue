@@ -160,7 +160,8 @@
         load_text: "加载更多数据",
         windowWidth: "",
         number: 1,
-        // dataArr1: [],
+        dataArr1: [],
+        counCode: "",
         navHeight: "",
         // icon: 'star-o',
         searchValue: "",
@@ -179,14 +180,23 @@
         ]
       }
     },
-    computed: {
-      dataArr1() {
-        return this.dataArr
-      }
+     watch: {
+      dataArr: {
+　　　　handler(newValue, oldValue) {
+       let that = this
+　　　　　　for (let i = 0; i < newValue.length; i++) {
+　　　　　　　if (oldValue[i] != newValue[i]) {
+              that.dataArr1[i] = newValue[i]
+　　　　　　　}
+　　　　　　}
+  　　　　},
+  　　　　deep: true
+  　　}
     },
     mounted () {
-      this.dataArr1 = [].concat(this.dataArr1)
-      // this.dataArr1 = this.dataArr
+      setTimeout(() => {
+        this.counCode = this.$store.state.counCode
+      }, 1500)
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
       // this.navHeight = this.globalData.navHeight
@@ -253,9 +263,9 @@
         that.number = that.number + 1
         let url = ""
         if(this.flagType == true) {
-          url = `/app/house/export/list?pageIndex=${that.number}&pageSize=10&type=${type}&tags=${ JSON.stringify(this.tags) }&status=${this.status}`
+          url = `/app/house/export/list?pageIndex=${that.number}&counCode=${this.counCode}&pageSize=10&type=${type}&tags=${ JSON.stringify(this.tags) }&status=${this.status}`
         } else {
-          url = `/app/house/export/list?pageIndex=${that.number}&pageSize=10&type=${type}`
+          url = `/app/house/export/list?pageIndex=${that.number}&counCode=${this.counCode}&pageSize=10&type=${type}`
         }
         this.$http.get(url, res=> {
           if(res.data.success) {
@@ -298,7 +308,7 @@
         }
         that.number = 1
         let type = 'sublet'
-        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`, res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}`, res=> {
           if(res.data.success) {
             setTimeout(() => {
               this.showRefresh = false
@@ -385,7 +395,7 @@
           let type = 'sublet'
           let title = this.searchValue
           let tag = JSON.stringify(tags)
-          this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}&tags=${tag}&status=${status}`, res=> {
+          this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&title=${title}&tags=${tag}&status=${status}`, res=> {
             if(res.data.success) {
               that.dataArr1 = [].concat(res.data.data)
               that.dataArr1.forEach(num => {
@@ -412,9 +422,9 @@
           let type = 'sublet'
           let url = ""
           if(this.flagType == true) {
-            url = `/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}&tags=${ JSON.stringify(this.tags) }&status=${this.status}`
+            url = `/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&title=${title}&tags=${ JSON.stringify(this.tags) }&status=${this.status}`
           } else {
-            url = `/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}`
+            url = `/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&title=${title}&counCode=${this.counCode}`
           }
           this.$http.get(url, res=> {
             if(res.data.success) {
@@ -489,7 +499,8 @@
       onSearch (e) {
         console.log(e.mp.detail)
       //这个方法此时还有效，点击 Enter 仍会执行
-        this.val = e.mp.detail
+        this.searchValue = e.mp.detail
+        this.onSearchSend()
       },
       onChangeVal (e) {
         this.searchValue = e.mp.detail

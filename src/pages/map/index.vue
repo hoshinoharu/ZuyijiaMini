@@ -33,18 +33,23 @@
         </van-grid> -->
      <!-- </div> -->
       <div class="l_tag">
-         <span class="tag" v-for="(num, i) in areaName" :key="i">{{num.name}}</span>
+         <span class="tag"
+          :class="[num.checked?'active':'']"
+          @tap = "onCity(num)"
+          v-for="(num, i) in areaName" :key="i">{{num.name}}</span>
       </div>
       <div class="index">
           <van-index-bar>
-            <view>
-              <van-index-anchor index="A" />
-              <van-cell title="文本" />
-              <van-cell title="文本" />
-              <van-cell title="文本" />
+            <view v-for="(num, i) in keys" :key="i">
+              <van-index-anchor :index="num" />
+              <van-cell 
+              @tap="onTurnCity($event, name)"
+              v-for="(name, n) in cityName[num]" :key="n" :title="name.cityName+'/'+name.counName" />
+              <!-- <van-cell title="文本" />
+              <van-cell title="文本" /> -->
             </view>
 
-            <view>
+            <!-- <view>
               <van-index-anchor index="B" />
               <van-cell title="文本" />
               <van-cell title="文本" />
@@ -61,7 +66,7 @@
               <van-cell title="文本" />
               <van-cell title="文本" />
               <van-cell title="文本" />
-            </view>
+            </view> -->
           </van-index-bar>
       </div>
      </div>
@@ -69,32 +74,105 @@
 </template>
 
 <script>
+let a = {
+  A: [
+    {
+      cityCode: "131100",
+      cityName: "衡水市",
+      counCode: "131125",
+      counName: "安平县",
+      createTimeStr: "",
+      provCode: "130000",
+      provName: "河北省",
+      status: "persistent",
+      statusStr: "persistent",
+      updateTimeStr: ""
+    }
+  ],
+  B: [
+    {
+      cityCode: "131100",
+      cityName: "衡水市",
+      counCode: "131125",
+      counName: "安平县",
+      createTimeStr: "",
+      provCode: "130000",
+      provName: "河北省",
+      status: "persistent",
+      statusStr: "persistent",
+      updateTimeStr: ""
+    }
+  ],
+  C:[
+    {
+      cityCode: "131100",
+      cityName: "衡水市",
+      counCode: "131125",
+      counName: "安平县",
+      createTimeStr: "",
+      provCode: "130000",
+      provName: "河北省",
+      status: "persistent",
+      statusStr: "persistent",
+      updateTimeStr: ""
+    }
+  ],
+  D:[
+    {
+      cityCode: "131100",
+      cityName: "衡水市",
+      counCode: "131125",
+      counName: "安平县",
+      createTimeStr: "",
+      provCode: "130000",
+      provName: "河北省",
+      status: "persistent",
+      statusStr: "persistent",
+      updateTimeStr: ""
+    }
+  ],
+}
 let areaName = [
-  {
-    name: "北京"
-  },
-  {
-    name: "上海"
-  },
-  {
-    name: "广州"
-  },
-  {
-    name: "深圳"
-  },
-  {
-    name: "成都"
-  },
-  {
-    name: "杭州"
-  },
-  {
-    name: "南京"
-  },
-  {
-    name: "苏州"
-  },
-
+   {
+    name: "北京",
+    cityCode:"110100",
+    checked: false
+  },
+  {
+    name: "上海",
+    cityCode:"310100",
+    checked: false
+  },
+  {
+    name: "广州",
+    cityCode:"440100",
+    checked: false
+  },
+  {
+    name: "深圳",
+    cityCode:"440300",
+    checked: false
+  },
+  {
+    name: "成都",
+    cityCode:"510100",
+    checked: false
+  },
+  {
+    name: "杭州",
+    cityCode:"330100",
+    checked: false
+  },
+  {
+    name: "南京",
+    cityCode:"320100",
+    checked: false
+  },
+  {
+    name: "苏州",
+    cityCode:"320500",
+    checked: false
+  },
 ]
 import Top from '../../components/head/index'
   export default {
@@ -105,24 +183,81 @@ import Top from '../../components/head/index'
     data() {
       return {
         areaName,
+        a,
+        keys: [],
+        cityName: [],
         back: {
           flag: true,
           text: "房源地点",
+          type: 'redictive',
           url: "/pages/nav/main",
-          switch: "/pages/nav/main"
         },
         location: "上海",
-        replay: false
+        replay: false,
+        value: ""
       }
     },
+    mounted () {
+      this.location = this.globalData.location.cityName
+      console.log(this.globalData.location,"this.globalData.location")
+      this.getCity()
+      this.keys = Object.keys(this.a)
+    },
     methods: {
-      onChange() {},
+      onTurnCity(e, num) {
+        console.log(num)
+        this.$store.commit('changeCounCode', num.counCode)
+        this.globalData.location.counName = ""
+        this.globalData.location.counName = num.counName
+        wx.redirectTo({
+          url: `/pages/home/main?counName=${num.counName}`,
+        })
+      },
+      onCity(num) {
+        this.areaName.forEach(m => {
+          if(num.name == m.name) {
+            num.checked = !num.checked
+          } else {
+            m.checked = false
+          }
+        })
+        this.areaName.forEach(m => {
+          if(m.checked == true) {
+            this.getCity(m.name)
+          }
+        })
+      },
+      getCity(name) {
+        let num = name||this.globalData.location.cityName
+        this.$http.get(`/app/district/export/country/grouped?search=${num}`, res => {
+          console.log(res)
+          this.cityName = res.data.data
+          this.keys = Object.keys(this.cityName)
+        })
+        
+      },
+      onChange(e) {
+        this.value = e.mp.detail
+        console.log(this.value)
+      },
       onSearch() {},
-      onClick() {},
+      onClick(e) {
+        this.value = e.mp.detail
+      },
       onReplay() {
         this.replay = true
-        setTimeout(() => {
+        setTimeout(() => { 
           this.replay = false
+          if(JSON.stringify(this.globalData.location) != "{}") {
+            this.location = this.globalData.location.cityName
+          } else {
+            wx.showToast({
+                title: '重新定位失败',
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+          }
         }, 1000)
       },
     }
@@ -192,5 +327,8 @@ top: 8rpx !important;
   background: #fff;
   display: flex;
   flex-flow:wrap;
+}
+.active{
+    background: #1989fa;
 }
 </style>

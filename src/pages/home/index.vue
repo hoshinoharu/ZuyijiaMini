@@ -1,6 +1,6 @@
 <template>
   <div>
-    <home v-if="active == 0"></home>
+    <home v-if="active == 0" :add="address"></home>
     <set  v-else-if="active == 1"></set>
     <item  v-else-if="active == 2"></item>
     <van-tabbar :active="active" @change="onChange">
@@ -23,6 +23,8 @@
 import home from "../nav/index"
 import set from "../set/index"
 import item from "../item/index"
+let bmap = require('../../../static/libs/bmap-wx.min.js');
+let wxMarkerData = [];    //  定位成功回调对象
   export default {
     name: '',
     components: {
@@ -30,55 +32,102 @@ import item from "../item/index"
       set,
       item
     },
-    onLoad() {
+    onLoad(option) {
       let that = this
-      that.attached();
+      that.address = option.counName
+      console.log(option,"option")
+      // that.attached();
+      // that.location1()
+      
     },
     data() {
       return {
         active: 0,
-        showHome: false
+        showHome: false,
+        ak:"UNrOozLxSIPT9tHTA6hMzKmKugTFIlPu",      //  ak
+        markers:[],
+        longitude:'',     //  经度
+        latitude:'',        //  纬度
+        address:'',       //  地址
+        cityInfo:{},      //  城市信息,
+        location: {}
       }
     },
-    onShow() {
-      let that = this
-      wx.getUserInfo({
-        withCredentials: true,
-        success: function (res) {
-          that.userInfo = res.userInfo;
-          that.globalData.userInfo = res.userInfo;
-          
-        },
-        fail: function (val) {
-          console.log(val)
-          //获取用户信息失败后。请跳转授权页面
-          wx.showModal({
-          title: '警告',
-          content: '尚未进行授权，请点击确定跳转到授权页面进行授权。',
-          success: function (res) {
-              if (res.confirm) {
-                // that.getuserinfo()
-                that.showHome = true
-              console.log('用户点击确定')
-              // wx.navigateTo({
-                // url: '../tologin/tologin',
-              // })
-              }
-            }
-            })
-          }
-        })
-    },
+    // onShow() {
+    //   let that = this
+    //   wx.getUserInfo({
+    //     withCredentials: true,
+    //     success: function (res) {
+    //       that.userInfo = res.userInfo;
+    //       that.globalData.userInfo = res.userInfo;
+    //       that.location1()
+    //     },
+    //     fail: function (val) {
+    //       console.log(val)
+    //       //获取用户信息失败后。请跳转授权页面
+    //       wx.showModal({
+    //       title: '警告',
+    //       content: '尚未进行授权，请点击确定跳转到授权页面进行授权。',
+    //       success: function (res) {
+    //           if (res.confirm) {
+    //             // that.getuserinfo()
+    //             that.showHome = true
+    //           console.log('用户点击确定')
+    //           // wx.navigateTo({
+    //             // url: '../tologin/tologin',
+    //           // })
+    //           }
+    //         }
+    //         })
+    //       }
+    //     })
+    // },
     mounted () {
-      this.getCity()
+      // this.getCity()
     },
     methods: {
-      getCity() {
-        this.$http.get('/app/district/export/country/grouped', res => {
-          console.log(res)
+      location1() {
+        var that = this;
+    // 获取定位地理位置
+    // 新建bmap对象
+        let BMap = new bmap.BMapWX({
+          ak:that.ak
+        });
+        let fail = function(data){
+          console.log(data);
+        };
+        let success = function(data){
+          // 返回数据内，已经包含经纬度
+          let arr = data.originalData.result
+          that.globalData.location = {
+            longitude: arr.location.lng,
+            latitude: arr.location.lat,
+            provName: arr.addressComponent.province,
+            cityName: arr.addressComponent.city,
+            counName: arr.addressComponent.district,
+            townName: arr.addressComponent.street,
+          }
+          that.globalData.addressComponent = Object.assign({}, arr.addressComponent) 
+          // 使用wxMarkerData获取数据
+          
+          wxMarkerData = data.wxMarkerData;
+          // 把所有数据放在初始化data内
+          that.location = {
+            markers:wxMarkerData,
+            latitude: wxMarkerData[0].latitude,
+            longitude: wxMarkerData[0].longitude,
+            address:wxMarkerData[0].address,
+            cityInfo:data.originalData.result.addressComponent
+          }
+        };
+
+    // 发起regeocoding检索请求
+        BMap.regeocoding({
+          fail:fail,
+          success:success
         })
-        
       },
+      
       onChange(event) {
         console.log(event.mp.detail)
         this.active = event.mp.detail
@@ -120,6 +169,8 @@ import item from "../item/index"
         // console.log(e.detail.userInfo);
         //接下来写业务代码
         that.showHome = false
+        console.log("that.location1()")
+        that.location1()
       },
       getuserinfo(e) {
       let that = this

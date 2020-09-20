@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/index/main",
     "pages/home/main",
     "pages/nav/main",
     "pages/item/main",
@@ -16,6 +17,11 @@
     "pages/send/main",
     "pages/housingRomate/main"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于小程序"
+    }
+  },
   "usingComponents": {
     "van-search": "/static/vant/search/index",
     "van-panel": "/static/vant/panel/index",

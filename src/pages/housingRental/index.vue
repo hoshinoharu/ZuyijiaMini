@@ -241,7 +241,20 @@ import Top from '../../components/head/index'
           console.log('e: ', e)
           return
         }
-        
+        if(this.modifyId) {
+          this.$http.put('/app/house/update', {
+            ...this.room,
+            id: this.modifyId,
+            tags: JSON.stringify(this.room.type),
+            imgUrls: JSON.stringify(this.files),
+            type: "short_rent"
+          }, res=> {
+            console.log(res)
+            wx.navigateBack({ changed: true });
+          })
+        } else {
+        let arr = Object.assign({}, this.globalData.roomData)
+        delete arr.id
         
         this.$http.post('/app/house/add', {
           title: this.room.title,
@@ -250,11 +263,13 @@ import Top from '../../components/head/index'
           liveDuration: this.room.liveDuration,
           tags: JSON.stringify(this.room.type),
           imgUrls: JSON.stringify(this.files),
-          type: "sublet"
+          type: "sublet",
+          ...arr
         }, res=> {
           console.log(res)
           wx.navigateBack({ changed: true });
         })
+        }
       },
       noop() {},
       cancel() {
