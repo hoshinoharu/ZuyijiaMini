@@ -312,6 +312,7 @@ import Top from '../../components/head/index'
       deleteImg(e) {
         console.log(e.mp.detail.index)
         this.fileList.splice(e.mp.detail.index, 1)
+        this.files.splice(e.mp.detail.index, 1)
       },
       urlTobase64(url, name){
         wx.request({
