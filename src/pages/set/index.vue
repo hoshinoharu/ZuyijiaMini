@@ -66,8 +66,6 @@ import Top from '../../components/head/index'
             url = ''
             break
         }
-        console.log(this.globalData.tokenFlag) 
-        return
         if(this.globalData.tokenFlag == undefined || this.globalData.tokenFlag == null ||this.globalData.tokenFlag==false) {
           wx.showToast({
               title: '请用户先登录',
