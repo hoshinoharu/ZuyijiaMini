@@ -38,7 +38,7 @@
           @tap = "onCity(num)"
           v-for="(num, i) in areaName" :key="i">{{num.name}}</span>
       </div>
-      <div class="index">
+      <div class="index" :style="{height: height + 'rpx'}">
           <van-index-bar>
             <view v-for="(num, i) in keys" :key="i">
               <van-index-anchor :index="num" />
@@ -140,10 +140,12 @@ let wxMarkerData = [];    //  定位成功回调对象
         location: "上海",
         city: "",
         replay: false,
+        height: "",
         value: ""
       }
     },
     mounted () {
+      this.height = this.globalData.windowHeight + 200
       this.location = this.globalData.location.cityName
       this.areaName.forEach(num => {
         num.checked = false
@@ -313,7 +315,7 @@ top: 8rpx !important;
   top: 10px;
 }
 .index {
-  height: 780rpx;
+  /* height: 780rpx; */
   overflow: hidden;
   overflow-y: scroll;
 }
