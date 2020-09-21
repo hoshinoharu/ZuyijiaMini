@@ -31,6 +31,16 @@ input{
   /* border-bottom: 1px solid #c7c6c6; */
   width:100%;
 }
+.row2 {
+  margin-top: 20rpx;
+  height: 100rpx;
+  line-height: 52rpx;
+  /* border-bottom: 1px solid #c7c6c6; */
+  width:100%;
+}
+.row2 .van-switch {
+  top: 10rpx;
+}
 .input { 
   position: relative;
   width: 100%;

@@ -75,6 +75,12 @@
                       maxlength="6" /><br>
                   </div>
               </div>
+              <div class="row2" v-if="modifyId">
+                  <div class="input">
+                      <label for="month">房源状态 (已成交)</label><br>
+                      <van-switch v-model="checked" @change="onChecked" />
+                  </div>
+              </div>
               <div class="row_img clearfix">
                 <div class="input van_img">
                     <label >房源图片</label>
@@ -132,6 +138,7 @@ import Top from '../../components/head/index'
           description: ""
         },
         show1: false,
+        checked: false,
         fileList: [],
         modifyId: "",
         files: [],
@@ -152,7 +159,24 @@ import Top from '../../components/head/index'
         }
       }
     },
+    mounted (){
+      this.checked = ""
+      if(this.room.status == 'persistent') {
+        this.checked = false
+      } else {
+        this.checked = true
+      }
+    },
     methods: {
+      onChecked(e) {
+        console.log(e)
+        this.checked = !this.checked
+        if(this.checked == false) {
+          this.room.status = 'persistent'
+        } else{
+          this.room.status = 'finished'
+        }
+      },
       modify(num) {
         this.room.title = num.title
         this.room.description = num.description
@@ -163,6 +187,13 @@ import Top from '../../components/head/index'
         this.room.priceEachMonth = num.priceEachMonth
         this.room.liveDuration = num.liveDuration
         let arr = JSON.parse(num.imgUrls)
+        if(num.status == 'persistent') {
+          this.checked = false
+          this.room.status = 'persistent'
+        }else {
+          this.checked = true
+          this.room.status = 'finished'
+        }
         arr.forEach(num => {
           this.fileList.push({
             url: this.$url + num + '?quality=1',
@@ -274,29 +305,29 @@ import Top from '../../components/head/index'
             id: this.modifyId,
             tags: JSON.stringify(this.room.type),
             imgUrls: JSON.stringify(this.files),
-            type: "short_rent"
+            type: "find_mate"
           }, res=> {
             console.log(res)
             wx.navigateBack({ changed: true });
           })
         } else {
-        let arr = Object.assign({}, this.globalData.roomData)
-        delete arr.id
-        this.$http.post('/app/house/add', {
-          title: this.room.title,
-          description: this.room.description,
-          priceEachMonth: this.room.priceEachMonth,
-          liveDuration: this.room.liveDuration,
-          tags: JSON.stringify(this.room.type),
-          imgUrls: JSON.stringify(this.files),
-          type: "find_mate",
-          male: this.room.male,
-          female: this.room.female ,
-          ...arr
-        }, res=> {
-          console.log(res)
-          wx.navigateBack({ changed: true });
-        })
+          let arr = Object.assign({}, this.globalData.roomData)
+          delete arr.id
+          this.$http.post('/app/house/add', {
+            title: this.room.title,
+            description: this.room.description,
+            priceEachMonth: this.room.priceEachMonth,
+            liveDuration: this.room.liveDuration,
+            tags: JSON.stringify(this.room.type),
+            imgUrls: JSON.stringify(this.files),
+            type: "find_mate",
+            male: this.room.male,
+            female: this.room.female ,
+            ...arr
+          }, res=> {
+            console.log(res)
+            wx.navigateBack({ changed: true });
+          })
         }
       },
       noop() {},
@@ -312,6 +343,7 @@ import Top from '../../components/head/index'
       },
       resetRoom() {
         console.log(this.room)
+        this.checked = false
         this.files = []
         this.fileList = []
         this.room = {

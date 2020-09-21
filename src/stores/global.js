@@ -11,7 +11,8 @@ export default new Vuex.Store({
     style: {},
     searchValue: "",
     type: "short_rent",
-    counCode: ""
+    counCode: "",
+    address: ""
   }, 
   mutations: {    
     increment: (state) => {
@@ -34,8 +35,11 @@ export default new Vuex.Store({
     },
     changeCounCode: (state, data) => {
       state.counCode = ""
-      console.log(data, "dfdrrr")
       state.counCode = data
+    },
+    changeAdress: (state, data) => { 
+      state.address = ""
+      state.address = data
     }
   }
 });

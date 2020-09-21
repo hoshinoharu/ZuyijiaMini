@@ -88,7 +88,7 @@
                         :error-message="login_err.password"
                       />
                 </van-cell-group>
-                <van-button round plain @tap="loginStyle" class="login_but">{{loginType}}</van-button>
+                <!-- <van-button round plain @tap="loginStyle" class="login_but">{{loginType}}</van-button> -->
                 <div class="register_btn">
                   <van-button type="primary" round size="normal" @tap.stop="onSubmit">登录</van-button>
                   <!-- <van-button type="primary" plain size="normal" @click="onReset">重置</van-button> -->
@@ -266,7 +266,7 @@ import Bottom from '../../components/bottom/index'
         errors: [],
         phoneInfo: "",
         type: "登录",
-        loginType: "密码登录"
+        loginType: "短信登录"
       }
     },
     created () {

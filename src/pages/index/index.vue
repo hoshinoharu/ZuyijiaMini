@@ -49,7 +49,21 @@ export default {
         success: function (res) {
           that.userInfo = res.userInfo;
           that.globalData.userInfo = res.userInfo;
-          that.location1()
+          let a = new Promise((res ,rej) =>{
+            that.location1()
+            res()
+          })
+          a.then(() => {
+            that.$store.commit('changeAdress', that.globalData.location.counName)
+            this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
+            , res => {
+              console.log(res)
+              this.globalData.roomData = res.data.data
+            })
+             wx.navigateTo({
+              url: '/pages/home/main',
+            })
+          })
         },
         fail: function (val) {
           console.log(val)
@@ -117,6 +131,7 @@ export default {
         };
         let success = function(data){
           // 返回数据内，已经包含经纬度
+          console.log("data",data)
           let arr = data.originalData.result
           that.globalData.location = {
             longitude: arr.location.lng,
@@ -126,7 +141,8 @@ export default {
             counName: arr.addressComponent.district,
             townName: arr.addressComponent.street,
           }
-          that.globalData.addressComponent = Object.assign({}, arr.addressComponent) 
+          that.globalData.addressComponent = Object.assign({}, arr.addressComponent)
+          that.$store.commit('changeCounCode', arr.addressComponent.adcode)
           // 使用wxMarkerData获取数据
           
           wxMarkerData = data.wxMarkerData;
@@ -138,9 +154,7 @@ export default {
             address:wxMarkerData[0].address,
             cityInfo:data.originalData.result.addressComponent
           }
-           wx.navigateTo({
-            url: '/pages/home/main',
-          })
+          
         };
 
     // 发起regeocoding检索请求
@@ -186,7 +200,21 @@ export default {
         // console.log(e.detail.userInfo);
         //接下来写业务代码
         that.showHome = false
-        that.location1()
+        let a = new Promise((res ,rej) =>{
+            that.location1()
+            res()
+          })
+          a.then(() => {
+            that.$store.commit('changeAdress', that.globalData.location.counName)
+            this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
+            , res => {
+              console.log(res)
+              this.globalData.roomData = res.data.data
+            })
+             wx.navigateTo({
+                url: '/pages/home/main',
+              })
+          })
       },
       getuserinfo(e) {
       let that = this

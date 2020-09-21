@@ -60,6 +60,12 @@
                       maxlength="6" /><br>
                   </div>
               </div>
+              <div class="row2" v-if="modifyId">
+                  <div class="input">
+                      <label for="month">房源状态 (已成交)</label><br>
+                      <van-switch v-model="checked" @change="onChecked" />
+                  </div>
+              </div>
               <div class="row_img clearfix">
                 <div class="input van_img">
                     <label >房源图片</label>
@@ -116,6 +122,7 @@ import Top from '../../components/head/index'
           priceEachMonth: "",
           description: ""
         },
+        checked: false,
         modifyId: "",
         show1: false,
         fileList: [],
@@ -126,21 +133,33 @@ import Top from '../../components/head/index'
       }
     },
     onLoad(option) {
-      console.log(option)
       this.resetRoom()
       if(option.dataDetail) {
         let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
-        console.log(roomDetail)
         if(roomDetail.id) {
           this.modify(roomDetail)
         } else {
           this.resetRoom()
         }
       }
-      
-      
+    },
+    mounted (){
+      this.checked = ""
+      if(this.room.status == 'persistent') {
+        this.checked = false
+      } else {
+        this.checked = true
+      }
     },
     methods: {
+      onChecked(e) {
+        this.checked = !this.checked
+        if(this.checked == false) {
+          this.room.status = 'persistent'
+        } else{
+          this.room.status = 'finished'
+        }
+      },
       modify(num) {
         this.room.title = num.title
         this.room.description = num.description
@@ -149,6 +168,13 @@ import Top from '../../components/head/index'
         this.room.priceEachMonth = num.priceEachMonth
         this.room.liveDuration = num.liveDuration
         let arr = JSON.parse(num.imgUrls)
+        if(num.status == 'persistent') {
+          this.checked = false
+          this.room.status = 'persistent'
+        }else {
+          this.checked = true
+          this.room.status = 'finished'
+        }
         arr.forEach(num => {
           this.fileList.push({
             url: this.$url + num + '?quality=1',
@@ -247,7 +273,10 @@ import Top from '../../components/head/index'
           })
         } else {
             let arr = Object.assign({}, this.globalData.roomData)
-            delete arr.id
+            if(arr.id) {
+              delete arr.id
+            }
+            
             this.$http.post('/app/house/add', {
               title: this.room.title,
               description: this.room.description,
@@ -278,6 +307,7 @@ import Top from '../../components/head/index'
       },
       resetRoom() {
         console.log(this.room)
+        this.checked = false
         this.files = []
         this.fileList = []
         this.room = {

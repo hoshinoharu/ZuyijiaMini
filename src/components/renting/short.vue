@@ -209,13 +209,11 @@
   　　}
     },
     mounted () {
-      setTimeout(() => {
-        this.counCode = this.$store.state.counCode
-      }, 1500)
+      // setTimeout(() => {
+      this.counCode = this.$store.state.counCode
+      // }, 1500)
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
-      // this.navHeight = this.globalData.navHeight
-      console.log("mounted")
     },
     methods: {
       filterFn(val) {

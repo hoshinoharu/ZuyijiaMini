@@ -165,6 +165,7 @@ let lastY = 0
       }
     },
     mounted () {
+      this.number = 1
     },
     onLoad(option) {
       let that = this
@@ -275,11 +276,10 @@ let lastY = 0
           return;
         }
         this.isScrolling=true;
-
-        
         that.loading = true;
         that.loaded = false;
-        let num = this.number++
+        let num = this.number+1
+        this.number++
         this.$http.get(`/app/house/list?pageIndex=${num}&pageSize=10&creatorId=${that.id}`, res=> {
           if(res.data.success) {
             let a = new Promise((resolve, reject) => {
@@ -357,6 +357,7 @@ let lastY = 0
       },
       getData(creatorId) {
         let that = this
+        this.number = 1
         if(that.showRefresh == true) {
           this.freshStatus = 'fresh'
         }

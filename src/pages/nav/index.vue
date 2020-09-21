@@ -101,7 +101,7 @@ import roomlate from "../../components/renting/roomlate"
         type: Object,
         default: {}
       },
-      add: {
+      active: {
         type: String,
         default: ""
       }
@@ -149,71 +149,36 @@ import roomlate from "../../components/renting/roomlate"
         ]
       }
     },
-    onPullDownRefresh: function() { 
-      // this.loadData()
-      var that = this;
-      that.num =1
-      // 显示导航条加载动画  
-      wx.showNavigationBarLoading();
-      let type;
-      switch(this.tab){
-        case 1:
-          type = 'short_rent'
-          break;
-        case 2:
-          type = 'sublet'
-          break;
-        case 3:
-          type = 'find_mate'
-          break;
-      }
-      // let p = new Promise(function(reslove,reject){
-      //   
-        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}`, res=> {
-          console.log(res)
-          that.dataArr = [].concat(res.data.data)
-          wx.stopPullDownRefresh(); 
-          wx.hideNavigationBarLoading();
-          that.dataArr.forEach(num => {
-            num.updateTime = num.updateTime.substring(0, 10)
-            if(num.favorite == false) {
-              num.icon="star-o"
-            } else {
-              num.icon = "star"
-            }
-          })
-        // })
-          //状态由等待变为失败，传的参数作为then函数中失败函数的实参
-      })
-    },
     watch: {
       '$store.state.counCode': {
         handler(newValue, oldValue) {
-　　　　　　this.counCode = newValue
+          console.log("new", newValue)
+　　　　　 this.counCode = newValue
           let type = this.$store.state.type
           this.getData(type)
 　　　　},
 　　　　deep: true
       },
-      add(new1, old){
-        if(new1) {
-          this.address = new1
-        }
+      '$store.state.address': {
+        handler(newValue, oldValue) {
+　　　　　　this.address = newValue
+　　　　},
+　　　　deep: true
+      },
+      active (newValue, oldValue){
+        console.log(newValue, oldValue,"jnjbjj")
       }
     },
     created () {
-      // let type = this.$store.state.type
-      // this.getData(type)
-      console.log("created")
-      setTimeout(() => {
-        this.address = this.globalData.location.counName
-        this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
-        , res => {
-          console.log(res)
-          this.globalData.roomData = res.data.data
-          this.$store.commit('changeCounCode', this.globalData.roomData.counCode)
-        })
-      }, 1000)
+      console.log("red")
+      this.counCode = this.$store.state.counCode
+      this.address = this.$store.state.address
+      let type = 'short_rent'
+      this.getData(type)
+      // setTimeout(() => {
+        // this.address = this.globalData.location.counName
+        
+      // }, 1000)
     },
      onPageScroll:function(e){
       // if(e.mp.scrollTop<0){

@@ -39,7 +39,6 @@ import Top from '../../components/head/index'
       }
     },
     created () {
-      console.log("Ddd")
       // wx.hideTabBar({
       //   aniamtion: false,
       //   fail () {

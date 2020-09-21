@@ -1,8 +1,8 @@
 <template>
   <div>
-    <home v-if="active == 0" :add="address"></home>
-    <set  v-else-if="active == 1"></set>
-    <item  v-else-if="active == 2"></item>
+    <home v-if="active == 0" :add="address" :active="active"></home>
+    <set  v-else-if="active == 1" :active="active"></set>
+    <item  v-else-if="active == 2" :active="active"></item>
     <van-tabbar :active="active" @change="onChange">
       <van-tabbar-item icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item icon="shop-o">发布</van-tabbar-item>
@@ -34,10 +34,21 @@ let wxMarkerData = [];    //  定位成功回调对象
     },
     onLoad(option) {
       let that = this
-      that.address = option.counName
+      if(option.counName) {
+        that.$store.commit('changeAdress', option.counName)
+      }
+      // this.globalData.location.counName = option.counName
       console.log(option,"option")
       // that.attached();
       // that.location1()
+      if(!this.$store.state.counCode){
+        this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
+          , res => {
+            console.log(res)
+            this.globalData.roomData = res.data.data
+            // this.$store.commit('changeCounCode', this.globalData.roomData.counCode)
+          })
+        }
       
     },
     data() {

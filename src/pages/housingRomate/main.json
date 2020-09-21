@@ -7,8 +7,8 @@
     "van-uploader": "../../static/vant/uploader/index",
     "van-stepper": "../../static/vant/stepper/index",
     "van-cell": "../../static/vant/cell/index",
-    "van-icon": "../../static/vant/icon/index"
-    
+    "van-icon": "../../static/vant/icon/index",
+    "van-switch": "../../static/vant/switch/index"
   },
   "navigationBarTitleText": "test",
   "navigationStyle": "custom"

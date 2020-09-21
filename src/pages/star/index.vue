@@ -161,6 +161,7 @@ let lastY = 0
       }
     },
     mounted () {
+      this.number = 1
     },
     onLoad(option) {
       let that = this
@@ -331,6 +332,7 @@ let lastY = 0
       },
       getData(creatorId) {
         let that = this
+        this.number = 1
         if(that.showRefresh == true) {
           this.freshStatus = 'fresh'
         }

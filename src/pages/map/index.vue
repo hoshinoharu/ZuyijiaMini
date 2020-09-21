@@ -172,6 +172,7 @@ let wxMarkerData = [];    //  定位成功回调对象
             counName: arr.addressComponent.district,
             townName: arr.addressComponent.street,
           }
+          that.$store.commit('changeAdress', that.globalData.location.counName)
           that.globalData.addressComponent = Object.assign({}, arr.addressComponent) 
           // 使用wxMarkerData获取数据
           that.city = arr.addressComponent.city
@@ -195,11 +196,12 @@ let wxMarkerData = [];    //  定位成功回调对象
       onTurnCity(e, num) {
         this.globalData.roomData = {}
         this.globalData.roomData = {...num}
-        console.log(this.globalData.roomData, "this.globalData.roomData")
+        console.log(num.counCode)
+        // return
         this.$store.commit('changeCounCode', num.counCode)
         this.globalData.location.cityName = ""
         this.globalData.location.cityName = num.cityName
-
+        this.$store.commit('changeAdress', this.globalData.location.counName)
         wx.redirectTo({
           url: `/pages/home/main?counName=${num.counName}`,
         })
