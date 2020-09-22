@@ -44,12 +44,12 @@
       <div>
 
       </div>
-      <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden',height: (windowHeight - 20)*2+'rpx'}">
+      <view :style="{width: (windowWidth - 30) +'rpx', overflow: 'hidden',height: (windowHeight - 20)+'rpx'}">
       <scroll-view class="my_list" id="page"
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 20)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
+        :style='{height: (windowHeight - 20)+"rpx",width: windowWidth + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
         @scrolltolower="loadMore"
@@ -70,7 +70,9 @@
             </view>
           </view>
         </view>
-        <div v-for="(num, i) in dataArr" :key="i" class="sublet" @tap="turnDetail($enent,num)" >
+        <div v-for="(num, i) in dataArr" :key="i" class="sublet" 
+        :style='{width: (windowWidth - 80)+"rpx"}'
+        @tap="turnDetail($enent,num)" >
           <van-panel :title="num.house.title+'/'+num.house.typeStr" :desc="num.tagsName" :status="num.house.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
             <div class="content_main">
             <span class="spl">地点：{{num.house.provName + '-' + num.house.cityName+'-'+num.house.counName+' '+""}}</span><br/>
@@ -592,13 +594,13 @@ padding-left: 10rpx;
   color: red;
 }
 .star .sublet {
-  padding: 20rpx 30rpx !important;
+  padding: 20rpx 40rpx !important;
 }
 .star .sublet:first-child {
   padding-top: 40rpx !important;
 }
 .star .sublet:last-child {
-  padding: 20rpx 30rpx !important;
+  padding: 20rpx 40rpx !important;
   padding-bottom: 10rpx!important;
 }
 

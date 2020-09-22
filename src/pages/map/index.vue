@@ -145,7 +145,7 @@ let wxMarkerData = [];    //  定位成功回调对象
       }
     },
     mounted () {
-      this.height = this.globalData.windowHeight + 200
+      this.height = this.globalData.windowHeight - 400
       this.location = this.globalData.location.cityName
       this.areaName.forEach(num => {
         num.checked = false

@@ -44,12 +44,13 @@
       <div>
 
       </div>
-      <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden',height: (windowHeight - 20)*2+'rpx'}">
+      <view :style="{width: (windowWidth - 30) +'rpx', overflow: 'hidden',height: (windowHeight - 20)+'rpx'}">
       <scroll-view class="my_list" id="page"
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 20)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
+        :style='{height: (windowHeight - 20)+"rpx",width: windowWidth + "rpx"}' 
+        scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
         @scrolltolower="loadMore"
@@ -70,7 +71,9 @@
             </view>
           </view>
         </view>
-        <div v-for="(num, i) in dataArr" :key="i" class="sublet" @tap="turnDetail($enent,num)" >
+        <div v-for="(num, i) in dataArr" :key="i" class="sublet"
+        :style="{width: (windowWidth - 80) +'rpx'}"
+        @tap="turnDetail($enent,num)" >
           <van-panel 
           :desc="num.tagsName"
           :title="num.title+'/'+num.typeStr" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
@@ -610,13 +613,13 @@ padding-left: 10rpx;
   color: red;
 }
 .send .sublet {
-  padding: 20rpx 30rpx !important;
+  padding: 20rpx 40rpx !important;
 }
 .send .sublet:first-child {
   padding-top: 40rpx !important;
 }
 .send .sublet:last-child {
-  padding: 20rpx 30rpx !important;
+  padding: 20rpx 40rpx !important;
   padding-bottom: 10rpx!important;
 }
 

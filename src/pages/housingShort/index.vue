@@ -276,7 +276,6 @@ import Top from '../../components/head/index'
             if(arr.id) {
               delete arr.id
             }
-            
             this.$http.post('/app/house/add', {
               title: this.room.title,
               description: this.room.description,

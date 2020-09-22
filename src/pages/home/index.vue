@@ -149,7 +149,7 @@ let wxMarkerData = [];    //  定位成功回调对象
         var rect = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null;
          wx.getSystemInfo({
           success: function success(res) {
-            _this.globalData.windowWidth = res.windowWidth
+            // _this.globalData.windowWidth = res.windowWidth
             var ios = !!(res.system.toLowerCase().search('ios') + 1);
             _this.$mp.page.setData({
               ios: ios,

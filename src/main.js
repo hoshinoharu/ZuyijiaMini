@@ -25,11 +25,17 @@ wx.getSystemInfo({
           toBar=48;
       }else{
           toBar=44;
-      }
+    }
+    let clientHeight = res.windowHeight;
+    let clientWidth = res.windowWidth;
+    let ratio = 750 / clientWidth;
+    let height = clientHeight * ratio;
+    let width = clientWidth*ratio
       that.globalData = {
         navHeight: navHeight,
         navTop: navTop,
-        windowHeight: res.windowHeight,
+        windowHeight: height,
+        windowWidth: width,
         statusBarHeight: statusBarHeight,
         toBar: toBar,
         searchValue: ""

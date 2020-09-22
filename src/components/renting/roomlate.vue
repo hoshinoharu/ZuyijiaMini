@@ -64,12 +64,13 @@
       </div>
       
     </div>
-    <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden'}">
+    <view :style="{width: (windowWidth - 30)+'rpx', overflow: 'hidden'}">
       <scroll-view class="my_list" id="page"
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 190)*2+"rpx",width: windowWidth*2 + "rpx"}' scroll-y="true" :scroll-top="scrollTop"
+        :style='{height: (windowHeight - 285)+"rpx",width: (windowWidth) + "rpx"}' 
+        scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
         @scrolltolower="loadMore"
@@ -90,7 +91,9 @@
             </view>
           </view>
         </view>
-        <div v-for="(num, i) in dataArr1" :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
+        <div v-for="(num, i) in dataArr1" 
+        :style="{width:(windowWidth -80)+'rpx'}"
+        :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
           <van-panel :title="num.title+'/'+num.typeStr" :desc="num.tagsName" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
               <div class="content_main">
               <span class="spl">地点：{{num.provName + '-' + num.cityName+'-'+num.counName+' '+""}}</span><br/>
@@ -674,7 +677,7 @@ padding-left: 10rpx;
   color: red;
 }
 .roomlate .sublet {
-  padding: 20rpx 30rpx !important;
+  padding: 20rpx 40rpx !important;
   
 }
 .roomlate .sublet:first-child {
