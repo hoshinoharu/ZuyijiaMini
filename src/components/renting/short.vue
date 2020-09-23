@@ -209,6 +209,7 @@
   　　}
     },
     mounted () {
+      this.searchValue = ""
       // setTimeout(() => {
       this.counCode = this.$store.state.counCode
       // }, 1500)

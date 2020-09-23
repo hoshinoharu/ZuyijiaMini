@@ -299,8 +299,23 @@ import Top from '../../components/head/index'
             ...arr
           }, res=> {
             console.log(res)
-            wx.navigateBack({ changed: true });
-          })
+            if(res.data.success) {
+              wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  mask:true,
+                  duration: 2000
+                })
+              wx.navigateBack({ changed: true });
+            }else {
+              wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  mask:true,
+                  duration: 2000
+                })
+            }
+          }) 
         }
       },
       noop() {},

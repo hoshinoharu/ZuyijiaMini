@@ -286,8 +286,17 @@ import Top from '../../components/head/index'
               type: "short_rent",
               ...arr
             }, res=> {
-              console.log(res)
-              wx.navigateBack({ changed: true });
+              // console.log(res)
+              wx.showToast({
+                  title: res.data.msg,
+                  icon: 'none',
+                  mask:true,
+                  duration: 2000
+                })
+                if(res.data.success) {
+                  wx.navigateBack({ changed: true });
+                }
+              
             })
         }
         

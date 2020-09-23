@@ -205,7 +205,8 @@
     mounted () {
       setTimeout(() => {
         this.counCode = this.$store.state.counCode
-      }, 1500)
+      }, 500)
+      this.searchValue = ""
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
       // this.navHeight = this.globalData.navHeight

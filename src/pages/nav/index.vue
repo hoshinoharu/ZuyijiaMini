@@ -155,7 +155,8 @@ import roomlate from "../../components/renting/roomlate"
           console.log("new", newValue)
 　　　　　 this.counCode = newValue
           let type = this.$store.state.type
-          this.getData(type)
+          let title = ""
+          this.getData(type, title)
 　　　　},
 　　　　deep: true
       },
@@ -174,7 +175,8 @@ import roomlate from "../../components/renting/roomlate"
       this.counCode = this.$store.state.counCode
       this.address = this.$store.state.address
       let type = 'short_rent'
-      this.getData(type)
+      let title = ""
+      this.getData(type, title)
       // setTimeout(() => {
         // this.address = this.globalData.location.counName
         
@@ -220,16 +222,20 @@ import roomlate from "../../components/renting/roomlate"
     onShow() {
       let that = this
       let type = this.$store.state.type
-      this.getData(type)
+      let title = ""
+      // this.getData(type, title)
     },
     methods: {
       getData(type, title) {
         let that = this
         this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&title=${title}`, res=> {
             that.dataArr = []
-            res.data.data.forEach((num, i) => {
-              that.dataArr[i] = num
-            })
+            if(res.data.data.length > 0) {
+              res.data.data.forEach((num, i) => {
+                that.dataArr[i] = num
+              })
+            }
+            
             // that.dataArr = [].concat(res.data.data)
             if(that.dataArr.length > 0) {
               that.dataArr.forEach(num => {
@@ -277,7 +283,9 @@ import roomlate from "../../components/renting/roomlate"
             type = 'find_mate'
             break;
         }
-        this.getData(type)
+        this.$store.commit('changeType', type)
+        let title = ""
+        this.getData(type, title)
       },
       /** 
      * 加载数据 
