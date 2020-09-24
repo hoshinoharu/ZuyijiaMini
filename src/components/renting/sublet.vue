@@ -2,7 +2,7 @@
   <div class="sublet1">
     <van-search
         v-model="searchValue"
-        placeholder="请输入房源标题"
+        placeholder="请输入房源地址"
         use-action-slot
         background="#f0f3f6"
         @cancel="onCancel"
