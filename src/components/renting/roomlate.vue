@@ -189,14 +189,19 @@
       dataArr: {
 　　　　handler(newValue, oldValue) {
           let that = this
+          // that.dataArr1 = []
           if(newValue.length == 0) {
             that.dataArr1 = []
           }
-　　　　　　for (let i = 0; i < newValue.length; i++) {
-　　　　　　　if (oldValue[i] != newValue[i]) {
-              that.dataArr1.push(newValue[i])
-　　　　　　　}
-　　　　　　}
+　　　　　　if(oldValue.length!=0 && oldValue!=null) {
+  　　　　　　for (let i = 0; i < newValue.length; i++) {
+              if (oldValue[i].id != newValue[i].id) {
+                  that.dataArr1.push(newValue[i]) 
+  　　　　　　　  }
+              }　
+  　　　　　 } else {
+              that.dataArr1 = [].concat(newValue)
+            }
           this.counCode = this.$store.state.counCode
   　　　　},
   　　　　deep: true

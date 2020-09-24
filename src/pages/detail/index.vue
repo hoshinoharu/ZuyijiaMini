@@ -63,7 +63,7 @@
           <div slot="footer" class="footer">
             <!-- v-if="flag" -->
             <van-button size="small" icon="chat-o" color="#07c160"  v-if="flagMsg!='true'"  plain @tap="messageTurn">留言</van-button>
-            <van-button size="small"  :icon="icon" :color="color" plain @tap="collect(roomDetail)">收藏</van-button>
+            <van-button size="small"  :icon="roomDetail.icon" :color="color" plain @tap="collect(roomDetail)">收藏</van-button>
           </div>
         </van-panel>
       </div>
