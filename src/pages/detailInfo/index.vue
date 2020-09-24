@@ -8,10 +8,10 @@
         <div style="height: 40rpx; width: 100%; font-size: 26rpx; lineHeight: 40rpx;background: #FF5151; color: #fff;text-align:center">
 注意：以扫二维码/链接/去微信转账等形式让你转钱的都是骗子
         </div>
-        <view :style="{width: (windowWidth - 10)*2 +'rpx', overflow: 'hidden'}">
+        <view :style="{width: (windowWidth - 30) +'rpx', overflow: 'hidden'}">
         <scroll-view class="my_list" 
           id="page" 
-          :style='{height: (windowHeight - 120)*2+"rpx",width: windowWidth*2 + "rpx"}' 
+          :style='{height: (windowHeight - 120)+"rpx",width: windowWidth + "rpx"}' 
           scroll-y="true" 
           :scroll-top="0" 
           @scroll="scroll"
@@ -161,7 +161,7 @@ import Top from '../../components/head/index'
       }
     },
     onLoad(option) {
-      this.heightP = (this.globalData.windowHeight - 80)*2;
+      this.heightP = (this.globalData.windowHeight - 80)
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
       this.id = option.id
