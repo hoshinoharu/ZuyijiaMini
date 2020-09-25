@@ -189,23 +189,37 @@
       dataArr: {
 　　　　handler(newValue, oldValue) {
           let that = this
-          // that.dataArr1 = []
-          if(newValue.length == 0) {
-            that.dataArr1 = []
-          }
-　　　　　　if(oldValue.length!=0 && oldValue!=null) {
-  　　　　　　for (let i = 0; i < newValue.length; i++) {
-              if (oldValue[i].id != newValue[i].id) {
-                  that.dataArr1.push(newValue[i]) 
-  　　　　　　　  }
-              }　
-  　　　　　 } else {
-              that.dataArr1 = [].concat(newValue)
+          let a = new Promise((resolve, reject) => {
+          that.dataArr1 = []
+          resolve()
+        })
+          a.then(() => {
+            if(newValue.length == 0) {
+              that.dataArr1 = []
             }
-          this.counCode = this.$store.state.counCode
+            if(oldValue.length!=0 && oldValue!=null) {
+    　　　　　　for (let i = 0; i < newValue.length; i++) {
+                if (oldValue[i].id != newValue[i].id) {
+                    that.dataArr1.push(newValue[i]) 
+    　　　　　　　  }
+                }　
+    　　　　　 } else {
+                for (let i = 0; i < newValue.length; i++) {
+                  that.dataArr1[i] = newValue[i]
+                }
+                
+              }
+               this.counCode = this.$store.state.counCode
+          })
+         
   　　　　},
   　　　　deep: true
   　　}
+    },
+    computed: {
+      dataArr1() {
+        return this.dataArr
+      }
     },
     mounted () {
       setTimeout(() => {
@@ -736,6 +750,9 @@ padding-left: 10rpx;
     left: 0;
     height: 50rpx;
     width: 120rpx;
+}
+.roomlate .van-dropdown-item--down {
+  top: 600rpx!important;
 }
 .checkbox{
     position: relative;

@@ -30,12 +30,12 @@
 		</div>
 	</div>
   <!-- <div style="clear: both;"></div> -->
-  <div class="boxImg" :style="{marginTop: 2*navHeight + 'rpx'}">
+  <div class="boxImg" :style="{top: 2*navHeight + 'rpx',position: 'relative'}">
       <image :src="boxImg"></image>
   </div>
-  <!-- <div style="clear: both; background: #fff;" :style="{marginTop: 2*navHeight + 'rpx'}"></div> -->
-	<div class="main" :style="{height: (heightTop-400) + 'rpx'}">
-    <div class="test" :style="{height: (heightTop-400) + 'rpx'}">
+  <div style="clear: both; background: #fff;" :style="{marginTop: 2*navHeight + 'rpx'}"></div>
+	<div class="main" :style="{height: (heightTop-(400 + 2*navHeight)) + 'rpx'}">
+    <div class="test" :style="{height: (heightTop-(400 + 2*navHeight)) + 'rpx'}">
       <div class="testNav">
         <div
           :class="{'selected':tab === 1,'testTitle':true}"

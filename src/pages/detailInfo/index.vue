@@ -296,10 +296,12 @@ import Top from '../../components/head/index'
       onPreview(e, path) {
         
         this.warningShow = true
-        this.bigPath = path
+        // this.bigPath = path
         if(path.indexOf('http') != 0) {
-          this.bigPath = 'https://www.zuyijia.cn:9443/app' + path
+          this.bigPath = 'https://www.zuyijia.cn:9443/app' + path + '?quality=1'
           // this.home_pics.push(this.bigPath)
+        } else {
+          this.bigPath = path + '?quality=1'
         }
         this.previewImage(e)
       },
@@ -411,6 +413,12 @@ import Top from '../../components/head/index'
                  let len = this.content.length-1
                  this.content.unshift(...arr)
               }
+              this.home_pics = []
+               this.content.forEach(num => {
+                  if(num.type == 'image') {
+                    this.home_pics.push('https://www.zuyijia.cn:9443/app'+num.content + '?quality=1')
+                  }
+                })
               this.toBottom(res.data.data.length,"len")
             }
           })

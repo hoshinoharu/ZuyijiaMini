@@ -186,23 +186,38 @@
       dataArr: {
 　　　　handler(newValue, oldValue) {
         let that = this
-        // that.dataArr1 = []
-        if(newValue.length == 0) {
+        
+        let a = new Promise((resolve, reject) => {
+          that.dataArr1 = []
+          resolve()
+        })
+          a.then(() => {
+            if(newValue.length == 0) {
               that.dataArr1 = []
             }
-　　　　　　if(oldValue.length!=0 && oldValue!=null) {
-  　　　　　　for (let i = 0; i < newValue.length; i++) {
-              if (oldValue[i].id != newValue[i].id) {
-                  that.dataArr1.push(newValue[i]) 
-  　　　　　　　  }
-              }　
-  　　　　　 } else {
-              that.dataArr1 = [].concat(newValue)
-            }
-          this.counCode = this.$store.state.counCode
+            if(oldValue.length!=0 && oldValue!=null) {
+    　　　　　　for (let i = 0; i < newValue.length; i++) {
+                if (oldValue[i].id != newValue[i].id) {
+                    that.dataArr1.push(newValue[i]) 
+    　　　　　　　  }
+                }　
+    　　　　　 } else {
+      console.log('old', oldValue)
+                for (let i = 0; i < newValue.length; i++) {
+                  that.dataArr1[i] = newValue[i]
+                }
+              }
+               this.counCode = this.$store.state.counCode
+          })
+         
   　　　　},
   　　　　deep: true
   　　}
+    },
+    computed: {
+      dataArr1() {
+        return this.dataArr
+      }
     },
     mounted () {
       setTimeout(() => {
@@ -686,6 +701,9 @@
   font-size: 28rpx;
   
 }
+.sublet1 .van-dropdown-item--down {
+  top: 600rpx!important;
+}
 .sublet1 .name span i {
 padding-left: 10rpx;
 }
@@ -730,9 +748,9 @@ padding-left: 10rpx;
 }
 .shaixuan .van-cell {
 }
-.sublet1 .van-dropdown-item--down {
+/* .sublet1 .van-dropdown-item--down {
   top: 185px!important;
-}
+} */
 .shaixuan .van-cell .van-button {
   width: 200rpx;
   height: 80rpx;

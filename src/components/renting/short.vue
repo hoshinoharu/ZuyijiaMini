@@ -29,7 +29,7 @@
       <i class="icon-sanjiaoxing_shang" v-else></i> -->
       <div class="shaixuan">
         <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
-        <van-dropdown-menu>
+        <van-dropdown-menu :overlay="false">
           <van-dropdown-item title="筛选" ref="item" id="item">
             <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
             <!-- <van-cell :title="'性别: '+sex"> -->
@@ -194,24 +194,36 @@
       dataArr: {
 　　　　handler(newValue, oldValue) {
            let that = this
-           console.log("that.dataArr1", newValue)
-          //  that.dataArr1 = []
-           if(newValue.length == 0) {
-             that.dataArr1 = []
-           }
-           if(oldValue.length!=0 && oldValue!=null) {
-  　　　　　　for (let i = 0; i < newValue.length; i++) {
-              if (oldValue[i].id != newValue[i].id) {
-                  that.dataArr1.push(newValue[i]) 
-  　　　　　　　  }
-              }　
-  　　　　　 } else {
-              that.dataArr1 = [].concat(newValue)
+           let a = new Promise((resolve, reject) => {
+          that.dataArr1 = []
+          resolve()
+        })
+          a.then(() => {
+            if(newValue.length == 0) {
+              that.dataArr1 = []
             }
-          this.counCode = this.$store.state.counCode
+            if(oldValue.length!=0 && oldValue!=null) {
+    　　　　　　for (let i = 0; i < newValue.length; i++) {
+                if (oldValue[i].id != newValue[i].id) {
+                    that.dataArr1.push(newValue[i]) 
+    　　　　　　　  }
+                }　
+    　　　　　 } else {
+                for (let i = 0; i < newValue.length; i++) {
+                  that.dataArr1[i] = newValue[i]
+                }
+              }
+              this.counCode = this.$store.state.counCode
+          })
+          
   　　　　},
   　　　　deep: true
   　　}
+    },
+    computed: {
+      dataArr1() {
+        return this.dataArr
+      }
     },
     mounted () {
       this.searchValue = ""
@@ -753,13 +765,26 @@ padding-left: 10rpx;
   line-height: 40rpx;
   background: #f0f3f6 !important;
 }
+#short .shaixuan .van-dropdown-menu {
+  /* margin-top: 40px; */
+}
+/* .dropClass {
+  top: 20px;
+  margin-top: 20px !important;
+} */
 #short .shaixuan .van-ellipsis {
   font-size: 24rpx;
 }
+/* .shaixuan .van-popup{
+   top: 115px;
+} */
+/* #short .van-overlay {
+  top: 150rpx !important;
+} */
 .shaixuan .van-cell {
 }
 #short .van-dropdown-item--down {
-  top: 185px!important;
+  top: 600rpx!important;
 }
 #short .shaixuan .van-cell .van-button {
   width: 200rpx;

@@ -62,7 +62,7 @@
           </div>
           <div slot="footer" class="footer">
             <!-- v-if="flag" -->
-            <van-button size="small" icon="chat-o" color="#07c160"  v-if="flagMsg!='true'"  plain @tap="messageTurn">留言</van-button>
+            <van-button size="small" icon="chat-o" color="#07c160"  v-if="!flagMsg"  plain @tap="messageTurn">留言</van-button>
             <van-button size="small"  :icon="roomDetail.icon" :color="color" plain @tap="collect(roomDetail)">收藏</van-button>
           </div>
         </van-panel>
@@ -114,7 +114,7 @@ import Top from '../../components/head/index'
         warningShow: false,
         color: '#FFCC66',
         icon: 'star',
-        flagMsg: 'false',
+        flagMsg: false,
         bigPath: "",
         sex: 'male',
         home_pics: [],
@@ -139,14 +139,8 @@ import Top from '../../components/head/index'
     onLoad(option) {
       
       this.windowWidth = this.globalData.windowWidth
-      this.userId = wx.getStorageSync("id")
       let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
-      console.log(roomDetail)
       this.roomDetail = roomDetail
-      // if(this.userId == roomDetail.creatorId) {
-      //   this.flag = true
-      // }
-      // console.log(this.flag, "flag")
       console.log(this.userId, roomDetail.creatorId)
       this.$store.commit('changeType', roomDetail.type)
       this.imgUrls = JSON.parse(roomDetail.imgUrls)
@@ -160,15 +154,13 @@ import Top from '../../components/head/index'
       this.home_pics.forEach((num, i) => {
          this.home_pics[i] = num + '?quality=1'
       })
-      console.log(this.imgUrls)
+    },
+    onShow() {
+      if(this.userId == this.roomDetail.creatorId) {
+        this.flagMsg = true
+      }
     },
     mounted () {
-      
-       if(this.userId == this.roomDetail.creatorId) {
-        this.flagMsg = 'true'
-      }
-      this.$forceUpdate();
-      console.log(this.flagMsg, "flag")
     },
     methods: {
       previewImage: function (path) {  
