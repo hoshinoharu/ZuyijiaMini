@@ -210,11 +210,10 @@ import Top from '../../components/head/index'
     },
  
     methods: {
-      previewImage: function (e) {  
-        var current=e.mp.target.dataset.src;
-        console.log(current)
+      previewImage: function (path) {  
+        // var current=e.mp.target.dataset.src;
         wx.previewImage({
-              current: current, // 当前显示图片的http链接
+              current: path, // 当前显示图片的http链接
               urls: this.home_pics // 需要预览的图片http链接列表
         })
       },
@@ -251,14 +250,17 @@ import Top from '../../components/head/index'
                           const ctx = canvas.getContext('2d');
                           //创建图片
                           const mainImg = canvas.createImage();
+                          console.log(path,"pathCanvas")
                           mainImg.src = path
                           const mainImgs = await new Promise((resolve, reject) => {
                               mainImg.onload = () => resolve(mainImg);
                               mainImg.onerror = (e) => reject(e);
                           });
+                      
                           // 绘制图像到画布
                           ctx.drawImage(mainImgs, 0, 0, imgWidth, imgHeight);
                           let base64 = canvas.toDataURL('image/jpeg', 0.9).replace('data:image/jpeg;base64,', "");
+                          console.log(base64)
                           this.sendImg(canvas.toDataURL('image/jpeg', 0.9), name)
                           callBack(base64);
                       })
@@ -281,7 +283,7 @@ import Top from '../../components/head/index'
                     let userId = wx.getStorageSync('id')
                     this.files.push(res.data.data)
                     this.$http.post('/app/chat/send',{
-                      content: this.files[0],
+                      content: this.files[this.files.length-1],
                       receiverId: this.id,
                       type: 'image'
                     }, res => {
@@ -303,7 +305,7 @@ import Top from '../../components/head/index'
         } else {
           this.bigPath = path + '?quality=1'
         }
-        this.previewImage(e)
+        this.previewImage(this.bigPath)
       },
       onClickWarning() {
         this.bagPath = ""
@@ -501,8 +503,7 @@ import Top from '../../components/head/index'
         this.path = url
         let type = file.path.split('.')
         let name = e.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
-        console.log(name)
-       this.canvas(file.path, name)
+        this.canvas(file.path, name)
         // console.log()
       },
       urlTobase64(url, name){

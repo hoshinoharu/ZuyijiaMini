@@ -52,12 +52,12 @@
               </div>
               <div class="row">
                   <div class="input">
-                      <label for="month">租期 /月</label><br>
+                      <label for="month"></label><br>
                       <input id="month" type="text" name="" 
                       v-model="room.liveDuration" 
-                      placeholder="请输入房源租期"
+                      placeholder="请输入租房时长"
                       placeholder-style="color:#e2e2e2; font-size: 28rpx"
-                      maxlength="6" /><br>
+                      maxlength="12" /><br>
                   </div>
               </div>
               <div class="row2" v-if="modifyId">

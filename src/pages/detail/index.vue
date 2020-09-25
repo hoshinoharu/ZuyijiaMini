@@ -47,8 +47,8 @@
                 <span class="info">{{roomDetail.provName + '-' + roomDetail.cityName+'-'+roomDetail.counName+' '+""}}</span>
               </div>
               <div class="detail_main_item">
-                <span class="label">租期</span>
-                <span class="info">{{roomDetail.liveDuration}}&nbsp;&nbsp;/月</span>
+                <span class="label">租房时长</span>
+                <span class="info">{{roomDetail.liveDuration}}</span>
               </div>
               <div class="detail_main_item">
                 <span class="label">每月租金</span>
