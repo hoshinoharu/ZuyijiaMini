@@ -9,11 +9,11 @@
 注意：以扫二维码/链接/去微信转账等形式让你转钱的都是骗子
         </div>
         <view :style="{width: (windowWidth - 30) +'rpx', overflow: 'hidden'}">
-        <scroll-view class="my_list" 
-          id="page" 
-          :style='{height: (windowHeight - 120)+"rpx",width: windowWidth + "rpx"}' 
-          scroll-y="true" 
-          :scroll-top="0" 
+        <scroll-view class="my_list"
+          id="page"
+          :style='{height: (windowHeight - 120)+"rpx",width: windowWidth + "rpx"}'
+          scroll-y="true"
+          :scroll-top="0"
           @scroll="scroll"
           @touchstart='touchStart'
           @touchend='touchEnd'
@@ -21,7 +21,7 @@
           :scroll-into-view="total"
         >
 
-          <view v-if="showRefresh" 
+          <view v-if="showRefresh"
             style='width:100%;position:relative;padding:60rpx 0;padding-bottom: 30rpx'>
             <view class="text-gray" style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>
               <view v-if="freshStatus == 'fresh'" class="flex">
@@ -30,7 +30,7 @@
               </view>
               <view class="text" v-else-if="freshStatus == 'more'">
                 <!-- 使用到了 colorUI 下拉箭头图标 -->
-                <text class="cuIcon-refresharrow">继续下拉刷新</text> 
+                <text class="cuIcon-refresharrow">继续下拉刷新</text>
               </view>
               <view class="text" v-else>
                 释放刷新
@@ -40,7 +40,7 @@
           <div v-for="(num, i) in content" :key="i"  :id="'item'+(i+1)">
             <div  class="chat_image" v-if="num.creatorId==id">
               <div>
-                <image class="home_img" 
+                <image class="home_img"
                 :src="num.creator.headImg">
                 </image>
               </div>
@@ -55,7 +55,7 @@
               </div>
             </div>
             <div  class="chat_image" style="float: right" v-else>
-              
+
               <div class="bubble_diailog right_bubble size_1">
                 <i class="r"></i>
                 <b class="r"></b>
@@ -65,7 +65,7 @@
                 </div>
               </div>
               <div>
-                <image class="home_imgr" 
+                <image class="home_imgr"
                 :src="num.creator.headImg">
                 </image>
               </div>
@@ -77,7 +77,7 @@
       </div>
        <div class="chat_footer">
           <div class="l-custom-input">
-              <input size="large" id="l-input" 
+              <input size="large" id="l-input"
               type="text"
               v-model="msg"
               @input="inputMsg"
@@ -89,13 +89,13 @@
                 <van-uploader @afterread="afterRead">
                   <van-icon name="photo-o" size="25px" style="margin: 18rpx 20rpx 0px 20rpx"/>
                 </van-uploader>
-                
+
                 <van-button size="small" round @tap="sendMessage($event)">发送</van-button>
               </div>
           </div>
        </div>
       </div>
-    
+
     </div>
     <!-- <van-action-sheet :show="false" title="留言板" class="leave_message" @close="onClose">
       <div class="message">
@@ -104,7 +104,7 @@
           <van-button size="small" round>提交</van-button>
 
         </div>
-        
+
       </div>
     </van-action-sheet> -->
     <!-- <van-overlay :show="warningShow" @click="onClickWarning">
@@ -114,10 +114,10 @@
           height="90%"
           fit="contain"
           class="bmg"
-          :src="bigPath + '?quality=1'" 
+          :src="bigPath + '?quality=1'"
         />
     </van-overlay> -->
-    <canvas id="myCanvas" type="2d" 
+    <canvas id="myCanvas" type="2d"
     :style="{width:canvasWidth + 'px',height:
     canvasHeight + 'px',position:'fixed',top:'-9999px',left:'-9999px'}">
     </canvas>
@@ -177,7 +177,7 @@ import Top from '../../components/head/index'
           })
           resolve()
         })
-      }) 
+      })
       a.then(() => {
         console.log(this.content,"content")
         _this.$mp.page.setData({
@@ -188,13 +188,13 @@ import Top from '../../components/head/index'
       })
     },
     mounted () {
-     
+
      this.user = this.globalData.userInfo
      this.initList()
-     
+
     },
     destroyed(){
-      
+
     },
     onUnload() {
       this.num = 1
@@ -208,13 +208,15 @@ import Top from '../../components/head/index'
       this.total = 'item1'
       this.toBottom()
     },
- 
+
     methods: {
-      previewImage: function (path) {  
-        // var current=e.mp.target.dataset.src;
+      previewImage: function (path) {
+          let urls = this.content.filter(msg=>{return msg.type == 'image'})
+              .map(msg=>{return 'https://www.zuyijia.cn:9443/app'+msg.content + '?quality=1'});
         wx.previewImage({
               current: path, // 当前显示图片的http链接
-              urls: this.home_pics // 需要预览的图片http链接列表
+              urls: urls, // 默认显示一张图片
+              // urls: this.home_pics // 需要预览的图片http链接列表
         })
       },
       canvas(path, name) {
@@ -227,9 +229,6 @@ import Top from '../../components/head/index'
                   success: res => {
                       // 比例
                       var scale = 1;
-                      if (res.width > windowWidth) {
-                          scale = windowWidth / res.width;
-                      }
                       // 宽
                       let imgWidth = res.width * scale;
                       // 高
@@ -256,7 +255,7 @@ import Top from '../../components/head/index'
                               mainImg.onload = () => resolve(mainImg);
                               mainImg.onerror = (e) => reject(e);
                           });
-                      
+
                           // 绘制图像到画布
                           ctx.drawImage(mainImgs, 0, 0, imgWidth, imgHeight);
                           let imgx = canvas.toDataURL('image/jpeg', 1);
@@ -296,7 +295,7 @@ import Top from '../../components/head/index'
         )
       },
       onPreview(e, path) {
-        
+
         this.warningShow = true
         // this.bigPath = path
         if(path.indexOf('http') != 0) {
@@ -369,7 +368,7 @@ import Top from '../../components/head/index'
               let arr = res.data.data
               let flag = false
               arr.forEach((num, i) => {
-                let len = this.content.length - 1 
+                let len = this.content.length - 1
                 let a = this.content[len].id
                 if(a == num.id) {
                   flag = true
@@ -391,7 +390,7 @@ import Top from '../../components/head/index'
         }
         let that = this
         this.$http.get(`/app/chat/session?pageIndex=${num1}&pageSize=10&receiverId=${that.id}`, res => {
-          
+
           let a = new Promise ((resolve, reject) => {
             setTimeout(() => {
               that.showRefresh = false
@@ -409,7 +408,7 @@ import Top from '../../components/head/index'
                   let b = arr.slice(i)
                   this.content.unshift(...b)
                 }
-                
+
               })
               if(!flag) {
                  let len = this.content.length-1
@@ -437,11 +436,11 @@ import Top from '../../components/head/index'
             len = len + type
           }
            this.total = 'item' + (this.content.length - len)
-          
+
         } else {
           this.total = 'item' + (this.content.length)
         }
-        
+
         console.log(this.total)
         // let that1 = this
         // wx.createSelectorQuery().select('#page').boundingClientRect(function (rect) {
@@ -465,7 +464,7 @@ import Top from '../../components/head/index'
                       this.content.push(...this.ascTime(b))
                     }
                 // }
-               
+
               })
               if(!flag) {
                 this.content.push(...arr)
@@ -512,8 +511,8 @@ import Top from '../../components/head/index'
           responseType: 'arraybuffer', //最关键的参数，设置返回的数据格式为arraybuffer
           success:res=>{
             //把arraybuffer转成base64
-                let base64 = wx.arrayBufferToBase64(res.data); 
-                
+                let base64 = wx.arrayBufferToBase64(res.data);
+
                 //不加上这串字符，在页面无法显示的哦
                 base64　= 'data:image/jpeg;base64,' + base64　
                 this.$http.post('/app/file/upload/base64', {
@@ -570,11 +569,11 @@ import Top from '../../components/head/index'
     margin: auto;
 }
   .chat_footer {
-    position: fixed; 
+    position: fixed;
     bottom: 0;
-    width: 100%; 
+    width: 100%;
     height: 90rpx;/*脚部的高度*/
-    background: #fff; 
+    background: #fff;
     clear:both;
     margin: 0px 0px;
   }
@@ -625,7 +624,7 @@ import Top from '../../components/head/index'
   }
    .bubble_diailog .text span{
     position: relative;
-    
+
     padding: 4rpx;
     word-wrap: break-word;
     word-break: break-all;
@@ -678,18 +677,18 @@ import Top from '../../components/head/index'
     }
  .bubble_diailog b.l{
    /* top:29px; */
-   left:-18rpx; 
+   left:-18rpx;
    border-color:transparent #ffc transparent transparent;
    }
 /*右*/
  .bubble_diailog i.r,.bubble_diailog b.r{border-style:dashed dashed dashed solid;}
  .bubble_diailog i.r{
-   right:-22rpx; 
+   right:-22rpx;
    /* margin: auto 0;  */
    border-color:transparent transparent transparent #ccc;
    }
  .bubble_diailog b.r{
-   right:-18rpx; 
+   right:-18rpx;
    /* margin: auto 0;  */
    border-color:transparent transparent transparent #ffc;
    }
@@ -778,7 +777,7 @@ import Top from '../../components/head/index'
   .container {
     box-sizing:border-box;
     padding:20px;
-} 
+}
 .previewimg{
     float:left;
     width:45%;

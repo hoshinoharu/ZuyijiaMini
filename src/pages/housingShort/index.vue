@@ -53,8 +53,8 @@
               <div class="row">
                   <div class="input">
                       <label for="month">租房时长</label><br>
-                      <input id="month" type="text" name="" 
-                      v-model="room.liveDuration" 
+                      <input id="month" type="text" name=""
+                      v-model="room.liveDuration"
                       placeholder="请输入租房时长"
                       placeholder-style="color:#e2e2e2; font-size: 28rpx"
                       maxlength="12" /><br>
@@ -70,8 +70,8 @@
                 <div class="input van_img">
                     <label >房源图片</label>
                 </div>
-                
-                <van-uploader 
+
+                <van-uploader
                 id="img"
                 :file-list="fileList"
                 sizeType="60px"
@@ -84,10 +84,10 @@
                 <div class="button">
                   <button type="button" class="bt_connect"  @tap.stop="resetRoom()" style="float: left">重置</button>
                   <button type="button" class="bt_connect" @tap="checkForm(this)" style="float: right">发布</button>
-                  
+
                 </div>
               </div>
-              
+
           </form>
       </div>
     </div>
@@ -193,9 +193,6 @@ import Top from '../../components/head/index'
                   success: res => {
                       // 比例
                       var scale = 1;
-                      if (res.width > windowWidth) {
-                          scale = windowWidth / res.width;
-                      }
                       // 宽
                       let imgWidth = res.width * scale;
                       // 高
@@ -223,7 +220,7 @@ import Top from '../../components/head/index'
                           });
                           // 绘制图像到画布
                           ctx.drawImage(mainImgs, 0, 0, imgWidth, imgHeight);
-                          let imgx = canvas.toDataURL('image/jpeg', 1);
+                          let imgx = canvas.toDataURL('image/jpeg');
                           let base64 = imgx.replace('data:image/jpeg;base64,', "");
                           this.sendImg(imgx, name)
                           callBack(base64);
@@ -323,11 +320,11 @@ import Top from '../../components/head/index'
                 if(res.data.success) {
                   wx.navigateBack({ changed: true });
                 }
-              
+
             })
         }
-        
-        
+
+
       },
       noop() {},
       cancel() {
@@ -381,8 +378,8 @@ import Top from '../../components/head/index'
           responseType: 'arraybuffer', //最关键的参数，设置返回的数据格式为arraybuffer
           success:res=>{
             //把arraybuffer转成base64
-                let base64 = wx.arrayBufferToBase64(res.data); 
-                
+                let base64 = wx.arrayBufferToBase64(res.data);
+
                 //不加上这串字符，在页面无法显示的哦
                 base64　= 'data:image/jpeg;base64,' + base64　
                 this.$http.post('/app/file/upload/base64', {
@@ -433,7 +430,7 @@ import Top from '../../components/head/index'
   .row_img {
     height: 80px;
     margin-top: 20px;
-  } 
+  }
   .van_img {
     margin-bottom: 20px;
   }
