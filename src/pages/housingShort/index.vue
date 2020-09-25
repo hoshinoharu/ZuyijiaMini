@@ -223,8 +223,9 @@ import Top from '../../components/head/index'
                           });
                           // 绘制图像到画布
                           ctx.drawImage(mainImgs, 0, 0, imgWidth, imgHeight);
-                          let base64 = canvas.toDataURL('image/jpeg', 0.9).replace('data:image/jpeg;base64,', "");
-                          this.sendImg(canvas.toDataURL('image/jpeg', 0.9), name)
+                          let imgx = canvas.toDataURL('image/jpeg', 1);
+                          let base64 = imgx.replace('data:image/jpeg;base64,', "");
+                          this.sendImg(imgx, name)
                           callBack(base64);
                       })
                   },
