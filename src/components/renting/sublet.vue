@@ -197,9 +197,10 @@
             }
             if(oldValue.length!=0 && oldValue!=null) {
     　　　　　　for (let i = 0; i < newValue.length; i++) {
-                if (oldValue[i].id != newValue[i].id) {
-                    that.dataArr1.push(newValue[i]) 
-    　　　　　　　  }
+                    that.dataArr1[i] = newValue[i]
+    //             if (oldValue[i].id != newValue[i].id) {
+    //                 that.dataArr1.push(newValue[i]) 
+    // 　　　　　　　  }
                 }　
     　　　　　 } else {
       console.log('old', oldValue)

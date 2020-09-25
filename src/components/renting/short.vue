@@ -195,18 +195,21 @@
 　　　　handler(newValue, oldValue) {
            let that = this
            let a = new Promise((resolve, reject) => {
-          that.dataArr1 = []
-          resolve()
-        })
+              that.dataArr1 = []
+              resolve()
+            })
+            console.log("oldValue",oldValue)
           a.then(() => {
             if(newValue.length == 0) {
               that.dataArr1 = []
             }
+            console.log(newValue,"nwewewewe")
             if(oldValue.length!=0 && oldValue!=null) {
+              console.log(newValue,"nw32323ewewewe")
     　　　　　　for (let i = 0; i < newValue.length; i++) {
-                if (oldValue[i].id != newValue[i].id) {
-                    that.dataArr1.push(newValue[i]) 
-    　　　　　　　  }
+                // if (oldValue[i].id != newValue[i].id) {
+                    that.dataArr1[i] = newValue[i]
+    // 　　　　　　　  }
                 }　
     　　　　　 } else {
                 for (let i = 0; i < newValue.length; i++) {
