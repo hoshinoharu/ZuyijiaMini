@@ -30,10 +30,13 @@
 		</div>
 	</div>
   <!-- <div style="clear: both;"></div> -->
-  <div style="clear: both; background: #fff;" :style="{marginTop: 2*navHeight + 'rpx'}"></div>
-	<div class="main" >
-    <div class="test">
-      <div class="testNav" style="height:">
+  <div class="boxImg" :style="{marginTop: 2*navHeight + 'rpx'}">
+      <image :src="boxImg"></image>
+  </div>
+  <!-- <div style="clear: both; background: #fff;" :style="{marginTop: 2*navHeight + 'rpx'}"></div> -->
+	<div class="main" :style="{height: (heightTop-400) + 'rpx'}">
+    <div class="test" :style="{height: (heightTop-400) + 'rpx'}">
+      <div class="testNav">
         <div
           :class="{'selected':tab === 1,'testTitle':true}"
           @click="changTab(1)"
@@ -121,12 +124,14 @@ import roomlate from "../../components/renting/roomlate"
        loading: false,
        loaded: false,
        statusBarHeight: "",
+       boxImg: require('../../../static/images/home.jpg'),
        innerWidth: "",
        num: 1,
        searchValue: "",
        counCode: "",
        innerPaddingRight: "",
        leftWidth: "",
+       heightTop: "",
        dataArr: [],
        cookie: "",
        obj: {},
@@ -171,7 +176,8 @@ import roomlate from "../../components/renting/roomlate"
       }
     },
     created () {
-      console.log("red")
+      // console.log("red")
+      this.heightTop = this.globalData.windowHeight
       this.counCode = this.$store.state.counCode
       this.address = this.$store.state.address
       let type = 'short_rent'
@@ -478,7 +484,7 @@ Page{
 .main {
   position: relative;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
 }
 .main::-webkit-scrollbar {
   width: 0;
@@ -533,5 +539,12 @@ Page{
   margin-bottom: 0rpx;
    background-color: rgba(255, 255, 255, 0.4)
 }
-
+.nav_all .boxImg {
+  width: 100%;
+  height: 400rpx;
+}
+.nav_all .boxImg image{
+  width: 100%;
+  height: 400rpx;
+}
 </style>

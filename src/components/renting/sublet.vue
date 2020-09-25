@@ -69,7 +69,7 @@
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 285)+"rpx",width: (windowWidth) + "rpx"}'
+        :style='{height: (windowHeight - 690)+"rpx",width: (windowWidth) + "rpx"}'
         scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
@@ -246,13 +246,20 @@
       touchEnd(e) {
         if (this.freshStatus == 'end') {
           // 延迟 500 毫秒，显示 “刷新中”，防止请求速度过快不显示
-          // setTimeout(()=>{
-            if(this.flagType == true) {
-              this.onSearchSend1(this.tags, this.status)
-            }else {
-              this.getData();
-            }// 获取最新列表数据
-          // }, 500);
+          let a = new Promise((resolve, reject) => {
+               setTimeout(() => {
+                  this.freshStatus = 'fresh'
+                  resolve()
+               }, 500)
+               
+            })
+            a.then(() => {
+              if(this.flagType == true) {
+                this.onSearchSend1(this.tags, this.status)
+              }else {
+                this.getData();
+              }
+            })
         } else {
           this.showRefresh = false
         }

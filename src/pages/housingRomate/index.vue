@@ -282,22 +282,46 @@ import Top from '../../components/head/index'
         this.show1 = !this.show1
         },
       checkForm (val) {
-        console.log(this.room)
-        try {
-          Object.keys(this.room).every(num => {
-            if(this.room[num] == '' || this.room[num] == []) {
+        if(this.room.title == "" || this.room.title == undefined) {
               wx.showToast({
-                  title: '请完善房源信息',
-                  icon: 'none',
-                  mask:true,
-                  duration: 2000
-                })
-              throw('循环终止')
-            }
-          })
-        } catch(e) {
-          console.log('e: ', e)
-          return
+                title: '房源标题不能为空',
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+              return
+        } else if(this.room.description == "" || this.room.description == undefined) {
+              wx.showToast({
+                title: '房源描述不能为空',
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+              return
+        } else if(this.room.type.length == 0 || this.room.type == undefined) {
+              wx.showToast({
+                title: '房源标识不能为空',
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+              return
+        } else if(this.room.liveDuration == "" || this.room.liveDuration == undefined) {
+               wx.showToast({
+                title: '房源租期不能为空',
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+              return
+        } else if(this.room.priceEachMonth == "" || this.room.priceEachMonth == undefined) {
+              wx.showToast({
+                title: '房源价格不能为空',
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+              return
         }
         if(this.modifyId) {
           this.$http.put('/app/house/update', {

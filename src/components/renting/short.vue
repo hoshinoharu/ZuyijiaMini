@@ -70,14 +70,14 @@
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 285)+"rpx",width: (windowWidth) + "rpx"}' 
+        :style='{height: (windowHeight - 690)+"rpx",width: (windowWidth) + "rpx"}' 
         scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
         @scrolltolower="loadMore"
         lower-threshold="10">
         <view v-if="showRefresh" 
-           style='width:100%;position:relative;padding:60rpx 0;padding-bottom: 30rpx'>
+           style='width:100%;position:relative;padding:60rpx 0;padding-bottom: 10rpx'>
           <view class="text-gray" style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>
             <view v-if="freshStatus == 'fresh'" class="flex">
               <view class="lzy-loading"></view>
@@ -199,7 +199,6 @@
            if(newValue.length == 0) {
              that.dataArr1 = []
            }
-           console.log(oldValue,"oldValue")
            if(oldValue.length!=0 && oldValue!=null) {
   　　　　　　for (let i = 0; i < newValue.length; i++) {
               if (oldValue[i].id != newValue[i].id) {
@@ -268,11 +267,21 @@
         if (this.freshStatus == 'end') {
           // 延迟 500 毫秒，显示 “刷新中”，防止请求速度过快不显示
           // setTimeout(()=>{
-            if(this.flagType == true) {
-              this.onSearchSend1(this.tags, this.status)
-            }else {
-              this.getData();
-            }
+            let a = new Promise((resolve, reject) => {
+               setTimeout(() => {
+                  this.freshStatus = 'fresh'
+                  resolve()
+               }, 500)
+               
+            })
+            a.then(() => {
+              if(this.flagType == true) {
+                this.onSearchSend1(this.tags, this.status)
+              }else {
+                this.getData();
+              }
+            })
+            
               // 获取最新列表数据
           // }, 500);
         } else {
@@ -343,21 +352,13 @@
       },
       getData() {
         let that = this
-        // this.items.forEach(num => {
-        //   num.checked = false
-        // })
-        // this.flagType = false
-        // this.switch1 = false
-        // if(that.showRefresh == true) {
-        //   this.freshStatus = 'fresh'
-        // }
         that.number = 1
         let type = 'short_rent'
         this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}`, res=> {
           if(res.data.success) {
             setTimeout(() => {
               this.showRefresh = false
-            }, 1000)
+            }, 500)
             that.dataArr1 = [].concat(res.data.data)
             that.dataArr1.forEach(num => {
               let tags = JSON.parse(num.tags)
