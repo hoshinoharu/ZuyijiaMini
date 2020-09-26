@@ -43,6 +43,7 @@ export default {
       that.attached();
   },
   onShow() {
+    return
       let that = this
       wx.getUserInfo({
         withCredentials: true,
@@ -57,12 +58,11 @@ export default {
             that.$store.commit('changeAdress', that.globalData.location.counName)
             this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
             , res => {
-              console.log(res)
+              console.log(this.globalData.tokenFlag,"flobaltoken")
               this.globalData.roomData = res.data.data
+              
             })
-             wx.navigateTo({
-              url: '/pages/home/main',
-            })
+            
           })
         },
         fail: function (val) {
@@ -75,9 +75,6 @@ export default {
               if (res.confirm) {
                 // that.getuserinfo()
               console.log('用户点击确定')
-              // wx.navigateTo({
-                // url: '../tologin/tologin',
-              // })
               }
             }
             })
@@ -91,36 +88,7 @@ export default {
       success: function (res) {
         that.userInfo = res.userInfo;
         that.globalData.userInfo = res.userInfo;
-        
-        // wx.switchTab({
-        //   url: "/pages/item/main?userInfo="+JSON.stringify(that.userInfo)
-        // })
-        
-          // wx.navigateTo({
-          //   url: '/pages/star/main',
-          // })
-        //此处为获取微信信息后的业务方法
-      },
-      fail: function () {
-        //获取用户信息失败后。请跳转授权页面
-        wx.showModal({
-        title: '警告',
-        content: '尚未进行授权，请点击确定跳转到授权页面进行授权。',
-        success: function (res) {
-          if (res.confirm) {
-          console.log('用户点击确定')
-          // wx.navigateTo({
-            // url: '../tologin/tologin',
-          // })
-          }
-        }
-        })
-      }
-    })
-  },
- methods: {
-      location1() {
-        var that = this;
+        let a = new Promise((resolve ,rej) =>{
     // 获取定位地理位置
     // 新建bmap对象
         let BMap = new bmap.BMapWX({
@@ -131,7 +99,6 @@ export default {
         };
         let success = function(data){
           // 返回数据内，已经包含经纬度
-          console.log("data",data)
           let arr = data.originalData.result
           that.globalData.location = {
             longitude: arr.location.lng,
@@ -154,7 +121,115 @@ export default {
             address:wxMarkerData[0].address,
             cityInfo:data.originalData.result.addressComponent
           }
+          // wx.navigateTo({
+          //   url: '/pages/home/main',
+          // })
+         
+        };
+        let b = new Promise((res, rej) => {
+          BMap.regeocoding({
+            fail:fail,
+            success:success
+          })
+          setTimeout(() => {
+            res()
+          }, 500)
+        })
+        b.then(() => {
+          console.log("sdfsf")
+          resolve()
+        })
+    // 发起regeocoding检索请求
+        
           
+          // setTimeout(() => {
+             
+          // }, 500)
+        })
+        // let b = new Promise((resolve, reject) => {
+        //     that.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
+        //     , res => {
+        //       console.log(this.globalData.tokenFlag,"flobaltoken")
+        //       this.globalData.roomData = res.data.data
+        //       resolve()
+        //     })
+        // })
+        // Promise.all([a,b]).then((result) => {
+				// 		  that.$store.commit('changeAdress', that.globalData.location.counName)
+        //      console.log(this.globalData.tokenFlag,"this.globalData.tokenFlag")
+        //      wx.navigateTo({
+        //           url: `/pages/home/main?address=${that.globalData.location.counName}`,
+        //         })
+				// 		  setshow2(result);
+				// 		}).catch((error) => {
+				// 		  console.log(error) 
+				// 		})
+        a.then(() => {
+          console.log("this.global",that.globalData.location.counName)
+            that.$store.commit('changeAdress', that.globalData.location.counName)
+             that.$http.post('/app/district/export/convert/baidu', JSON.stringify(that.globalData.addressComponent)
+            , res => {
+              that.globalData.roomData = res.data.data
+               wx.redirectTo({
+                  url: '/pages/home/main',
+              })
+          })
+        })
+      },
+      fail: function () {
+        //获取用户信息失败后。请跳转授权页面
+        wx.showModal({
+        title: '警告',
+        content: '尚未进行授权，请点击确定跳转到授权页面进行授权。',
+        success: function (res) {
+          if (res.confirm) {
+          }
+        }
+        })
+      }
+    })
+  },
+ methods: {
+      location1(type) {
+        var that = this;
+    // 获取定位地理位置
+    // 新建bmap对象
+        let BMap = new bmap.BMapWX({
+          ak:that.ak
+        });
+        let fail = function(data){
+          console.log(data);
+        };
+        let success = function(data){
+          // 返回数据内，已经包含经纬度
+          let arr = data.originalData.result
+          that.globalData.location = {
+            longitude: arr.location.lng,
+            latitude: arr.location.lat,
+            provName: arr.addressComponent.province,
+            cityName: arr.addressComponent.city,
+            counName: arr.addressComponent.district,
+            townName: arr.addressComponent.street,
+          }
+          that.globalData.addressComponent = Object.assign({}, arr.addressComponent)
+          that.$store.commit('changeCounCode', arr.addressComponent.adcode)
+          // 使用wxMarkerData获取数据
+          
+          wxMarkerData = data.wxMarkerData;
+          // 把所有数据放在初始化data内
+          that.location = {
+            markers:wxMarkerData,
+            latitude: wxMarkerData[0].latitude,
+            longitude: wxMarkerData[0].longitude,
+            address:wxMarkerData[0].address,
+            cityInfo:data.originalData.result.addressComponent
+          }
+          if(type) {
+            type()
+          }
+          // wx.navigateTo({
+          //   url: '/pages/home/main',
+          // })
         };
 
     // 发起regeocoding检索请求
@@ -201,20 +276,20 @@ export default {
         //接下来写业务代码
         that.showHome = false
         let a = new Promise((res ,rej) =>{
-            that.location1()
-            res()
+          that.location1()
+          res()
+        })
+        a.then(() => {
+          that.$store.commit('changeAdress', that.globalData.location.counName)
+          this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
+          , res => {
+            console.log(res)
+            this.globalData.roomData = res.data.data
           })
-          a.then(() => {
-            that.$store.commit('changeAdress', that.globalData.location.counName)
-            this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
-            , res => {
-              console.log(res)
-              this.globalData.roomData = res.data.data
+            wx.navigateTo({
+              url: '/pages/home/main',
             })
-             wx.navigateTo({
-                url: '/pages/home/main',
-              })
-          })
+        })
       },
       getuserinfo(e) {
       let that = this

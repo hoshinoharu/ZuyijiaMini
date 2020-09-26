@@ -76,8 +76,8 @@
                 :file-list="fileList"
                 sizeType="60px"
                 preview-size="60px"
-                :mutiple="true"
-                max-count="8"
+                :multiple="true"
+                :max-count="3"
                 :deletable="true"
                 @delete="deleteImg"
                 @afterread="afterRead" />
@@ -125,6 +125,7 @@ import Top from '../../components/head/index'
         checked: false,
         modifyId: "",
         show1: false,
+        fileUpload: [],
         fileList: [],
         files: [],
         show: false,
@@ -371,34 +372,6 @@ import Top from '../../components/head/index'
         this.fileList.splice(e.mp.detail.index, 1)
         this.files.splice(e.mp.detail.index, 1)
       },
-      urlTobase64(url, name){
-        console.log(url, "url")
-        wx.request({
-          url:url,
-          responseType: 'arraybuffer', //最关键的参数，设置返回的数据格式为arraybuffer
-          success:res=>{
-            //把arraybuffer转成base64
-                let base64 = wx.arrayBufferToBase64(res.data);
-
-                //不加上这串字符，在页面无法显示的哦
-                base64　= 'data:image/jpeg;base64,' + base64　
-                this.$http.post('/app/file/upload/base64', {
-                  fileName: name,
-                  base64Content: base64
-                }, res => {
-                  console.log(res)
-                  if(res.data.success) {
-                    this.files.push(res.data.data)
-                  }
-                })
-                console.log(this.files)
-                // /app/file/upload/base64
-                //打印出base64字符串，可复制到网页校验一下是否是你选择的原图片呢　
-              },
-          fail: res => {
-          }
-        })
-    },
     sendImg(file, name) {
       this.$http.post('/app/file/upload/base64', {
                   fileName: name,
@@ -411,15 +384,34 @@ import Top from '../../components/head/index'
                 })
     },
       afterRead(event) {
-        const { file } = event.mp.detail;
-        let type = file.path.split('.')
-        let name = event.mp.detail.index + 'tupian' + '.' + type[type.length - 1]
+        let { file } = event.mp.detail
+        this.fileUpload = []
+        file.forEach((num, i) => {
+          this.fileUpload[i] = num,
+          this.fileList.push(
+           { url: num.path, name: '图片2'},
+          )
+        })
+        if (this.fileUpload.length > 3) {
+          wx.showToast({
+                title: "图片一次性最多上传三张!",
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+          // this.$toast.fail("图片一次性最多上传三张!");
+          this.fileUpload.splice(3);
+          return;
+        }
+        for(let i in this.fileUpload) {
+          let type = this.fileUpload[i].path.split('.')
+          let name = event.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
+          this.canvas(this.fileUpload[i].path, name)
+        }
+        // let type = file.path.split('.')
+        // let name = event.mp.detail.index + 'tupian' + '.' + type[type.length - 1]
         // console.log(name, file.path)
-        this.fileList.push(
-           { url: file.path, name: '图片2'},
-        )
-      //  this.urlTobase64(file.path, name)
-       this.canvas(file.path, name)
+        
       },
     }
   }

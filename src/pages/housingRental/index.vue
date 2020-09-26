@@ -76,8 +76,8 @@
                 :file-list="fileList"
                 sizeType="60px"
                 preview-size="60px"
-                :mutiple="true"
-                max-count="8"
+                :multiple="true"
+                :max-count="8"
                 :deletable="true"
                 @delete="deleteImg"
                 @afterread="afterRead" />
@@ -123,6 +123,7 @@ import Top from '../../components/head/index'
         checked: false,
         show1: false,
         fileList: [],
+        fileUpload: [],
         files: [],
         modifyId: "",
         show: false,
@@ -411,15 +412,30 @@ import Top from '../../components/head/index'
         })
     },
       afterRead(event) {
-        const { file } = event.mp.detail;
-        let type = file.path.split('.')
-        let name = event.mp.detail.index + 'tupian' + '.' + type[type.length - 1]
-        console.log(name)
-        this.fileList.push(
-           { url: file.path, name: '图片2'},
-        )
-        this.canvas(file.path, name)
-      //  this.urlTobase64(file.path, name)
+        let { file } = event.mp.detail
+        this.fileUpload = []
+        file.forEach((num, i) => {
+          this.fileUpload[i] = num,
+          this.fileList.push(
+           { url: num.path, name: '图片2'},
+          )
+        })
+        if (this.fileUpload.length > 3) {
+          wx.showToast({
+                title: "图片一次性最多上传三张!",
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+          // this.$toast.fail("图片一次性最多上传三张!");
+          this.fileUpload.splice(3);
+          return;
+        }
+        for(let i in this.fileUpload) {
+          let type = this.fileUpload[i].path.split('.')
+          let name = event.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
+          this.canvas(this.fileUpload[i].path, name)
+        }
       },
     }
   }

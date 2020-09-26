@@ -36,11 +36,10 @@ let wxMarkerData = [];    //  定位成功回调对象
       let that = this
       if(option.counName) {
         that.$store.commit('changeAdress', option.counName)
-      }
-      // this.globalData.location.counName = option.counName
-      console.log(option,"option")
-      // that.attached();
-      // that.location1()
+      } 
+      // else {
+      //   that.$store.commit('changeAdress', option.address)
+      // }
       if(!this.$store.state.counCode){
         this.$http.post('/app/district/export/convert/baidu', JSON.stringify(this.globalData.addressComponent)
           , res => {

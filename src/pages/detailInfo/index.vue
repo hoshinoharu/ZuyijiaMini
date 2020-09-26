@@ -86,8 +86,8 @@
               cursor-spacing="20"
               />
               <div class="l-button">
-                <van-uploader @afterread="afterRead">
-                  <van-icon name="photo-o" size="25px" style="margin: 18rpx 20rpx 0px 20rpx"/>
+                <van-uploader @afterread="afterRead"  multiple="true">
+                  <van-icon name="photo-o" size="25px" multiple style="margin: 18rpx 20rpx 0px 20rpx"/>
                 </van-uploader>
 
                 <van-button size="small" round @tap="sendMessage($event)">发送</van-button>
@@ -142,6 +142,7 @@ import Top from '../../components/head/index'
         total: "item9",
         heightP: "",
         id: "",
+        fileUpload: [],
         home_pics: [],
         warningShow: false,
         freshStatus: 'more', // 当前刷新的状态
@@ -280,9 +281,9 @@ import Top from '../../components/head/index'
                 }, res => {
                   if(res.data.success) {
                     let userId = wx.getStorageSync('id')
-                    this.files.push(res.data.data)
+                    // this.files.push(res.data.data)
                     this.$http.post('/app/chat/send',{
-                      content: this.files[this.files.length-1],
+                      content: res.data.data,
                       receiverId: this.id,
                       type: 'image'
                     }, res => {
@@ -498,63 +499,32 @@ import Top from '../../components/head/index'
       },
       afterRead(e) {
         let { file } = e.mp.detail
+        this.fileUpload = []
+        file.forEach((num, i) => {
+          this.fileUpload[i] = num
+        })
+        
+        if (this.fileUpload.length > 3) {
+          wx.showToast({
+                title: "图片一次性最多上传三张!",
+                icon: 'none',
+                mask:true,
+                duration: 2000
+              })
+          // this.$toast.fail("图片一次性最多上传三张!");
+          this.fileUpload.splice(3);
+          return;
+        }
         let url = file.path
         this.path = url
-        let type = file.path.split('.')
-        let name = e.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
-        this.canvas(file.path, name)
+        
+        for(let i in this.fileUpload) {
+          let type = this.fileUpload[i].path.split('.')
+          let name = e.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
+          this.canvas(this.fileUpload[i].path, name)
+        }
+        
         // console.log()
-      },
-      urlTobase64(url, name){
-        wx.request({
-          url:url,
-          responseType: 'arraybuffer', //最关键的参数，设置返回的数据格式为arraybuffer
-          success:res=>{
-            //把arraybuffer转成base64
-                let base64 = wx.arrayBufferToBase64(res.data);
-
-                //不加上这串字符，在页面无法显示的哦
-                base64　= 'data:image/jpeg;base64,' + base64　
-                this.$http.post('/app/file/upload/base64', {
-                  fileName: name,
-                  base64Content: base64
-                }, res => {
-                  console.log(res)
-                  if(res.data.success) {
-                    let userId = wx.getStorageSync('id')
-                    this.files.push(res.data.data)
-                    this.$http.post('/app/chat/send',{
-                      content: this.files[0],
-                      receiverId: userId,
-                      type: 'image'
-                    }, res => {
-                      if(res.data.success) {
-                        this.shuaxin()
-                        // this.content.push({
-                        //   creatorId: this.id,
-                        //   creator: {
-                        //     headImg: this.user.avatarUrl
-                        //   },
-                        //   content: this.files[0],
-                        //   type: 'image'
-                        // })
-                      }
-                    })
-                    // this.content.push({
-                    //   creatorId: this.id,
-                    //   creator: {
-                    //     headImg: this.user.avatarUrl
-                    //   },
-                    //   content: this.files[0],
-                    //   type: 'image'
-                    // })
-                  }
-                })
-                console.log(this.files)
-                // /app/file/upload/base64
-                //打印出base64字符串，可复制到网页校验一下是否是你选择的原图片呢　
-              }
-        })
       },
     }
   }
