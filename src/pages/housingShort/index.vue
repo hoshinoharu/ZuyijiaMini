@@ -77,7 +77,7 @@
                 sizeType="60px"
                 preview-size="60px"
                 :multiple="true"
-                :max-count="3"
+                :max-count="8"
                 :deletable="true"
                 @delete="deleteImg"
                 @afterread="afterRead" />
@@ -408,10 +408,6 @@ import Top from '../../components/head/index'
           let name = event.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
           this.canvas(this.fileUpload[i].path, name)
         }
-        // let type = file.path.split('.')
-        // let name = event.mp.detail.index + 'tupian' + '.' + type[type.length - 1]
-        // console.log(name, file.path)
-        
       },
     }
   }
