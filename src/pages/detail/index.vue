@@ -54,9 +54,15 @@
                 <span class="label">每月租金</span>
                 <span class="info">{{roomDetail.priceEachMonth}}&nbsp;&nbsp;￥/月</span>
               </div>
+              
               <div class="detail_main_item">
                 <span class="label">发布时间</span>
                 <span class="info">{{roomDetail.updateTime}}</span>
+              </div>
+              <div class="detail_main_item" v-if="roomDetail.type == 'sublet'">
+                <span class="label">房东是否授权</span>
+                <!-- roomDetail.isAgree -->
+                <span class="info">{{roomDetail.isAgreeStr}}</span>
               </div>
             </div>
           </div>
@@ -120,6 +126,9 @@ import Top from '../../components/head/index'
         home_pics: [],
         windowWidth: "",
         userId: "",
+        xx: {
+          flag: false
+        },
         roomDetail: {},
         data1: {
           description: "速度大大大大大大大大大大大大大大大大大但是杀杀杀杀杀杀杀杀杀说的是事实",
@@ -141,7 +150,11 @@ import Top from '../../components/head/index'
       this.windowWidth = this.globalData.windowWidth
       let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
       this.roomDetail = roomDetail
-      console.log(this.userId, roomDetail.creatorId)
+      if(this.roomDetail.isAgree == false) {
+        this.roomDetail.isAgreeStr = '否'
+      } else {
+        this.roomDetail.isAgreeStr = '是'
+      }
       this.$store.commit('changeType', roomDetail.type)
       this.imgUrls = JSON.parse(roomDetail.imgUrls)
       this.imgUrls.forEach((num, i)=> {
@@ -163,6 +176,7 @@ import Top from '../../components/head/index'
     mounted () {
     },
     methods: {
+      
       previewImage: function (path) {  
         var current=path
         wx.previewImage({
