@@ -52,12 +52,18 @@
               </div>
               <div class="row">
                   <div class="input">
-                      <label for="month"></label><br>
+                      <label for="month" >租房时长</label><br>
                       <input id="month" type="text" name=""
                       v-model="room.liveDuration"
                       placeholder="请输入租房时长"
                       placeholder-style="color:#e2e2e2; font-size: 28rpx"
                       maxlength="12" /><br>
+                  </div>
+              </div>
+              <div class="row2" >
+                  <div class="input">
+                      <label for="month">房东是否已授权</label><br>
+                      <van-switch v-model="isAgree" @change="onCheckedFlag" />
                   </div>
               </div>
               <div class="row2" v-if="modifyId">
@@ -66,6 +72,7 @@
                       <van-switch v-model="checked" @change="onChecked" />
                   </div>
               </div>
+              
               <div class="row_img clearfix">
                 <div class="input van_img">
                     <label >房源图片</label>
@@ -118,10 +125,12 @@ import Top from '../../components/head/index'
           title: "",
           liveDuration: "",
           priceEachMonth: "",
-          description: ""
+          description: "",
+          isAgree: false
         },
         checked: false,
         show1: false,
+        isAgree: false,
         fileList: [],
         fileUpload: [],
         files: [],
@@ -139,6 +148,7 @@ import Top from '../../components/head/index'
         let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
         if(roomDetail.id) {
           this.modify(roomDetail)
+          console.log(roomDetail,"room")
         } else {
           this.resetRoom()
         }
@@ -146,6 +156,9 @@ import Top from '../../components/head/index'
     },
     mounted (){
       this.checked = ""
+      // this.checkedFlag = ""
+      this.isAgree = ""
+      this.isAgree = this.room.isAgree
       if(this.room.status == 'persistent') {
         this.checked = false
       } else {
@@ -153,6 +166,10 @@ import Top from '../../components/head/index'
       }
     },
     methods: {
+      onCheckedFlag() {
+        this.isAgree = !this.isAgree
+        this.room.isAgree = this.isAgree
+      },
       onChecked(e) {
         this.checked = !this.checked
         if(this.checked == false) {
@@ -163,6 +180,9 @@ import Top from '../../components/head/index'
       },
       modify(num) {
         this.room.title = num.title
+        this.room.isAgree = num.isAgree
+        // this.isAgree = ""
+        this.isAgree = num.isAgree
         this.room.description = num.description
         this.modifyId = num.id
         this.room.type = JSON.parse(num.tags)
@@ -317,6 +337,7 @@ import Top from '../../components/head/index'
             priceEachMonth: this.room.priceEachMonth,
             liveDuration: this.room.liveDuration,
             tags: JSON.stringify(this.room.type),
+            isAgree: this.isAgree,
             imgUrls: JSON.stringify(this.files),
             type: "sublet",
             ...arr
@@ -353,8 +374,9 @@ import Top from '../../components/head/index'
         this.show = true
       },
       resetRoom() {
-        console.log(this.room)
+        this.isAgree = false
         this.checked = false
+        this.modifyId = ""
         this.files = []
         this.fileList = []
         this.room = {
