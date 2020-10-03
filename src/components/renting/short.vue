@@ -11,12 +11,23 @@
         label="关键字"
         shape="round"
         class="search"
+        @focus.stop="onFouces"
+        @blur.stop="onBlur"
+        @clear="onClear"
     >
     <div
         slot="action"
         @tap="onSearchSend"
     >搜索</div>
+    
     </van-search>
+    <van-transition :show="showAn" custom-class="block">
+    <div class="select">
+      <ul>
+        <li v-for="(num, i) in selectArr" :key="i" ><span @tap="onLi($event,num)">{{num}}</span></li>
+      </ul>
+    </div>
+    </van-transition>
     <div class="choose">
       <!-- 时间排序 -->
       <!-- <view hover-class="bg_red">
@@ -156,6 +167,7 @@
       return {
         value: "",
         sex: '男',
+        showAn: false,
         sort: "desc",
         loading: false,
         loaded: false,
@@ -164,6 +176,7 @@
         switch2: false,
         tags: [],
         dataArr1: [],
+        selectArr: [],
         flagType: false,
         freshStatus: 'more', // 当前刷新的状态
         showRefresh: false,   // 是否显示下拉刷新组件
@@ -228,7 +241,14 @@
         return this.dataArr
       }
     },
+    destroyed () {
+      this.$store.commit('changeSelect', this.selectArr)
+    },
     mounted () {
+      let arr = this.$store.state.select
+      for(let i in arr) {
+        this.selectArr[i] = arr[i]
+      }
       this.searchValue = ""
       // setTimeout(() => {
       this.counCode = this.$store.state.counCode
@@ -237,6 +257,29 @@
       this.windowWidth = this.globalData.windowWidth
     },
     methods: {
+      onShort() {
+        this.showAn = false
+      },
+      onLi(e,val) {
+        this.searchValue = ""
+        this.searchValue = val
+      },
+      onClear(e) {
+        console.log(e)
+        this.searchValue = ""
+      },
+      onFouces() {
+        if(this.selectArr.length >= 1) {
+          this.showAn = true
+        }
+        
+        if(this.selectArr.length > 3) {
+          this.selectArr.splice(3)
+        }
+      },
+      onBlur() {
+        this.showAn = false
+      },
       filterFn(val) {
         let str = "";
         let arr = JSON.parse(val)
@@ -493,7 +536,13 @@
       },
       onSearchSend(e) {
         let that = this
+        // this.selectArr.unshift(this.searchValue)
+        // return
         if(this.searchValue) {
+          if(this.selectArr.includes(this.searchValue) == false) {
+            this.selectArr.unshift(this.searchValue)
+          }
+          
           that.number = 1
           let title = this.searchValue
           let type = 'short_rent'
@@ -520,6 +569,9 @@
                   num.icon = "star"
                 }
               })
+              if(this.selectArr.length > 3) {
+                this.selectArr.splice(3)
+              }
             }
           })
           // this.$store.commit('changeValue', this.searchValue) 
@@ -577,12 +629,19 @@
       },
       onSearch (e) {
         console.log(e.mp.detail)
+        if(e.mp.detail) {
+          this.searchValue = e.mp.detail.value
+          this.onSearchSend()
+        }
       //这个方法此时还有效，点击 Enter 仍会执行
-        this.searchValue = e.mp.detail
-        this.onSearchSend()
+        
       },
       onChangeVal (e) {
-        this.searchValue = e.mp.detail
+        console.log(e.mp.detail,"e.mp.detail")
+        if(e.mp.detail.value) {
+           this.searchValue = e.mp.detail.value
+        }
+       
       },
       onSearch2 () {
         wx.showToast({
@@ -854,5 +913,37 @@ flex: none;
   from{transform:rotate(0deg);}
   to{transform:rotate(360deg);}
   }
+.select {
+  width: 590rpx;
+  height: 300rpx;
+  background: #fff;
+  position: absolute;
+  left: 48rpx;
+  top: 92rpx;
+  /* border-radius: 5px; */
+  border: 1px solid #bbb;
+  border-bottom-right-radius:5px;
+  border-bottom-left-radius:5px;
+  border-top: none;
+  z-index: 99;
 
+}
+.select ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 80rpx;
+}
+.select ul li {
+  line-height: 35rpx;
+  font-size: 35rpx;
+  color: #888888;
+  display: inline-block;
+  height: 50rpx;
+}
+#short .block {
+  height: 0px;
+}
 </style>

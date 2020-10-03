@@ -233,7 +233,6 @@ let mine = [
 import Bottom from '../../components/bottom/index'
   export default {
     name: '',
-    
     components: {
       Bottom,
       Top

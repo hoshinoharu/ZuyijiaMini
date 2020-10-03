@@ -12,12 +12,19 @@ export default new Vuex.Store({
     searchValue: "",
     type: "short_rent",
     counCode: "",
-    address: ""
+    address: "",
+    select: [],
   }, 
   mutations: {    
     increment: (state) => {
       state.count += 1
-    },    
+    },
+    changeSelect: (state, data) => { 
+      state.select = []
+      for (let i in data) { 
+        state.select[i] = data[i]
+      }
+    },
     decrement: (state) => {
       state.count -= 1
     },

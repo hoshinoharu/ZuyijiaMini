@@ -11,7 +11,7 @@
         <view :style="{width: (windowWidth - 30) +'rpx', overflow: 'hidden'}">
         <scroll-view class="my_list"
           id="page"
-          :style='{height: (windowHeight - 120)+"rpx",width: windowWidth + "rpx"}'
+          :style='{height: (windowHeight - 120 - bottomM)+"rpx",width: windowWidth + "rpx"}'
           scroll-y="true"
           :scroll-top="0"
           @scroll="scroll"
@@ -75,7 +75,7 @@
         </scroll-view>
         </view>
       </div>
-       <div class="chat_footer">
+       <div class="chat_footer" :style="{bottom: bottomM + 'rpx'}">
           <div class="l-custom-input">
               <input size="large" id="l-input"
               type="text"
@@ -84,6 +84,8 @@
               confirm-type='发送'
               @confirm="sendMsgTap"
               cursor-spacing="20"
+              @focus="onShow"
+              @blur="onBlur"
               />
               <div class="l-button">
                 <van-uploader @afterread="afterRead"  multiple="true">
@@ -95,7 +97,18 @@
           </div>
        </div>
       </div>
+      <van-action-sheet :show="showMessage" :overlay="false" title="留言板" class="leave_message" @close="onClose">
+        <div class="message">
+          <div class="message1">
+            <van-picker show-toolbar :columns="columns" @change="onChange"  @cancel="onCancel"
+             @confirm="onConfirm" />
+            <!-- <input type=""> -->
+            <!-- <van-button size="small" round>提交</van-button> -->
 
+          </div>
+          
+        </div>
+      </van-action-sheet>
     </div>
     <!-- <van-action-sheet :show="false" title="留言板" class="leave_message" @close="onClose">
       <div class="message">
@@ -139,10 +152,12 @@ import Top from '../../components/head/index'
           flag: true
         },
         content: [],
+        columns: ['押一付一', '押一付三', '押一付六', '押一付十二', '房子已出租'],
         total: "item9",
         heightP: "",
         id: "",
         fileUpload: [],
+        showMessage: true,
         home_pics: [],
         warningShow: false,
         freshStatus: 'more', // 当前刷新的状态
@@ -158,7 +173,8 @@ import Top from '../../components/head/index'
         scrollTop: 5,//控制上滑距离
         windowHeight: 0,//页面高度
         files: [],
-        myInterval: ""
+        myInterval: "",
+        bottomM: 490
       }
     },
     onLoad(option) {
@@ -201,16 +217,37 @@ import Top from '../../components/head/index'
       this.num = 1
       clearInterval(this.myInterval)
     },
-    onShow() {
-      this.total = 'item1'
-      this.toBottom()
-    },
+   
     onReady: function() {
       this.total = 'item1'
       this.toBottom()
     },
 
     methods: {
+      onChange(){
+
+      },
+      onConfirm(event) {
+        this.msg = event.mp.detail.value
+        console.log(event.mp)
+      },
+      onCancel() {
+        this.bottomM = 0
+        this.showMessage = false
+      },
+       onShow() {
+          console.log("Sds")
+          this.showMessage = true
+          this.bottomM = 490
+        },
+      onBlur(){
+        this.bottomM = 0
+        this.showMessage = false
+      },
+      onClose() {
+        this.showMessage = false
+        this.bottomM = 0
+      },
       previewImage: function (path) {
           let urls = this.content.filter(msg=>{return msg.type == 'image'})
               .map(msg=>{return 'https://www.zuyijia.cn:9443/app'+msg.content + '?quality=1'});
@@ -757,5 +794,23 @@ import Top from '../../components/head/index'
 .previewimg image{
     width:100%;
     height:100%;
+}
+.message {
+  width: 100%;
+  background: #fafafa;
+  height: 400rpx;
+}
+.leave_message .van-action-sheet {
+   height: 35%;
+}
+ 
+.van-overlay .van-overlay {
+
+ height: 0px !important;
+}
+.message1 {
+  height: 350rpx;
+  overflow: hidden;
+
 }
 </style>

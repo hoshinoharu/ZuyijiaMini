@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #fafafa;" class="nav_all">
+  <div style="background-color: #fafafa;" class="nav_all" @touchstart="bgTouchStart">
 	<div class="header">
 		<!-- 官方自定义导航栏抽取出来的模块 -->
 		<div class="navigation">
@@ -232,6 +232,9 @@ import roomlate from "../../components/renting/roomlate"
       // this.getData(type, title)
     },
     methods: {
+      bgTouchStart(e) {
+        // console.log(e)
+      },
       getData(type, title) {
         let that = this
         this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&title=${title}`, res=> {

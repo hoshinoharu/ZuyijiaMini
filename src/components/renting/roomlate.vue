@@ -11,12 +11,22 @@
         label="关键字"
         shape="round"
         class="search"
+        @focus="onFouces"
+        @blur="onBlur"
+        @clear="onClear"
     >
     <div
         slot="action"
         @tap="onSearchSend"
     >搜索</div>
     </van-search>
+    <van-transition :show="showAn" custom-class="block">
+    <div class="select">
+      <ul>
+        <li v-for="(num, i) in selectArr" :key="i"><span @tap="onLi($event,num)">{{num}}</span></li>
+      </ul>
+    </div>
+    </van-transition>
     <div class="choose">
       <!-- <view hover-class="bg_red">
       <div :value="sort" @tap="sortClick" class="choose_div" @touchstart="sort">
@@ -166,6 +176,8 @@
         number: 1,
         navHeight: "",
         flagType: false,
+        selectArr: [],
+        showAn: false,
         tags: [],
         dataArr1: [],
         counCode: "",
@@ -222,7 +234,14 @@
         return this.dataArr
       }
     },
+    destroyed () {
+      this.$store.commit('changeSelect', this.selectArr)
+    },
     mounted () {
+      let arr = this.$store.state.select
+      for(let i in arr) {
+        this.selectArr[i] = arr[i]
+      }
       setTimeout(() => {
         this.counCode = this.$store.state.counCode
       }, 500)
@@ -233,6 +252,26 @@
       // console.log(this.navHeight)
     },
     methods: {
+      onClear(e) {
+        console.log(e)
+        this.searchValue = ""
+      },
+      onLi(e,val) {
+        this.searchValue = ""
+        this.searchValue = val
+      },
+      onFouces() {
+        if(this.selectArr.length >= 1) {
+          this.showAn = true
+        }
+        
+        if(this.selectArr.length > 3) {
+          this.selectArr.splice(3)
+        }
+      },
+      onBlur() {
+        this.showAn = false
+      },
       touchStart(e) {
         this.startY = e.mp.changedTouches[0].pageY;
         this.freshStatus = 'more'
@@ -473,6 +512,9 @@
       onSearchSend(e) {
         let that = this
         if(this.searchValue) {
+          if(this.selectArr.includes(this.searchValue) == false) {
+            this.selectArr.unshift(this.searchValue)
+          }
           that.number = 1
           let title = this.searchValue
           let type = 'find_mate'
@@ -499,6 +541,9 @@
                   num.icon = "star"
                 }
               })
+              if(this.selectArr.length > 3) {
+                this.selectArr.splice(3)
+              }
             }
           })
           // this.$store.commit('changeValue', this.searchValue) 
@@ -557,11 +602,11 @@
       onSearch (e) {
         console.log(e.mp.detail)
       //这个方法此时还有效，点击 Enter 仍会执行
-        this.searchValue = e.mp.detail
+        this.searchValue = e.mp.detail.value
         this.onSearchSend()
       },
       onChangeVal (e) {
-        this.searchValue = e.mp.detail
+        this.searchValue = e.mp.detail.value
       },
       onSearch2 () {
         wx.showToast({
@@ -806,5 +851,37 @@ flex: none;
   from{transform:rotate(0deg);}
   to{transform:rotate(360deg);}
   }
+.select {
+  width: 590rpx;
+  height: 300rpx;
+  background: #fff;
+  position: absolute;
+  left: 48rpx;
+  top: 92rpx;
+  /* border-radius: 5px; */
+  border: 1px solid #bbb;
+  border-bottom-right-radius:5px;
+  border-bottom-left-radius:5px;
+  border-top: none;
+  z-index: 88;
 
+}
+.select ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 80rpx;
+}
+.select ul li {
+  line-height: 35rpx;
+  font-size: 35rpx;
+  color: #888888;
+  display: inline-block;
+  height: 50rpx;
+}
+.roomlate .block {
+  height: 0px;
+}
 </style>

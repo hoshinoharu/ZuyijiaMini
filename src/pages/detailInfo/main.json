@@ -7,7 +7,8 @@
     "van-icon": "../../static/vant/icon/index",
     "van-overlay": "../../static/vant/overlay/index",
     "van-uploader": "../../static/vant/uploader/index",
-    "van-image": "../../static/vant/image/index"
+    "van-image": "../../static/vant/image/index",
+    "van-picker": "../../static/vant/picker/index"
   },
   "navigationBarTitleText": "test",
   "navigationStyle": "custom"
