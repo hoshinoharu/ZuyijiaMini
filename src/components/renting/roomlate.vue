@@ -851,7 +851,7 @@ flex: none;
   from{transform:rotate(0deg);}
   to{transform:rotate(360deg);}
   }
-.select {
+.roomlate .select {
   width: 590rpx;
   height: 300rpx;
   background: #fff;

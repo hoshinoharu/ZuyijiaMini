@@ -54,6 +54,15 @@
                 </div>
 
               </div>
+              <div class="row"  @tap="typeShow1">
+                  <div class="select" >
+                      <label>押金方式</label><br>
+                      <span style="color:#666">
+                        {{room.payModeStr}}&nbsp;
+                      </span>
+                      <br>
+                  </div>
+              </div>
               <div class="row">
                   <div class="input">
                       <label for="price">月租价格 ￥/月</label><br>
@@ -109,6 +118,9 @@
     <van-action-sheet :show="show" title="房源标识位选择" @close.stop="cancel">
        <van-picker show-toolbar :columns="columns" @cancel="onCancel" @change="onChange"  @confirm="onConfirm"/>
     </van-action-sheet>
+    <van-action-sheet :show="showStyle" title="押金方式" @close.stop="cancel1">
+       <van-picker show-toolbar :columns="columnArr" @cancel="onCancel1" @change="onChange"  @confirm="onConfirm1"/>
+    </van-action-sheet>
     <span v-show="show1"></span>
     <canvas id="myCanvas" type="2d" :style="{width:canvasWidth + 'px',height:
 canvasHeight + 'px',position:'fixed',top:'-9999px',left:'-9999px'}"></canvas>
@@ -135,17 +147,26 @@ import Top from '../../components/head/index'
           title: "",
           liveDuration: "",
           priceEachMonth: "",
-          description: ""
+          description: "",
+          payModeStr: "",
+          payMode: ""
         },
         show1: false,
         checked: false,
         fileList: [],
         fileUpload: [],
+        showStyle: false,
         modifyId: "",
         files: [],
         show: false,
         multiIndex: "",
-        columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场', '体育馆', '医院']
+        columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场', '体育馆', '医院'],
+        columnArr: [
+          {text:'押一付一',value: "oneToOne"},
+          {text:'押一付三',value: "oneToThree"},
+          {text:'押一付六',value: "oneToSix"},
+          {text:'押一付十二',value: "oneToTwelve"}
+          ]
       }
     },
     onLoad(option) {
@@ -169,6 +190,21 @@ import Top from '../../components/head/index'
       }
     },
     methods: {
+      cancel1() {
+        this.showStyle = false
+      },
+      onCancel1() {
+        this.showStyle = false
+      },
+       typeShow1() {
+        this.showStyle = true
+      },
+       onConfirm1(e) {
+        this.room.payMode = ""
+        this.room.payMode = e.mp.detail.value.value
+        this.room.payModeStr = e.mp.detail.value.text
+        this.showStyle = false
+      },
       onChecked(e) {
         console.log(e)
         this.checked = !this.checked
@@ -184,6 +220,8 @@ import Top from '../../components/head/index'
         this.modifyId = num.id
         this.room.male = num.male
         this.room.female = num.female
+        this.room.payModeStr = num.payModeStr
+        this.room.payMode = num.payMode
         this.room.type = JSON.parse(num.tags)
         this.room.priceEachMonth = num.priceEachMonth
         this.room.liveDuration = num.liveDuration

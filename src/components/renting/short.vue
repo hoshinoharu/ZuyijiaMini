@@ -41,6 +41,7 @@
       <div class="shaixuan">
         <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
         <van-dropdown-menu :overlay="false">
+          <van-dropdown-item title="价格" ref="item" id="item1" @click="onConfirm1" class="itemD"></van-dropdown-item>
           <van-dropdown-item title="筛选" ref="item" id="item">
             <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
             <!-- <van-cell :title="'性别: '+sex"> -->
@@ -188,6 +189,7 @@
         navHeight: "",
         counCode: "",
         // icon: 'star-o',
+        priceAsc: false,
         searchValue: "",
         status: "persistent",
         items: [
@@ -408,11 +410,11 @@
           }  
         })
       },
-      getData() {
+      getData(priceAsc) {
         let that = this
         that.number = 1
         let type = 'short_rent'
-        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}`, res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&priceAsc=${priceAsc}`, res=> {
           if(res.data.success) {
             setTimeout(() => {
               this.showRefresh = false
@@ -455,7 +457,15 @@
         }
         //重新赋值
         self.items = [] .concat(list)
-    },    
+    }, 
+    onConfirm1(e) {
+      console.log(e)
+      this.priceAsc = !this.priceAsc
+      console.log(this.priceAsc)
+      this.getData(this.priceAsc)
+      this.$root.$mp.page.selectComponent('#item1').toggle();
+      
+    },
       onConfirm() {
         this.$root.$mp.page.selectComponent('#item').toggle();
         this.flagType = true
@@ -712,7 +722,7 @@
   margin-left: 30rpx;
 }
 #short .choose div {
-  width: 160rpx;
+  width: 200rpx;
   height: 40rpx;
   line-height: 40rpx;
 }
@@ -827,6 +837,11 @@ padding-left: 10rpx;
   line-height: 40rpx;
   background: #f0f3f6 !important;
 }
+#short .shaixuan .van-dropdown-menu .van-dropdown-menu__title 
+ {
+  /* left: 20px !important; */
+}
+
 #short .shaixuan .van-dropdown-menu {
   /* margin-top: 40px; */
 }
@@ -913,7 +928,7 @@ flex: none;
   from{transform:rotate(0deg);}
   to{transform:rotate(360deg);}
   }
-.select {
+#short .select {
   width: 590rpx;
   height: 300rpx;
   background: #fff;

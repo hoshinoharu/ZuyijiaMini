@@ -35,7 +35,15 @@
                       <span v-for="(num ,i) in room.type" :key="i" style="color:#666">
                         {{num.value}}&nbsp;
                       </span>
-                      <!-- <input id="p_tel" type="text" name="p_tel"/> -->
+                      <br>
+                  </div>
+              </div>
+              <div class="row"  @tap="typeShow1">
+                  <div class="select" >
+                      <label>押金方式</label><br>
+                      <span style="color:#666">
+                        {{room.payModeStr}}&nbsp;
+                      </span>
                       <br>
                   </div>
               </div>
@@ -94,6 +102,9 @@
     <van-action-sheet :show="show" title="房源标识位选择" @close.stop="cancel">
        <van-picker show-toolbar :columns="columns" @cancel="onCancel" @change="onChange"  @confirm="onConfirm"/>
     </van-action-sheet>
+    <van-action-sheet :show="showStyle" title="押金方式" @close.stop="cancel1">
+       <van-picker show-toolbar :columns="columnArr" @cancel="onCancel1" @change="onChange"  @confirm="onConfirm1"/>
+    </van-action-sheet>
     <span v-show="show1"></span>
     <canvas id="myCanvas" type="2d" :style="{width:canvasWidth + 'px',height:
 canvasHeight + 'px',position:'fixed',top:'-9999px',left:'-9999px'}"></canvas>
@@ -120,17 +131,26 @@ import Top from '../../components/head/index'
           title: "",
           liveDuration: "",
           priceEachMonth: "",
-          description: ""
+          description: "",
+          payMode: "",
+          payModeStr:""
         },
         checked: false,
         modifyId: "",
         show1: false,
+        showStyle: false,
         fileUpload: [],
         fileList: [],
         files: [],
         show: false,
         multiIndex: "",
-        columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场']
+        columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场'],
+        columnArr: [
+          {text:'押一付一',value: "oneToOne"},
+          {text:'押一付三',value: "oneToThree"},
+          {text:'押一付六',value: "oneToSix"},
+          {text:'押一付十二',value: "oneToTwelve"}
+          ]
       }
     },
     onLoad(option) {
@@ -168,6 +188,8 @@ import Top from '../../components/head/index'
         this.room.type = JSON.parse(num.tags)
         this.room.priceEachMonth = num.priceEachMonth
         this.room.liveDuration = num.liveDuration
+        this.room.payModeStr = num.payModeStr
+        this.room.payMode = num.payMode
         let arr = JSON.parse(num.imgUrls)
         if(num.status == 'persistent') {
           this.checked = false
@@ -308,6 +330,8 @@ import Top from '../../components/head/index'
               liveDuration: this.room.liveDuration,
               tags: JSON.stringify(this.room.type),
               imgUrls: JSON.stringify(this.files),
+              payMode: this.room.payMode,
+              payModeStr: this.room.payModeStr,
               type: "short_rent",
               ...arr
             }, res=> {
@@ -332,12 +356,29 @@ import Top from '../../components/head/index'
         console.log("ss")
         this.show = false
       },
+     
       onCancel() {
         this.show = false
+      },
+      cancel1() {
+        this.showStyle = false
+      },
+      onCancel1() {
+        this.showStyle = false
+      },
+       typeShow1() {
+        this.showStyle = true
+      },
+       onConfirm1(e) {
+        this.room.payMode = ""
+        this.room.payMode = e.mp.detail.value.value
+        this.room.payModeStr = e.mp.detail.value.text
+        this.showStyle = false
       },
       typeShow () {
         this.show = true
       },
+     
       resetRoom() {
         console.log(this.room)
         this.checked = false
@@ -347,6 +388,7 @@ import Top from '../../components/head/index'
           type: []
         }
       },
+     
       onConfirm(e) {
         console.log(e.mp.detail)
         console.log(this.room.type)
@@ -362,6 +404,9 @@ import Top from '../../components/head/index'
         }
       },
       onChange(event) {
+        const { picker, value, index } = event.mp.detail;
+      },
+      onChange1(event) {
         const { picker, value, index } = event.mp.detail;
       },
       beforeRead(e) {
