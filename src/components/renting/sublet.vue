@@ -39,9 +39,14 @@
       <div class="shaixuan">
         <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
         <van-dropdown-menu>
+          <van-dropdown-item title="价格" ref="item" id="item1"
+              @close="onConfirm2" @open="onConfirm1" class="itemD"
+              :style="{display: categoryShow ? 'none ' : 'block' } " >
+              </van-dropdown-item>
           <van-dropdown-item title="筛选" ref="item" id="item">
             <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
             <!-- <van-cell :title="'性别: '+sex"> -->
+              
             <van-cell title="已出租">
               <van-switch v-model="switch1"  @input="onInput"></van-switch>
             </van-cell>
@@ -166,6 +171,8 @@
         color: '#FFCC66',
         switch1: false,
         switch2: false,
+        categoryShow: false,
+        priceAsc: false,
         freshStatus: 'more', // 当前刷新的状态
         showRefresh: false,   // 是否显示下拉刷新组件
         windowHeight: 0,
@@ -381,14 +388,14 @@
           }  
         })
       },
-      getData() {
+      getData(priceAsc) {
         let that = this
         if(that.showRefresh == true) {
           this.freshStatus = 'fresh'
         }
         that.number = 1
         let type = 'sublet'
-        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}`, res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&priceAsc=${priceAsc}`, res=> {
           if(res.data.success) {
             setTimeout(() => {
               this.showRefresh = false
@@ -441,6 +448,18 @@
         self.items = []
         self.items = [].concat(list)
     },   
+    onConfirm1(e) {
+      this.priceAsc = true
+      this.categoryShow = true
+      this.getData(this.priceAsc)
+      // this.$root.$mp.page.selectComponent('#item1').toggle();
+      
+    },
+    onConfirm2(e) {
+      this.categoryShow = false
+      this.priceAsc = false
+      this.getData(this.priceAsc)
+    },
       onConfirm() {
         this.$root.$mp.page.selectComponent('#item').toggle();
         this.flagType = true
@@ -685,7 +704,7 @@
   margin-left: 30rpx;
 }
 .sublet1 .choose div {
-  width: 160rpx;
+  width: 200rpx;
   height: 40rpx;
   line-height: 40rpx;
 }

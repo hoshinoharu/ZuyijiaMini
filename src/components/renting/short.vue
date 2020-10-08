@@ -41,7 +41,10 @@
       <div class="shaixuan">
         <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
         <van-dropdown-menu :overlay="false">
-          <van-dropdown-item title="价格" ref="item" id="item1" @click="onConfirm1" class="itemD"></van-dropdown-item>
+          <van-dropdown-item title="价格" ref="item" id="item1"
+           @close="onConfirm2" @open="onConfirm1" class="itemD"
+           :style="{display: categoryShow ? 'none ' : 'block' } " >
+          </van-dropdown-item>
           <van-dropdown-item title="筛选" ref="item" id="item">
             <!-- <span>筛选</span><i class="iconfont icon-icon_shaixuan"></i> -->
             <!-- <van-cell :title="'性别: '+sex"> -->
@@ -171,6 +174,7 @@
         showAn: false,
         sort: "desc",
         loading: false,
+        categoryShow: false,
         loaded: false,
         color: '#FFCC66',
         switch1: false,
@@ -459,12 +463,16 @@
         self.items = [] .concat(list)
     }, 
     onConfirm1(e) {
-      console.log(e)
-      this.priceAsc = !this.priceAsc
-      console.log(this.priceAsc)
+      this.priceAsc = true
+      this.categoryShow = true
       this.getData(this.priceAsc)
-      this.$root.$mp.page.selectComponent('#item1').toggle();
+      // this.$root.$mp.page.selectComponent('#item1').toggle();
       
+    },
+    onConfirm2(e) {
+      this.categoryShow = false
+      this.priceAsc = false
+      this.getData(this.priceAsc)
     },
       onConfirm() {
         this.$root.$mp.page.selectComponent('#item').toggle();
