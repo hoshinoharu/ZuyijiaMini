@@ -395,7 +395,7 @@
         }
         that.number = 1
         let type = 'sublet'
-        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&priceAsc=${priceAsc}`, res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&priceAsc=${this.priceAsc}`, res=> {
           if(res.data.success) {
             setTimeout(() => {
               this.showRefresh = false

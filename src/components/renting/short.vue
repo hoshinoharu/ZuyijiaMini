@@ -175,6 +175,7 @@
         sort: "desc",
         loading: false,
         categoryShow: false,
+        priceAsc: false,
         loaded: false,
         color: '#FFCC66',
         switch1: false,
@@ -193,7 +194,7 @@
         navHeight: "",
         counCode: "",
         // icon: 'star-o',
-        priceAsc: false,
+        
         searchValue: "",
         status: "persistent",
         items: [
@@ -418,7 +419,7 @@
         let that = this
         that.number = 1
         let type = 'short_rent'
-        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&priceAsc=${priceAsc}`, res=> {
+        this.$http.get(`/app/house/export/list?pageIndex=1&pageSize=10&type=${type}&counCode=${this.counCode}&priceAsc=${this.priceAsc}`, res=> {
           if(res.data.success) {
             setTimeout(() => {
               this.showRefresh = false
