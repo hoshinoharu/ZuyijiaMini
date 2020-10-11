@@ -21,7 +21,8 @@
       <ul class="ul_mine">
         <li class="li_mine" v-for="(num, i) in mine" :key="i" @tap="onTurn($event, num.url)">
            <i :class="num.icon" v-if="i!=1"></i>
-           <i v-else ><van-icon name="chat" :info="num.number"/></i>
+           <i v-else-if="num.number > 0" ><van-icon name="chat" :info="num.number"/></i>
+           <i v-else ><van-icon name="chat" /></i>
            <span>{{num.name}}</span>
         </li>
       </ul>
@@ -199,9 +200,9 @@
     </van-overlay>
   </div>
   <div v-show="showFlag1"></div>
-  <div class="footer">
+  <!-- <div class="footer">
     <Bottom :selected="2"></Bottom>
-  </div>
+  </div> -->
 </div>
 </template>
 
@@ -306,6 +307,16 @@ import Bottom from '../../components/bottom/index'
     mounted () {
       this.userInfo = this.globalData.userInfo
       this.url = this.userInfo.avatarUrl
+      this.$http.get(`/app/chat/unread/count`, res => {
+            if(res.data.success) {
+              console.log(res.data)
+              this.mine.forEach(num => {
+                if(num.name = '我的消息') {
+                  num.number = Number(res.data.data)
+                }
+              })
+            }
+          })
     },
     methods: {
       getCodeSuccess(e){

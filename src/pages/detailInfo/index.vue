@@ -49,8 +49,12 @@
                 <b class="l"></b>
                 <div class="text">
                   <span v-if="num.type=='text'">{{num.content}}</span>
-                  <image v-else class="chat_photo" :src="'https://www.zuyijia.cn:9443/app'+num.content" @tap.stop="onPreview($event, num.content)"></image>
-
+                  <image v-else-if="num.type=='image'" class="chat_photo" :src="'https://www.zuyijia.cn:9443/app'+num.content" @tap.stop="onPreview($event, num.content)"></image>
+                  <div v-else-if="num.type=='position'" class="chat_position">
+                     <span>{{num.contentObj.address}}</span>
+                     <image  class="chat_map" src="../../static/images/ma.png" @tap="bindLocation($event,num.contentObj)"></image>
+                  </div>
+                  
                 </div>
               </div>
             </div>
@@ -61,7 +65,11 @@
                 <b class="r"></b>
                 <div class="text">
                   <span v-if="num.type=='text'">{{num.content}}</span>
-                  <image v-else class="chat_photo" :src="'https://www.zuyijia.cn:9443/app'+num.content" @tap.stop="onPreview($event, num.content)"></image>
+                  <image v-else-if="num.type=='image'" class="chat_photo" :src="'https://www.zuyijia.cn:9443/app'+num.content" @tap.stop="onPreview($event, num.content)"></image>
+                  <div v-else-if="num.type=='position'" class="chat_position">
+                     <span>{{num.contentObj.address}}</span>
+                     <image  class="chat_map" src="../../static/images/ma.png" @tap="bindLocation($event,num.contentObj)"></image>
+                  </div>
                 </div>
               </div>
               <div>
@@ -77,16 +85,18 @@
       </div>
        <div class="chat_footer" :style="{bottom: bottomM + 'rpx'}">
           <div class="l-custom-input">
+            <div class="map">
+               <van-icon name="location-o" size="20px"  @tap="onMap" />
+            </div>
               <input size="large" id="l-input"
-              type="text"
-              v-model="msg"
-              @input="inputMsg"
-              confirm-type='发送'
-              @confirm="sendMsgTap"
-              cursor-spacing="20"
-              @focus="onShow"
-              @blur="onBlur"
-              />
+                type="text"
+                v-model="msg"
+                @input="inputMsg"
+                confirm-type='发送'
+                @confirm="sendMsgTap"
+                cursor-spacing="20"
+                @focus="onShow"
+                />
               <div class="l-button">
                 <van-uploader @afterread="afterRead"  multiple="true">
                   <van-icon name="photo-o" size="25px" multiple style="margin: 18rpx 20rpx 0px 20rpx"/>
@@ -134,6 +144,12 @@
     :style="{width:canvasWidth + 'px',height:
     canvasHeight + 'px',position:'fixed',top:'-9999px',left:'-9999px'}">
     </canvas>
+    <!-- <block v-if="resultData[k].address != 'undefined'">
+      <text class="address" @tap="bindLocation" :data-address="resultData[k].address" 
+      :data-name="resultData[k].name" 
+      :data-longitude="resultData[k].longitude" 
+      :data-latitude="resultData[k].latitude">{{resultData[k].addressAll}}</text>
+    </block> -->
   </div>
 </template>
 
@@ -174,7 +190,10 @@ import Top from '../../components/head/index'
         windowHeight: 0,//页面高度
         files: [],
         myInterval: "",
-        bottomM: 490
+        bottomM: 490,
+        addressData: "",
+        addressAll: "",
+        type: ""
       }
     },
     onLoad(option) {
@@ -224,6 +243,52 @@ import Top from '../../components/head/index'
     },
 
     methods: {
+      bindLocation(e, num) {// 点击地址，查看位置
+      // console.log(num)
+      // return
+        wx.openLocation({
+          latitude: num.arr.latitude,
+          longitude: num.arr.longitude,
+          name: num.arr.name,
+          address: num.arr.address
+        })
+      },
+      onMap() {
+        let that = this
+         wx.chooseLocation({   // ①.利用微信选择位置API，获得经纬度信息  
+          success: function (lb) {
+            that.addressData = lb
+            console.log(that.addressData,"that.addressData")
+            wx.request({ // ②百度地图API，将微信获得的经纬度传给百度，获得城市等信息
+              url: 'https://api.map.baidu.com/reverse_geocoding/v3/?ak=UNrOozLxSIPT9tHTA6hMzKmKugTFIlPu&location=' + lb.latitude + ',' + lb.longitude + '&output=json&coordtype=wgs84ll',
+              data: {},
+              header: {
+                'Content-Type': 'application/json'
+              },
+              success: function (res) {
+                console.log(res.data.result);
+                console.log(res.data.result.addressComponent.city + res.data.result.addressComponent.district);
+                // that.setData({
+                that.addressAll = res.data.result.addressComponent.city + res.data.result.addressComponent.district + "·" + lb.name //③.我们将微信得到的位置名称“故宫博物馆”与百度地图API得到的“北京市东城区”合并显示在页面上。
+                that.setAddress(that.addressAll, that.addressData)
+                // that.msg = 
+                // })
+              },
+              fail: function () {
+                // fail
+              },
+              complete: function () {
+                // complete
+              }
+            })
+          },
+          cancel: function (lb) {
+          },
+          fail: function (lb) {
+            console.log(lb)
+          }
+        })
+      },
       onChange(){
 
       },
@@ -512,20 +577,45 @@ import Top from '../../components/head/index'
             }
           })
       },
-      sendMessage(e,value) {
-        let val = value || this.msg
-        let that = this
-        let userId = wx.getStorageSync('id')
+      setAddress(address, arr) {
+        this.msg = address
+        this.type = "position"
+      },
+      sendMap() {
+        let a = {}
+        a.address = this.msg
+        a.arr = this.addressData
         this.$http.post('/app/chat/send',{
-          content: val,
+          content: JSON.stringify(a),
           receiverId: this.id,
-          type: 'text'
+          contentIsObj: true,
+          type: 'position'
         }, res => {
           if(res.data.success) {
             this.shuaxin()
             this.msg = ""
           }
         })
+      },
+      sendMessage(e, value) {
+        console.log(e)
+        if(this.type == 'position') {
+          this.sendMap()
+        } else {
+          let val = value || this.msg
+          let that = this
+          let userId = wx.getStorageSync('id')
+          this.$http.post('/app/chat/send',{
+            content: val,
+            receiverId: this.id,
+            type: 'text'
+          }, res => {
+            if(res.data.success) {
+              this.shuaxin()
+              this.msg = ""
+            }
+          })
+        }
       },
       inputMsg(e) {
         this.msg = e.mp.detail.value
@@ -590,6 +680,20 @@ import Top from '../../components/head/index'
     border: 1rpx solid #fff;
     border-radius: 10rpx;
     margin: 7rpx 10rpx 0rpx 10rpx;
+  }
+  .chat_position {
+    max-width: 400rpx;
+    word-wrap: break-word;
+    word-break: break-all;
+    
+    border: 1rpx solid #fff;
+    border-radius: 10rpx;
+    margin: 7rpx 10rpx 0rpx 10rpx;
+  }
+  .chat_map {
+    max-width: 380rpx;
+    height: 200rpx;
+    border-radius: 5px;
   }
   .chat_image {
     display: flex;
@@ -743,18 +847,26 @@ import Top from '../../components/head/index'
 }
 #l-input{
     border: none;
-    width: calc(100% - 225rpx);
+    width: calc(100% - 280rpx);
     display: block;
     padding: 12px 0px 2px 10px;
     font-size: 16px;
     background: none;
     color: #000;
+    margin-left: 28rpx;
     text-indent: 0;
     border-bottom: 1px solid #e0e0e0;
+     word-wrap: break-word;
+    word-break: normal;
 }
 #l-input::before {
     outline: none;
     border-bottom: 1px solid #2196f3;
+}
+.map {
+  position: absolute;
+  bottom: 0px;
+  width: 50rpx;
 }
 .lzy-loading{
   margin-right: 20rpx;

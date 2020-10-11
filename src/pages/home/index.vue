@@ -6,7 +6,8 @@
     <van-tabbar :active="active" @change="onChange">
       <van-tabbar-item icon="home-o">首页</van-tabbar-item>
       <van-tabbar-item icon="shop-o">发布</van-tabbar-item>
-      <van-tabbar-item icon="friends-o">我的</van-tabbar-item>
+      <van-tabbar-item icon="friends-o" :info="number" v-if="number > 0">我的</van-tabbar-item>
+      <van-tabbar-item icon="friends-o" v-else>我的</van-tabbar-item>
       <!-- <van-tabbar-item icon="setting-o">标签</van-tabbar-item> -->
     </van-tabbar>
     <van-overlay :show="showHome" @click="onClickHide">
@@ -54,14 +55,20 @@ let wxMarkerData = [];    //  定位成功回调对象
       return {
         active: 0,
         showHome: false,
-        ak:"UNrOozLxSIPT9tHTA6hMzKmKugTFIlPu",      //  ak
+        ak: "UNrOozLxSIPT9tHTA6hMzKmKugTFIlPu",      //  ak
         markers:[],
         longitude:'',     //  经度
         latitude:'',        //  纬度
         address:'',       //  地址
         cityInfo:{},      //  城市信息,
-        location: {}
+        location: {},
+        number: 0,
+        myInterval: "",
       }
+    },
+     onUnload() {
+      this.num = 1
+      clearInterval(this.myInterval)
     },
     // onShow() {
     //   let that = this
@@ -93,9 +100,19 @@ let wxMarkerData = [];    //  定位成功回调对象
     //     })
     // },
     mounted () {
-      // this.getCity()
+      this.getMessage()
     },
     methods: {
+      getMessage() {
+        this.myInterval = setInterval(() => {
+          this.$http.get(`/app/chat/unread/count`, res => {
+            if(res.data.success) {
+              console.log(res.data)
+              num.number = Number(res.data.data)
+            }
+          })
+        }, 6000);
+      },
       location1() {
         var that = this;
     // 获取定位地理位置
