@@ -108,7 +108,7 @@ let wxMarkerData = [];    //  定位成功回调对象
           this.$http.get(`/app/chat/unread/count`, res => {
             if(res.data.success) {
               console.log(res.data)
-              num.number = Number(res.data.data)
+              this.number = Number(res.data.data)
             }
           })
         }, 6000);
