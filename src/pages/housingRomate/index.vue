@@ -16,6 +16,18 @@
                       <i class="CardNo"><b></b></i>
                   </div>
               </div>
+              <div class="row row_title">
+                  <div class="input">
+                      <label for="title">地理位置</label>
+                      <input id="title" type="text" name="p_cardid"
+                       v-model="address"
+                       size="25"
+                       maxlength="20"
+                       disabled="true"
+                       placeholder-style="color:#e2e2e2; font-size: 28rpx"/>
+                      <i class="CardNo"><b></b></i>
+                  </div>
+              </div>
               <div class="row1">
                   <div class="input">
                       <label>房源描述</label><br>
@@ -157,6 +169,7 @@ import Top from '../../components/head/index'
         fileUpload: [],
         showStyle: false,
         modifyId: "",
+        address: "",
         files: [],
         show: false,
         multiIndex: "",
@@ -176,9 +189,12 @@ import Top from '../../components/head/index'
         console.log(roomDetail)
         if(roomDetail.id) {
           this.modify(roomDetail)
+          this.address = roomDetail.cityName+ "-"+ roomDetail.counName
         } else {
           this.resetRoom()
         }
+      } else {
+        this.address = this.globalData.roomData.cityName+ "-"+this.globalData.roomData.counName
       }
     },
     mounted (){

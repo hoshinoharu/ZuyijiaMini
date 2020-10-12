@@ -311,7 +311,7 @@ import Bottom from '../../components/bottom/index'
             if(res.data.success) {
               console.log(res.data)
               this.mine.forEach(num => {
-                if(num.name = '我的消息') {
+                if(num.name == '我的消息') {
                   num.number = Number(res.data.data)
                 }
               })

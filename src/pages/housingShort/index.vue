@@ -16,6 +16,18 @@
                       <i class="CardNo"><b></b></i>
                   </div>
               </div>
+              <div class="row row_title">
+                  <div class="input">
+                      <label for="title">地理位置</label>
+                      <input id="title" type="text" name="p_cardid"
+                       v-model="address"
+                       size="25"
+                       maxlength="20"
+                       disabled="true"
+                       placeholder-style="color:#e2e2e2; font-size: 28rpx"/>
+                      <i class="CardNo"><b></b></i>
+                  </div>
+              </div>
               <div class="row1">
                   <div class="input">
                       <label>房源描述</label><br>
@@ -142,6 +154,7 @@ import Top from '../../components/head/index'
         fileUpload: [],
         fileList: [],
         files: [],
+        address: "",
         show: false,
         multiIndex: "",
         columns: ['地铁站', '超市', '火车站', '购物广场', '学校', '菜市场'],
@@ -159,9 +172,12 @@ import Top from '../../components/head/index'
         let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
         if(roomDetail.id) {
           this.modify(roomDetail)
+          this.address = roomDetail.cityName+ "-"+ roomDetail.counName
         } else {
           this.resetRoom()
         }
+      } else {
+        this.address = this.globalData.roomData.cityName+ "-"+this.globalData.roomData.counName
       }
     },
     mounted (){

@@ -86,7 +86,8 @@
        <div class="chat_footer" :style="{bottom: bottomM + 'rpx'}">
           <div class="l-custom-input">
             <div class="map">
-               <van-icon name="location-o" size="20px"  @tap="onMap" />
+               <van-icon name="location-o" size="20px"  style="padding: 0 6px" @tap="onMap" />
+               <van-icon name="chat-o" size="20px"  @tap="onShow" style="padding: 0 0 0 1px" />
             </div>
               <input size="large" id="l-input"
                 type="text"
@@ -95,7 +96,6 @@
                 confirm-type='发送'
                 @confirm="sendMsgTap"
                 cursor-spacing="20"
-                @focus="onShow"
                 />
               <div class="l-button">
                 <van-uploader @afterread="afterRead"  multiple="true">
@@ -173,7 +173,7 @@ import Top from '../../components/head/index'
         heightP: "",
         id: "",
         fileUpload: [],
-        showMessage: true,
+        showMessage: false,
         home_pics: [],
         warningShow: false,
         freshStatus: 'more', // 当前刷新的状态
@@ -190,7 +190,7 @@ import Top from '../../components/head/index'
         windowHeight: 0,//页面高度
         files: [],
         myInterval: "",
-        bottomM: 490,
+        bottomM: 0,
         addressData: "",
         addressAll: "",
         type: ""
@@ -578,12 +578,13 @@ import Top from '../../components/head/index'
           })
       },
       setAddress(address, arr) {
-        this.msg = address
+        // this.msg = address
         this.type = "position"
+        this.sendMap(address)
       },
-      sendMap() {
+      sendMap(address) {
         let a = {}
-        a.address = this.msg
+        a.address = address
         a.arr = this.addressData
         this.$http.post('/app/chat/send',{
           content: JSON.stringify(a),
@@ -847,13 +848,13 @@ import Top from '../../components/head/index'
 }
 #l-input{
     border: none;
-    width: calc(100% - 280rpx);
+    width: calc(100% - 320rpx);
     display: block;
     padding: 12px 0px 2px 10px;
     font-size: 16px;
     background: none;
     color: #000;
-    margin-left: 28rpx;
+    margin-left: 120rpx;
     text-indent: 0;
     border-bottom: 1px solid #e0e0e0;
      word-wrap: break-word;
@@ -866,7 +867,13 @@ import Top from '../../components/head/index'
 .map {
   position: absolute;
   bottom: 0px;
-  width: 50rpx;
+  width: 100rpx;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.map .van-icon {
+  padding: 0 8rpx !important;
 }
 .lzy-loading{
   margin-right: 20rpx;

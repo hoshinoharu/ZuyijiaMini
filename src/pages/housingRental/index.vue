@@ -9,9 +9,21 @@
                   <div class="input">
                       <label for="title">标题</label>
                       <input id="title" type="text" name="p_cardid"
-                       v-model="room.title" placeholder="请输入房源地址"
+                       v-model="room.title" placeholder="请输入房源标题"
                        size="25"
                        maxlength="20"
+                       placeholder-style="color:#e2e2e2; font-size: 28rpx"/>
+                      <i class="CardNo"><b></b></i>
+                  </div>
+              </div>
+              <div class="row row_title">
+                  <div class="input">
+                      <label for="title">地理位置</label>
+                      <input id="title" type="text" name="p_cardid"
+                       v-model="address"
+                       size="25"
+                       maxlength="20"
+                       disabled="true"
                        placeholder-style="color:#e2e2e2; font-size: 28rpx"/>
                       <i class="CardNo"><b></b></i>
                   </div>
@@ -88,15 +100,15 @@
                 </div>
 
                 <van-uploader
-                id="img"
-                :file-list="fileList"
-                sizeType="60px"
-                preview-size="60px"
-                :multiple="true"
-                :max-count="8"
-                :deletable="true"
-                @delete="deleteImg"
-                @afterread="afterRead" />
+                  id="img"
+                  :file-list="fileList"
+                  sizeType="60px"
+                  preview-size="60px"
+                  :multiple="true"
+                  :max-count="8"
+                  :deletable="true"
+                  @delete="deleteImg"
+                  @afterread="afterRead" />
                 <div class="button">
                    <button type="button" class="bt_connect"  @tap.stop="resetRoom()" style="float: left">重置</button>
                   <button type="button" class="bt_connect" @tap="checkForm(this)" style="float: right">发布</button>
@@ -150,6 +162,7 @@ import Top from '../../components/head/index'
         fileUpload: [],
         files: [],
         modifyId: "",
+        address: "",
         show: false,
         canvasWidth: "",
         canvasHeight: "",
@@ -169,15 +182,19 @@ import Top from '../../components/head/index'
         let roomDetail = JSON.parse(decodeURIComponent(option.dataDetail))
         if(roomDetail.id) {
           this.modify(roomDetail)
+          this.address = roomDetail.cityName+ "-"+ roomDetail.counName
           console.log(roomDetail,"room")
         } else {
           this.resetRoom()
         }
+      } else {
+        this.address = this.globalData.roomData.cityName+ "-"+this.globalData.roomData.counName
       }
     },
     mounted (){
       this.checked = ""
-      // this.checkedFlag = ""
+      
+     
       this.isAgree = ""
       this.isAgree = this.room.isAgree
       if(this.room.status == 'persistent') {
@@ -416,6 +433,7 @@ import Top from '../../components/head/index'
       resetRoom() {
         this.isAgree = false
         this.checked = false
+        this.address = ""
         this.modifyId = ""
         this.files = []
         this.fileList = []
