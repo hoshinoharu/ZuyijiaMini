@@ -11,7 +11,6 @@
         label="关键字"
         shape="round"
         class="search"
-        cursor-spacing="200"
         @focus.stop="onFouces"
         @blur.stop="onBlur"
         @clear="onClear"
@@ -22,7 +21,7 @@
     >搜索</div>
     
     </van-search>
-    <van-transition :show="showAn" custom-class="block">
+    <van-transition :show="showAn" custom-class="block" duration="{ enter: 300, leave: 1000 }">
     <div class="select">
       <ul>
         <li v-for="(num, i) in selectArr" :key="i" ><span @tap="onLi($event,num)">{{num}}</span></li>
@@ -277,6 +276,11 @@
         this.searchValue = ""
       },
       onFouces() {
+        console.log("dssdsd")
+        if(this.selectArr.length > 0) {
+          this.$store.commit('changeFouce', true)
+        }
+        
         if(this.selectArr.length >= 1) {
           this.showAn = true
         }
@@ -286,6 +290,8 @@
         }
       },
       onBlur() {
+        console.log("blue")
+        this.$store.commit('changeFouce', false)
         this.showAn = false
       },
       filterFn(val) {
@@ -940,7 +946,7 @@ flex: none;
   }
 #short .select {
   width: 590rpx;
-  height: 300rpx;
+  height: 200rpx;
   background: #fff;
   position: absolute;
   left: 48rpx;
@@ -959,11 +965,11 @@ flex: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 80rpx;
+  margin-top: 40rpx;
 }
 .select ul li {
-  line-height: 35rpx;
-  font-size: 35rpx;
+  line-height: 30rpx;
+  font-size: 30rpx;
   color: #888888;
   display: inline-block;
   height: 50rpx;

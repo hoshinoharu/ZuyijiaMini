@@ -38,7 +38,8 @@ wx.getSystemInfo({
         windowWidth: width,
         statusBarHeight: statusBarHeight,
         toBar: toBar,
-        searchValue: ""
+        searchValue: "",
+        fouce: false
       };
   },
   fail(err) {

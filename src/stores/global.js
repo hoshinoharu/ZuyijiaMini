@@ -14,7 +14,8 @@ export default new Vuex.Store({
     counCode: "",
     address: "",
     select: [],
-    message: 0
+    message: 0,
+    fouce: false
   }, 
   mutations: {    
     increment: (state) => {
@@ -29,6 +30,10 @@ export default new Vuex.Store({
       for (let i in data) { 
         state.select[i] = data[i]
       }
+    },
+    changeFouce(state, data) { 
+      state.fouce = ""
+      state.fouce = data
     },
     decrement: (state) => {
       state.count -= 1

@@ -33,7 +33,7 @@
   <div class="boxImg" :style="{top: 2*navHeight + 'rpx',position: 'relative'}">
       <image :src="boxImg"></image>
   </div>
-  <div style="clear: both; background: #fff;" :style="{marginTop: 2*navHeight + 'rpx'}"></div>
+  <div style="clear: both; background: #fff;" :style="{marginTop: (2*navHeight -fouce) + 'rpx'}"></div>
 	<div class="main" :style="{height: (heightTop-(400 + 2*navHeight)) + 'rpx'}">
     <div class="test" :style="{height: (heightTop-(400 + 2*navHeight)) + 'rpx'}">
       <div class="testNav">
@@ -119,6 +119,7 @@ import roomlate from "../../components/renting/roomlate"
        hidden: 'hidden',
        ios: "",
        address: "",
+       fouce: 0,
        navHeight: "",
        hidden1: true,
        loading: false,
@@ -171,8 +172,21 @@ import roomlate from "../../components/renting/roomlate"
 　　　　},
 　　　　deep: true
       },
-      active (newValue, oldValue){
-        console.log(newValue, oldValue,"jnjbjj")
+      // active (newValue, oldValue){
+      //   console.log(newValue, oldValue,"jnjbjj")
+      // },
+      '$store.state.fouce': {
+        handler(newValue, oldValue) {
+          console.log("dfdf")
+          if(newValue == true) {
+            this.fouce = ""
+            this.fouce = 180
+          } else {
+            this.fouce = ""
+            this.fouce = 0
+          }
+  　　　},
+  　　　deep: true
       }
     },
     created () {

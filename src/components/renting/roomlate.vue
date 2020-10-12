@@ -20,7 +20,7 @@
         @tap="onSearchSend"
     >搜索</div>
     </van-search>
-    <van-transition :show="showAn" custom-class="block">
+    <van-transition :show="showAn" custom-class="block" duration="{ enter: 300, leave: 1000 }">
     <div class="select">
       <ul>
         <li v-for="(num, i) in selectArr" :key="i"><span @tap="onLi($event,num)">{{num}}</span></li>
@@ -267,6 +267,9 @@
         this.searchValue = val
       },
       onFouces() {
+        if(this.selectArr.length > 0) {
+          this.$store.commit('changeFouce', true)
+        }
         if(this.selectArr.length >= 1) {
           this.showAn = true
         }
@@ -276,6 +279,7 @@
         }
       },
       onBlur() {
+         this.$store.commit('changeFouce', true)
         this.showAn = false
       },
       touchStart(e) {
@@ -871,15 +875,15 @@ flex: none;
   }
 .roomlate .select {
   width: 590rpx;
-  height: 300rpx;
+  height: 200rpx;
   background: #fff;
   position: absolute;
   left: 48rpx;
   top: 92rpx;
   /* border-radius: 5px; */
-  border: 1px solid #bbb;
-  border-bottom-right-radius:5px;
-  border-bottom-left-radius:5px;
+  border: 2rpx solid #bbb;
+  border-bottom-right-radius:10rpx;
+  border-bottom-left-radius:10rpx;
   border-top: none;
   z-index: 88;
 
@@ -890,11 +894,11 @@ flex: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 80rpx;
+  margin-top: 40rpx;
 }
 .select ul li {
-  line-height: 35rpx;
-  font-size: 35rpx;
+  line-height: 30rpx;
+  font-size: 30rpx;
   color: #888888;
   display: inline-block;
   height: 50rpx;
