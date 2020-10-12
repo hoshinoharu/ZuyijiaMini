@@ -14,10 +14,15 @@ export default new Vuex.Store({
     counCode: "",
     address: "",
     select: [],
+    message: 0
   }, 
   mutations: {    
     increment: (state) => {
       state.count += 1
+    },
+    changeMessage(state, data) { 
+      state.message = ""
+      state.message = data
     },
     changeSelect: (state, data) => { 
       state.select = []

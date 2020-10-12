@@ -67,7 +67,7 @@ let wxMarkerData = [];    //  定位成功回调对象
       }
     },
      onUnload() {
-      this.num = 1
+      // this.num = 1
       clearInterval(this.myInterval)
     },
     // onShow() {
@@ -109,6 +109,8 @@ let wxMarkerData = [];    //  定位成功回调对象
             if(res.data.success) {
               console.log(res.data)
               this.number = Number(res.data.data)
+              this.$store.commit('changeMessage', this.number)
+              console.log(this.$store.state.message)
             }
           })
         }, 6000);

@@ -307,16 +307,26 @@ import Bottom from '../../components/bottom/index'
     mounted () {
       this.userInfo = this.globalData.userInfo
       this.url = this.userInfo.avatarUrl
-      this.$http.get(`/app/chat/unread/count`, res => {
-            if(res.data.success) {
-              console.log(res.data)
-              this.mine.forEach(num => {
-                if(num.name == '我的消息') {
-                  num.number = Number(res.data.data)
-                }
-              })
+      // this.$http.get(`/app/chat/unread/count`, res => {
+      //       if(res.data.success) {
+      //         console.log(res.data)
+              
+      //       }
+      //     })
+    },
+    watch: {
+      '$store.state.message':{
+         handler(newValue, oldValue) {
+           console.log(newValue,"dsd")
+            this.mine.forEach(num => {
+            if(num.name == '我的消息') {
+              num.number = Number(newValue)
             }
           })
+　　　　},
+　　　　deep: true
+         
+      }
     },
     methods: {
       getCodeSuccess(e){

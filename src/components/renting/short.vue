@@ -11,6 +11,7 @@
         label="关键字"
         shape="round"
         class="search"
+        cursor-spacing="200"
         @focus.stop="onFouces"
         @blur.stop="onBlur"
         @clear="onClear"
