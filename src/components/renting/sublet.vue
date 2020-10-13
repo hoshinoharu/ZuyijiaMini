@@ -273,8 +273,8 @@
           this.showAn = true
         }
         
-        if(this.selectArr.length > 3) {
-          this.selectArr.splice(3)
+        if(this.selectArr.length > 10) {
+          this.selectArr.splice(10)
         }
       },
       onBlur() {
@@ -568,10 +568,11 @@
                   num.icon = "star"
                 }
               })
-              if(this.selectArr.length > 3) {
-                this.selectArr.splice(3)
+              if(this.selectArr.length > 10) {
+                this.selectArr.splice(10)
               }
             }
+            this.searchValue = ""
           })
           // this.$store.commit('changeValue', this.searchValue) 
         }
@@ -886,33 +887,49 @@ flex: none;
   }
 .sublet1 .select {
   width: 590rpx;
-  height: 200rpx;
+  height: auto;
   background: #fff;
   position: absolute;
   left: 48rpx;
   top: 92rpx;
   /* border-radius: 5px; */
-  border: 1px solid #bbb;
-  border-bottom-right-radius:5px;
-  border-bottom-left-radius:5px;
+  border: 2rpx solid #bbb;
+  border-bottom-right-radius:10rpx;
+  border-bottom-left-radius:10rpx;
   border-top: none;
-  z-index: 88;
+  z-index: 99;
+  padding: 5rpx;
+  padding-bottom: 10rpx;
 
 }
 .sublet1 .select ul {
   list-style: none;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 40rpx;
+  flex-direction: row;
+  flex-flow: wrap;
+  /* align-items: center; */
+  justify-content: start;
+  margin: 0 10rpx;
+  margin-top: 20rpx;
+  
 }
 .sublet1 .select ul li {
   line-height: 30rpx;
   font-size: 30rpx;
   color: #888888;
   display: inline-block;
-  height: 50rpx;
+  height: auto;
+  /* border-bottom:1px solid  #888888; */
+}
+.sublet1 .select ul li span{
+  width: auto;
+  border: 1rpx solid #888888;
+  display: inline-block;
+  line-height: 30rpx;
+  padding: 6rpx 6rpx;
+  margin-left: 5px;
+  margin-bottom: 5px;;
+  /* border-bottom:1px solid  #888888; */
 }
 .sublet1 .block {
   height: 0px;

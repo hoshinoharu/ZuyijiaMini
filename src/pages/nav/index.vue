@@ -180,7 +180,7 @@ import roomlate from "../../components/renting/roomlate"
           console.log("dfdf")
           if(newValue == true) {
             this.fouce = ""
-            this.fouce = 180
+            this.fouce = 240
           } else {
             this.fouce = ""
             this.fouce = 0

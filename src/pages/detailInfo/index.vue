@@ -614,6 +614,7 @@ import Top from '../../components/head/index'
             if(res.data.success) {
               this.shuaxin()
               this.msg = ""
+              this.type = ""
             }
           })
         }
