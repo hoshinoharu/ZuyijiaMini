@@ -18,7 +18,8 @@
     <div
         slot="action"
         @tap="onSearchSend"
-    >搜索</div>
+    >
+    <view hover-class="bg_red">搜索</view></div>
     
     </van-search>
     <van-transition :show="showAn" custom-class="block" duration="{ enter: 300, leave: 1000 }">
@@ -994,5 +995,8 @@ flex: none;
 }
 #short .block {
   height: 0px;
+}
+.bg_red{
+  color: #1989fa;
 }
 </style>
