@@ -294,7 +294,7 @@
       onBlur() {
         console.log("blue")
         this.$store.commit('changeFouce', false)
-        this.showAn = false
+        // this.showAn = false
       },
       filterFn(val) {
         let str = "";
@@ -601,7 +601,7 @@
                 this.selectArr.splice(10)
               }
             }
-            this.searchValue = ""
+            
           })
           // this.$store.commit('changeValue', this.searchValue) 
         }
@@ -666,9 +666,10 @@
         
       },
       onChangeVal (e) {
-        console.log(e.mp.detail,"e.mp.detail")
         if(e.mp.detail.value) {
            this.searchValue = e.mp.detail.value
+        }else {
+          this.searchValue = ""
         }
        
       },
@@ -948,12 +949,12 @@ flex: none;
   to{transform:rotate(360deg);}
   }
 #short .select {
-  width: 590rpx;
+  width: 580rpx;
   height: auto;
   background: #fff;
   position: absolute;
   left: 48rpx;
-  top: 92rpx;
+  top: 94rpx;
   /* border-radius: 5px; */
   border: 2rpx solid #bbb;
   border-bottom-right-radius:10rpx;

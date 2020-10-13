@@ -18,7 +18,7 @@
     <div
         slot="action"
         @tap="onSearchSend"
-    >搜索</div>
+    ><view hover-class="bg_red">搜索</view></div>
     </van-search>
     <van-transition :show="showAn" custom-class="block" duration="{ enter: 300, leave: 1000 }">
     <div class="select">
@@ -572,7 +572,6 @@
                 this.selectArr.splice(10)
               }
             }
-            this.searchValue = ""
           })
           // this.$store.commit('changeValue', this.searchValue) 
         }
@@ -638,7 +637,11 @@
         this.onSearchSend()
       },
       onChangeVal (e) {
-        this.searchValue = e.mp.detail.value
+       if(e.mp.detail.value) {
+           this.searchValue = e.mp.detail.value
+        }else {
+          this.searchValue = ""
+        }
       },
       onSearch2 () {
         wx.showToast({
@@ -886,12 +889,12 @@ flex: none;
   to{transform:rotate(360deg);}
   }
 .sublet1 .select {
-  width: 590rpx;
+  width: 580rpx;
   height: auto;
   background: #fff;
   position: absolute;
   left: 48rpx;
-  top: 92rpx;
+  top: 94rpx;
   /* border-radius: 5px; */
   border: 2rpx solid #bbb;
   border-bottom-right-radius:10rpx;
@@ -933,5 +936,8 @@ flex: none;
 }
 .sublet1 .block {
   height: 0px;
+}
+.bg_red{
+  color: #1989fa;
 }
 </style>
