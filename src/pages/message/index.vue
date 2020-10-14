@@ -21,16 +21,16 @@
       </div>
       <div class="modify">
         <span class="modify_title" v-if="modifyShow" @tap="allModify" >
-          编辑    
+          编辑
         </span>
         <span class="modify_title" v-else @tap="allFinish">完成</span>
         <div style="float: right; margin-right: 20rpx" v-show="!modifyShow">
           <van-checkbox :value="checked" @change="modify" >全选</van-checkbox>
         </div>
-        
+
       </div>
       <div class="message_body">
-        
+
         <van-checkbox-group :value="result" @change="onChange">
           <scroll-view class="my_list" id="page"
             @touchstart='touchStart'
@@ -46,7 +46,7 @@
               </view>
               <view class="text" v-else-if="freshStatus == 'more'">
                 <!-- 使用到了 colorUI 下拉箭头图标 -->
-                <text class="cuIcon-refresharrow">继续下拉刷新</text> 
+                <text class="cuIcon-refresharrow">继续下拉刷新</text>
               </view>
               <view class="text" v-else>
                 释放刷新
@@ -70,7 +70,7 @@
                 value-class="value-class"
                 clickable
                 :data-index="index"
-                
+
               >
                 <!-- @click="toggle" -->
                 <div class="mess_info" slot="title" v-if="id != num.creatorId">
@@ -106,7 +106,7 @@
                     <span>{{num.createTimeStr}}</span>
                   </div>
                 </div>
-                
+
               </van-cell>
               <!-- class="checkboxes-{{ index }}" -->
               <!-- <van-cell title="单元格" value="内容" /> -->
@@ -123,7 +123,7 @@
       <div class="message_empty" :style="{height: he+'rpx'}">
 
       </div>
-      <div class="button_footer" v-if="!modifyShow">
+      <div class="button_footer" v-if="modifyShow != null && !modifyShow">
         <van-goods-action>
           <!-- <van-goods-action-icon icon="chat-o" text="客服" bind:click="onClickIcon" />
           <van-goods-action-icon icon="cart-o" text="购物车" bind:click="onClickIcon" /> -->
@@ -214,16 +214,16 @@ import fun from '../../utils/index'
         console.log(res.data.success)
       })
     },
-    onPullDownRefresh: function() { 
+    onPullDownRefresh: function() {
       // this.loadData()
-     wx.showNavigationBarLoading(); 
+     wx.showNavigationBarLoading();
      this.$http.get('/app/chat/list/all/user', res=> {
           console.log(res)
           setTimeout(() => {
             wx.hideNavigationBarLoading();
             wx.stopPullDownRefresh();
           }, 1000)
-          
+
           if(res.data.success) {
             this.dataInfo = []
           this.dataInfo = res.data.data
@@ -312,7 +312,7 @@ import fun from '../../utils/index'
       })
     },
       onShread(e, num) {
-        
+
         console.log(this.result)
         // return
         this.$http.put('/app/chat/read/all', JSON.stringify(this.result), res => {
@@ -328,7 +328,7 @@ import fun from '../../utils/index'
         })
       },
       onShdelete(e, num) {
-        this.$http.delete('/app/house/delete/all', JSON.stringify(this.result), 
+        this.$http.delete('/app/house/delete/all', JSON.stringify(this.result),
         res => {
           wx.showToast({
                 title: res.data.msg,  // 标题
@@ -352,7 +352,7 @@ import fun from '../../utils/index'
          wx.navigateTo({
           url: '/pages/detailInfo/main?id='+sendId,
           success: function(res) {
-        
+
           }})
       },
       onRead(e, num) {
@@ -370,7 +370,7 @@ import fun from '../../utils/index'
           if(res.data.success) {
             this.$http.get('/app/chat/list/all/user', res => {
               if(res.data.success) {
-                this.dataInfo = [] 
+                this.dataInfo = []
                 let id = wx.getStorageSync("id")
                 res.data.data.forEach(num => {
                   if(num.receiverId != num.creatorId) {
@@ -414,14 +414,14 @@ import fun from '../../utils/index'
         this.checked = !this.checked
         if(this.checked) {
           this.dataInfo.forEach(num => {
-            
+
             this.result = this.result.concat(String(num.id))
             // num.modelId
           })
         } else {
           this.result = []
         }
-        
+
         console.log(this.result)
       },
       onClick() {},
@@ -439,7 +439,7 @@ import fun from '../../utils/index'
         const { index } = event.currentTarget.dataset;
         return
         checkbox.toggle();
-        
+
         // this.result.push()
       },
       onClose(event) {
@@ -469,7 +469,7 @@ import fun from '../../utils/index'
 }
 .message_empty {
   position: relative;
-  
+
   clear: both;
 }
 .message .mess_name {
