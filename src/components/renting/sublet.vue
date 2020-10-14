@@ -255,6 +255,7 @@
       this.windowWidth = this.globalData.windowWidth
       // this.navHeight = this.globalData.navHeight
       // console.log(this.navHeight)
+        this.$store.commit('changeFouce', false)
     },
     methods: {
       onClear(e) {
@@ -264,6 +265,7 @@
       onLi(e,val) {
         this.searchValue = ""
         this.searchValue = val
+          this.onSearchSend()
       },
       onFouces() {
         if(this.selectArr.length > 0) {
@@ -644,14 +646,8 @@
         this.onSearchSend()
       },
       onChangeVal (e) {
-        if(e.mp.detail) {
-              if (e.mp.detail instanceof Object){
-                  this.searchValue = e.mp.detail.value
-              }else{
-                  this.searchValue = e.mp.detail
-              }
-          }else {
-              this.searchValue = ""
+          if (!(e.mp.detail instanceof Object)){
+              this.searchValue = e.mp.detail
           }
       },
       onSearch2 () {

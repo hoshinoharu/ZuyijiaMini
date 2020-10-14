@@ -263,6 +263,7 @@
       // }, 1500)
       this.windowHeight = this.globalData.windowHeight
       this.windowWidth = this.globalData.windowWidth
+        this.$store.commit('changeFouce', false)
     },
     methods: {
       onShort() {
@@ -271,6 +272,7 @@
       onLi(e,val) {
         this.searchValue = ""
         this.searchValue = val
+          this.onSearchSend()
       },
       onClear(e) {
         console.log(e)
@@ -434,6 +436,7 @@
             setTimeout(() => {
               this.showRefresh = false
             }, 500)
+              console.log("房源列表", res.data.data)
             that.dataArr1 = [].concat(res.data.data)
             that.dataArr1.forEach(num => {
               let tags = JSON.parse(num.tags)
@@ -659,7 +662,7 @@
         console.log("dd")
       },
       onSearch (e) {
-        console.log(e.mp.detail)
+        console.log("点击搜索", e.mp.detail)
         if(e.mp.detail) {
           this.searchValue = e.mp.detail.value
           this.onSearchSend()
@@ -668,18 +671,9 @@
 
       },
       onChangeVal (e) {
-        console.log(e.mp.detail)
-        if(e.mp.detail) {
-            if (e.mp.detail instanceof Object){
-              this.searchValue = e.mp.detail.value
-            }else{
-                this.searchValue = e.mp.detail
-            }
-        }else {
-          this.searchValue = ""
-        }
-        console.log(this.searchValue,"dfd")
-
+          if (!(e.mp.detail instanceof Object)){
+              this.searchValue = e.mp.detail
+          }
       },
       onSearch2 () {
         wx.showToast({

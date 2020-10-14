@@ -9,7 +9,7 @@
                   <div class="input">
                       <label for="title">标题</label>
                       <input id="title" type="text" name="p_cardid"
-                       v-model="room.title" placeholder="请输入房源地址"
+                       v-model="room.title" placeholder="请输入房源标题"
                        size="25"
                        maxlength="20"
                        placeholder-style="color:#e2e2e2; font-size: 28rpx"/>
@@ -372,7 +372,7 @@ import Top from '../../components/head/index'
         console.log("ss")
         this.show = false
       },
-     
+
       onCancel() {
         this.show = false
       },
@@ -394,7 +394,7 @@ import Top from '../../components/head/index'
       typeShow () {
         this.show = true
       },
-     
+
       resetRoom() {
         console.log(this.room)
         this.checked = false
@@ -404,7 +404,7 @@ import Top from '../../components/head/index'
           type: []
         }
       },
-     
+
       onConfirm(e) {
         console.log(e.mp.detail)
         console.log(this.room.type)

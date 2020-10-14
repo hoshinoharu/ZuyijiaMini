@@ -54,7 +54,7 @@
                      <span>{{num.contentObj.address}}</span>
                      <image  class="chat_map" src="../../static/images/ma.png" @tap="bindLocation($event,num.contentObj)"></image>
                   </div>
-                  
+
                 </div>
               </div>
             </div>
@@ -107,7 +107,7 @@
           </div>
        </div>
       </div>
-      <van-action-sheet :show="showMessage" :overlay="false" title="留言板" class="leave_message" @close="onClose">
+      <van-action-sheet :show="showMessage" :overlay="false" title="快捷回复" class="leave_message" @close="onClose">
         <div class="message">
           <div class="message1">
             <van-picker show-toolbar :columns="columns" @change="onChange"  @cancel="onCancel"
@@ -116,7 +116,7 @@
             <!-- <van-button size="small" round>提交</van-button> -->
 
           </div>
-          
+
         </div>
       </van-action-sheet>
     </div>
@@ -145,9 +145,9 @@
     canvasHeight + 'px',position:'fixed',top:'-9999px',left:'-9999px'}">
     </canvas>
     <!-- <block v-if="resultData[k].address != 'undefined'">
-      <text class="address" @tap="bindLocation" :data-address="resultData[k].address" 
-      :data-name="resultData[k].name" 
-      :data-longitude="resultData[k].longitude" 
+      <text class="address" @tap="bindLocation" :data-address="resultData[k].address"
+      :data-name="resultData[k].name"
+      :data-longitude="resultData[k].longitude"
       :data-latitude="resultData[k].latitude">{{resultData[k].addressAll}}</text>
     </block> -->
   </div>
@@ -168,7 +168,7 @@ import Top from '../../components/head/index'
           flag: true
         },
         content: [],
-        columns: ['押一付一', '押一付三', '押一付六', '押一付十二', '房子已出租'],
+        columns: ['有中介服务费吗？', '请问房子在几层？', '请问水电民用还是商用？', '请问房子还在吗？'],
         total: "item9",
         heightP: "",
         id: "",
@@ -236,7 +236,7 @@ import Top from '../../components/head/index'
       this.num = 1
       clearInterval(this.myInterval)
     },
-   
+
     onReady: function() {
       this.total = 'item1'
       this.toBottom()
@@ -255,7 +255,7 @@ import Top from '../../components/head/index'
       },
       onMap() {
         let that = this
-         wx.chooseLocation({   // ①.利用微信选择位置API，获得经纬度信息  
+         wx.chooseLocation({   // ①.利用微信选择位置API，获得经纬度信息
           success: function (lb) {
             that.addressData = lb
             console.log(that.addressData,"that.addressData")
@@ -271,7 +271,7 @@ import Top from '../../components/head/index'
                 // that.setData({
                 that.addressAll = res.data.result.addressComponent.city + res.data.result.addressComponent.district + "·" + lb.name //③.我们将微信得到的位置名称“故宫博物馆”与百度地图API得到的“北京市东城区”合并显示在页面上。
                 that.setAddress(that.addressAll, that.addressData)
-                // that.msg = 
+                // that.msg =
                 // })
               },
               fail: function () {
@@ -293,8 +293,9 @@ import Top from '../../components/head/index'
 
       },
       onConfirm(event) {
-        this.msg = event.mp.detail.value
         console.log(event.mp)
+        this.msg = event.mp.detail.value
+          this.sendMessage(null, this.msg)
       },
       onCancel() {
         this.bottomM = 0
@@ -633,7 +634,7 @@ import Top from '../../components/head/index'
         file.forEach((num, i) => {
           this.fileUpload[i] = num
         })
-        
+
         if (this.fileUpload.length > 3) {
           wx.showToast({
                 title: "图片一次性最多上传三张!",
@@ -647,13 +648,13 @@ import Top from '../../components/head/index'
         }
         let url = file.path
         this.path = url
-        
+
         for(let i in this.fileUpload) {
           let type = this.fileUpload[i].path.split('.')
           let name = e.mp.detail.index + 'tupianMesssage' + '.' + type[type.length - 1]
           this.canvas(this.fileUpload[i].path, name)
         }
-        
+
         // console.log()
       },
     }
@@ -688,7 +689,7 @@ import Top from '../../components/head/index'
     max-width: 400rpx;
     word-wrap: break-word;
     word-break: break-all;
-    
+
     border: 1rpx solid #fff;
     border-radius: 10rpx;
     margin: 7rpx 10rpx 0rpx 10rpx;
@@ -924,7 +925,7 @@ import Top from '../../components/head/index'
 .leave_message .van-action-sheet {
    height: 35%;
 }
- 
+
 .van-overlay .van-overlay {
 
  height: 0px !important;
