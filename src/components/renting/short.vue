@@ -293,7 +293,7 @@
       onBlur() {
         console.log("blue")
         this.$store.commit('changeFouce', false)
-        // this.showAn = false
+        this.showAn = false
       },
       filterFn(val) {
         let str = "";

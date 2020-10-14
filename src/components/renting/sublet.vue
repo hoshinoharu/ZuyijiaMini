@@ -644,11 +644,15 @@
         this.onSearchSend()
       },
       onChangeVal (e) {
-       if(e.mp.detail.value) {
-           this.searchValue = e.mp.detail.value
-        }else {
-          this.searchValue = ""
-        }
+        if(e.mp.detail) {
+              if (e.mp.detail instanceof Object){
+                  this.searchValue = e.mp.detail.value
+              }else{
+                  this.searchValue = e.mp.detail
+              }
+          }else {
+              this.searchValue = ""
+          }
       },
       onSearch2 () {
         wx.showToast({
