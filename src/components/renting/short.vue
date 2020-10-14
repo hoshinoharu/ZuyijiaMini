@@ -275,7 +275,6 @@
       onClear(e) {
         console.log(e)
         this.searchValue = ""
-        this.searchValue = ""
       },
       onFouces() {
         console.log("dssdsd")
@@ -350,8 +349,10 @@
             })
             a.then(() => {
               if(this.flagType == true) {
+                this.searchValue = ""
                 this.onSearchSend1(this.tags, this.status)
               }else {
+                this.searchValue = ""
                 this.getData();
               }
             })
@@ -563,6 +564,7 @@
         })
       },
       onSearchSend(e) {
+        console.log("rrrrrrrrrrss",this.searchValue,"dfdfdf")
         let that = this
         // this.selectArr.unshift(this.searchValue)
         // return
@@ -666,11 +668,13 @@
         
       },
       onChangeVal (e) {
-        if(e.mp.detail.value) {
-           this.searchValue = e.mp.detail.value
+        console.log(e)
+        if(e.mp.detail) {
+           this.searchValue = e.mp.detail
         }else {
           this.searchValue = ""
         }
+        console.log(this.searchValue,"dfd")
        
       },
       onSearch2 () {
