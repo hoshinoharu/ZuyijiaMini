@@ -279,7 +279,7 @@
         }
       },
       onBlur() {
-         this.$store.commit('changeFouce', true)
+         this.$store.commit('changeFouce', false)
         this.showAn = false
       },
       touchStart(e) {
