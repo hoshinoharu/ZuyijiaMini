@@ -55,7 +55,7 @@
             <van-cell title="租房标识" class="symbolRental">
               <checkbox-group @dchange="checkboxChange" class="boxflex">
                   <label :class="['checkbox', num.checked?'active':'']"
-                      v-for="(num, i) in items" 
+                      v-for="(num, i) in items"
                       :key="i"
                       @tap="addclass"
                       :data-index="i">
@@ -70,26 +70,26 @@
               <van-button  round type="info" @click="onConfirm">确认</van-button>
             </van-cell>
             <!-- <div class="chooseBut">
-              
+
             </div> -->
-            
+
           </van-dropdown-item>
         </van-dropdown-menu>
       </div>
-      
+
     </div>
     <view :style="{width: (windowWidth - 30)+'rpx', overflow: 'hidden'}">
       <scroll-view class="my_list" id="page"
         @touchstart='touchStart'
         @touchend='touchEnd'
         @touchmove='touchMove'
-        :style='{height: (windowHeight - 690)+"rpx",width: (windowWidth) + "rpx"}' 
+        :style='{height: (windowHeight - 690)+"rpx",width: (windowWidth) + "rpx"}'
         scroll-y="true" :scroll-top="scrollTop"
         @scroll="scroll"
         @scrolltoupper="refresh"
         @scrolltolower="loadMore"
         lower-threshold="10">
-        <view v-if="showRefresh" 
+        <view v-if="showRefresh"
            style='width:100%;position:relative;padding:60rpx 0;padding-bottom: 30rpx'>
           <view class="text-gray" style='position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);'>
             <view v-if="freshStatus == 'fresh'" class="flex">
@@ -98,16 +98,16 @@
             </view>
             <view class="text" v-else-if="freshStatus == 'more'">
               <!-- 使用到了 colorUI 下拉箭头图标 -->
-              <text class="cuIcon-refresharrow">继续下拉刷新</text> 
+              <text class="cuIcon-refresharrow">继续下拉刷新</text>
             </view>
             <view class="text" v-else>
               释放刷新
             </view>
           </view>
         </view>
-        <div v-for="(num, i) in dataArr1" 
+        <div v-for="(num, i) in dataArr1"
         :style="{width:(windowWidth -80)+'rpx'}"
-        :key="i" class="sublet" @tap="turnDetail($enent,num)"> 
+        :key="i" class="sublet" @tap="turnDetail($enent,num)">
           <van-panel :title="num.title+'/'+num.typeStr" :desc="num.tagsName" :status="num.statusStr" use-footer-slot class="sublet_main" footer-class="footer">
               <div class="content_main">
               <span class="spl">地点：{{num.provName + '-' + num.cityName+'-'+num.counName+' '+""}}</span><br/>
@@ -127,9 +127,9 @@
                         <p>
                         ￥{{num.priceEachMonth}}元/月
                       </p>
-                    </div> 
+                    </div>
                   </div>
-                  
+
                 </div>
               </div>
             <div slot="footer">
@@ -159,7 +159,7 @@
         type: Array,
         default: () => {}
       }
-      
+
     },
     data() {
       return {
@@ -199,7 +199,7 @@
             { name: '超市', value: '超市', checked: false },
             { name: '体育馆', value: '体育馆', checked: false },
             { name: '菜市场', value: '菜市场', checked: false },
-             
+
         ]
       }
     },
@@ -219,18 +219,18 @@
     　　　　　　for (let i = 0; i < newValue.length; i++) {
       that.dataArr1[i] = newValue[i]
     //             if (oldValue[i].id != newValue[i].id) {
-    //                 that.dataArr1.push(newValue[i]) 
+    //                 that.dataArr1.push(newValue[i])
     // 　　　　　　　  }
                 }　
     　　　　　 } else {
                 for (let i = 0; i < newValue.length; i++) {
                   that.dataArr1[i] = newValue[i]
                 }
-                
+
               }
                this.counCode = this.$store.state.counCode
           })
-         
+
   　　　　},
   　　　　deep: true
   　　}
@@ -273,7 +273,7 @@
         if(this.selectArr.length >= 1) {
           this.showAn = true
         }
-        
+
         if(this.selectArr.length > 10) {
           this.selectArr.splice(10)
         }
@@ -318,7 +318,7 @@
                   this.freshStatus = 'fresh'
                   resolve()
                }, 500)
-               
+
             })
             a.then(() => {
               if(this.flagType == true) {
@@ -358,10 +358,10 @@
             let a = new Promise((resolve, reject) => {
               setTimeout(() => {
                 that.loading = false;
-                resolve() 
+                resolve()
               }, 500)
             })
-            
+
             a.then(() => {
               if(res.data.data == [] || res.data.data.length == 0) {
                 that.load_text = "没有更多的数据......"
@@ -387,10 +387,10 @@
                     num.icon = "star"
                   }
               })
-              
+
             })
-            
-          }  
+
+          }
         })
       },
       onConfirm1(e) {
@@ -398,7 +398,7 @@
       this.categoryShow = true
       this.getData(this.priceAsc)
       // this.$root.$mp.page.selectComponent('#item1').toggle();
-      
+
     },
     onConfirm2(e) {
       this.categoryShow = false
@@ -434,7 +434,7 @@
             })
           }
         })
-          
+
       },
       checkboxChange(e){
         console.log('checkbox发生change事件，携带value值为：', e.mp.detail.value)
@@ -455,7 +455,7 @@
         }
         //重新赋值
         self.items = [] .concat(list)
-    },    
+    },
      onConfirm() {
         this.$root.$mp.page.selectComponent('#item').toggle();
         this.flagType = true
@@ -480,7 +480,7 @@
         this.switch1 = false
         this.getData();
         this.$root.$mp.page.selectComponent('#item').toggle();
-        
+
       },
        onSearchSend1(tags, status){
           let that = this
@@ -490,7 +490,7 @@
             }
             that.number = 1
           }
-          
+
           let type = 'find_mate'
           let title = this.searchValue
           let tag = JSON.stringify(tags)
@@ -568,7 +568,7 @@
               }
             }
           })
-          // this.$store.commit('changeValue', this.searchValue) 
+          // this.$store.commit('changeValue', this.searchValue)
         }
       },
       turnDetail(e,num) {
@@ -580,7 +580,7 @@
       collect(val) {
         if(val.icon == 'star-o') {
           //  val.icon = ""
-          
+
           this.$http.post(`/app/favorites/like/${val.id}`, res => {
             console.log(res)
             wx.showToast({
@@ -593,8 +593,8 @@
             this.$set(val, 'icon', 'star')
             this.$forceUpdate();
           })
-          
-         
+
+
         } else {
           // val.icon = ""
           this.$http.delete(`/app/favorites/dislike/${val.id}`, res => {
@@ -607,7 +607,7 @@
             this.$set(val, 'icon', 'star-o')
             this.$forceUpdate();
           })
-          
+
         }
         console.log(val)
       },
@@ -623,8 +623,15 @@
       },
       onSearch (e) {
         console.log(e.mp.detail)
-      //这个方法此时还有效，点击 Enter 仍会执行
-        this.searchValue = e.mp.detail.value
+          if(e.mp.detail) {
+              if (e.mp.detail instanceof Object){
+                  this.searchValue = e.mp.detail.value
+              }else{
+                  this.searchValue = e.mp.detail
+              }
+          }else {
+              this.searchValue = ""
+          }
         this.onSearchSend()
       },
       onChangeVal (e) {
@@ -669,7 +676,7 @@
   animation: weuiLoading 1s steps(12, end) infinite;
   background: transparent url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZmlsbD0ibm9uZSIgZD0iTTAgMGgxMDB2MTAwSDB6Ii8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMjAiIHg9IjQ2LjUiIHk9IjQwIiBmaWxsPSIjRTlFOUU5IiByeD0iNSIgcnk9IjUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgLTMwKSIvPjxyZWN0IHdpZHRoPSI3IiBoZWlnaHQ9IjIwIiB4PSI0Ni41IiB5PSI0MCIgZmlsbD0iIzk4OTY5NyIgcng9IjUiIHJ5PSI1IiB0cmFuc2Zvcm09InJvdGF0ZSgzMCAxMDUuOTggNjUpIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMjAiIHg9IjQ2LjUiIHk9IjQwIiBmaWxsPSIjOUI5OTlBIiByeD0iNSIgcnk9IjUiIHRyYW5zZm9ybT0icm90YXRlKDYwIDc1Ljk4IDY1KSIvPjxyZWN0IHdpZHRoPSI3IiBoZWlnaHQ9IjIwIiB4PSI0Ni41IiB5PSI0MCIgZmlsbD0iI0EzQTFBMiIgcng9IjUiIHJ5PSI1IiB0cmFuc2Zvcm09InJvdGF0ZSg5MCA2NSA2NSkiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgeD0iNDYuNSIgeT0iNDAiIGZpbGw9IiNBQkE5QUEiIHJ4PSI1IiByeT0iNSIgdHJhbnNmb3JtPSJyb3RhdGUoMTIwIDU4LjY2IDY1KSIvPjxyZWN0IHdpZHRoPSI3IiBoZWlnaHQ9IjIwIiB4PSI0Ni41IiB5PSI0MCIgZmlsbD0iI0IyQjJCMiIgcng9IjUiIHJ5PSI1IiB0cmFuc2Zvcm09InJvdGF0ZSgxNTAgNTQuMDIgNjUpIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMjAiIHg9IjQ2LjUiIHk9IjQwIiBmaWxsPSIjQkFCOEI5IiByeD0iNSIgcnk9IjUiIHRyYW5zZm9ybT0icm90YXRlKDE4MCA1MCA2NSkiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgeD0iNDYuNSIgeT0iNDAiIGZpbGw9IiNDMkMwQzEiIHJ4PSI1IiByeT0iNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTE1MCA0NS45OCA2NSkiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgeD0iNDYuNSIgeT0iNDAiIGZpbGw9IiNDQkNCQ0IiIHJ4PSI1IiByeT0iNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTEyMCA0MS4zNCA2NSkiLz48cmVjdCB3aWR0aD0iNyIgaGVpZ2h0PSIyMCIgeD0iNDYuNSIgeT0iNDAiIGZpbGw9IiNEMkQyRDIiIHJ4PSI1IiByeT0iNSIgdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDM1IDY1KSIvPjxyZWN0IHdpZHRoPSI3IiBoZWlnaHQ9IjIwIiB4PSI0Ni41IiB5PSI0MCIgZmlsbD0iI0RBREFEQSIgcng9IjUiIHJ5PSI1IiB0cmFuc2Zvcm09InJvdGF0ZSgtNjAgMjQuMDIgNjUpIi8+PHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMjAiIHg9IjQ2LjUiIHk9IjQwIiBmaWxsPSIjRTJFMkUyIiByeD0iNSIgcnk9IjUiIHRyYW5zZm9ybT0icm90YXRlKC0zMCAtNS45OCA2NSkiLz48L3N2Zz4=) no-repeat;
   background-size: 100%;
-  
+
 }
 .roomlate .load_tips {
   display: inline-block;
@@ -761,7 +768,7 @@
   height: 30rpx;
   line-height: 30rpx;
   font-size: 28rpx;
-  
+
 }
 .roomlate .name span i {
 padding-left: 10rpx;
@@ -777,7 +784,7 @@ padding-left: 10rpx;
 }
 .roomlate .sublet {
   padding: 20rpx 40rpx !important;
-  
+
 }
 .roomlate .sublet:first-child {
   padding-top: 0rpx !important;
@@ -903,7 +910,7 @@ flex: none;
   justify-content: start;
   margin: 0 10rpx;
   margin-top: 20rpx;
-  
+
 }
 .roomlate .select ul li {
   line-height: 30rpx;
